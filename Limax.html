@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Limax.io</title> <!-- ✅ Game title -->
+    <link rel="icon" href="https://images.forfun.com/v2/fetch/67/67a6481c9611268608b0c38ecda9c26a.png" type="image/png" /> <!-- ✅ Favicon -->
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #000, #333, #000, #111);
+            background-size: 400% 400%;
+            animation: gradientBG 6s infinite alternate;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .loader-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            animation: rotate 2s linear infinite;
+        }
+
+        .ring:nth-child(1) {
+            border-top: 3px solid white;
+            border-bottom: 3px solid white;
+            animation-duration: 1.5s;
+        }
+
+        .ring:nth-child(2) {
+            border-left: 3px solid gray;
+            border-right: 3px solid gray;
+            animation-duration: 2s;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .crosshair {
+            position: absolute;
+            background-color: white;
+        }
+
+        .horizontal {
+            width: 130px;
+            height: 2px;
+            top: 50%;
+            left: 10px;
+        }
+
+        .vertical {
+            width: 2px;
+            height: 130px;
+            left: 50%;
+            top: 10px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .loader-text {
+            margin-top: 20px;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .iframe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: none;
+        }
+
+        iframe.fullscreen {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transition: opacity 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loader-container">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="crosshair horizontal"></div>
+        <div class="crosshair vertical"></div>
+        <img src="https://images.forfun.com/v2/fetch/67/67a6481c9611268608b0c38ecda9c26a.png" alt="Logo" class="logo">
+    </div>
+
+    <div class="loader-text">Limax.io</div>
+    <div class="loader-text">If You Use Phone</div>
+    <div class="loader-text">!! Rotate It !!</div>
+
+    <!-- ✅ Fullscreen Game iframe -->
+    <div class="iframe-container" id="iframe-container">
+        <iframe id="fullscreen-iframe" class="fullscreen" src="about:blank" loading="lazy" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        function startGame() {
+            document.querySelector(".loader-container").style.display = "none";
+            const iframe = document.getElementById("fullscreen-iframe");
+            const container = document.getElementById("iframe-container");
+            container.style.display = "block";
+            iframe.src = "https://limax.io/";
+        }
+
+        setTimeout(startGame, 5000);
+
+        function optimizeRendering() {
+            requestAnimationFrame(optimizeRendering);
+            // Custom FPS logic can go here if needed
+        }
+
+        optimizeRendering();
+    </script>
+
+</body>
+</html>
