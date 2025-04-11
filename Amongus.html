@@ -205,3 +205,335 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdBlock Detector - Multi Tab</title>
+  <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #121212;
+        color: white;
+        margin: 0;
+        padding: 0;
+      }
+  
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+  
+      .modal-content {
+        background: linear-gradient(45deg, #1a1a1a 0%, #0a0a0a 100%);
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 700px;
+        box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+        position: relative;
+        border: 3px solid darkred;
+        overflow: hidden;
+      }
+  
+      .modal-content::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, 
+          transparent 48%,
+          rgba(139, 0, 0, 0.1) 50%,
+          transparent 52%
+        );
+        animation: hologram 2.5s infinite linear;
+        pointer-events: none;
+      }
+  
+      .modal-header {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #fff;
+        text-shadow: 0 0 15px darkred;
+        letter-spacing: 2px;
+      }
+  
+      .adblock-warning {
+        color: #ff6b6b;
+        font-size: 18px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #2e0b0b 0%, #1a0000 100%);
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid darkred;
+        margin-top: 20px;
+        text-shadow: 0 0 10px darkred;
+        box-shadow: 0 0 15px rgba(139, 0, 0, 0.3);
+      }
+  
+      .iframe-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+  
+      .iframe-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        height: 250px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: transparent;
+        box-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid darkred;
+      }
+  
+      .iframe-container::before {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border: 2px solid rgba(139, 0, 0, 0.3);
+        border-radius: 12px;
+        z-index: -1;
+      }
+  
+      .iframe-container:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 0 25px rgba(139, 0, 0, 0.6);
+      }
+  
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+      }
+  
+      .glass-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(139, 0, 0, 0.1) 0%, rgba(0,0,0,0.3) 100%);
+        backdrop-filter: blur(12px) brightness(1.2);
+        opacity: 1;
+        pointer-events: none;
+      }
+  
+      .glass-overlay::before {
+        content: "⚠️SYSTEM ALERT";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+        font-family: 'Courier New', monospace;
+        color: #fff;
+        text-shadow: 0 0 10px darkred;
+        letter-spacing: 2px;
+        opacity: 0.9;
+      }
+  
+      .hidden {
+        display: none !important;
+      }
+  
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 99999;
+      }
+  
+      .close-btn img {
+        width: 32px;
+        height: 32px;
+        filter: invert(0.8) sepia(1) hue-rotate(-20deg) saturate(5);
+        transition: all 0.2s ease;
+      }
+  
+      .close-btn img:hover {
+        filter: invert(1) sepia(1) hue-rotate(0deg) saturate(10);
+        transform: scale(1.1) rotate(90deg);
+      }
+  
+      @keyframes hologram {
+        0% { transform: translate(-25%, -25%) rotate(45deg); opacity: 0.3; }
+        50% { opacity: 0.6; }
+        100% { transform: translate(25%, 25%) rotate(45deg); opacity: 0.3; }
+      }
+  
+      @keyframes scanline {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+      }
+  
+      .iframe-container::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(0deg, 
+          transparent 48%,
+          rgba(139, 0, 0, 0.1) 50%,
+          transparent 52%
+        );
+        animation: hologram 1.5s infinite linear;
+        pointer-events: none;
+      }
+  </style>
+</head>
+<body>
+
+  <div id="adblock-modal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">
+        <img src="https://cdn-icons-png.flaticon.com/512/359/359778.png" alt="Close" />
+      </button>
+      <div class="modal-header">Advertisements</div>
+      <div class="adblock-warning" id="adblock-warning" style="display: none;">
+        ⚠️ AdBlock Detected! Please disable it!
+      </div>
+      <div class="iframe-wrapper hidden" id="iframe-wrapper">
+        <!-- Iframes will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const adLink = "https://www.effectiveratecpm.com/kwt9e48a?key=e1a642698e24eaf1688285a0b751b9bc";
+
+    function detectAdBlock(callback) {
+      let isBlocked = false;
+      let checkDone = 0;
+
+      // Check 1: adsbox element
+      let testAd = document.createElement("div");
+      testAd.innerHTML = "&nbsp;";
+      testAd.className = "adsbox";
+      testAd.style.display = "block";
+      testAd.style.position = "absolute";
+      testAd.style.left = "-9999px";
+      document.body.appendChild(testAd);
+
+      setTimeout(function () {
+        if (testAd.offsetHeight === 0 || testAd.offsetParent === null) {
+          isBlocked = true;
+        }
+        testAd.remove();
+        done();
+      }, 100);
+
+      // Check 2: block adsbygoogle script
+      let script = document.createElement("script");
+      script.type = "text/javascript";
+      script.onerror = function () {
+        isBlocked = true;
+        done();
+      };
+      script.onload = function () {
+        done();
+      };
+      script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+      document.body.appendChild(script);
+
+      function done() {
+        checkDone++;
+        if (checkDone === 2) {
+          callback(isBlocked);
+        }
+      }
+    }
+
+    function loadIframes() {
+      const iframeWrapper = document.getElementById("iframe-wrapper");
+      iframeWrapper.innerHTML = "";
+      for (let i = 0; i < 2; i++) {
+        let container = document.createElement("div");
+        container.className = "iframe-container";
+
+        let overlay = document.createElement("div");
+        overlay.className = "glass-overlay";
+
+        let iframe = document.createElement("iframe");
+        iframe.src = adLink;
+        iframe.loading = "lazy";
+
+        container.appendChild(overlay);
+        container.appendChild(iframe);
+        iframeWrapper.appendChild(container);
+      }
+    }
+
+    function checkAndLoad() {
+      detectAdBlock(function (isBlocked) {
+        const warning = document.getElementById("adblock-warning");
+        const iframeWrapper = document.getElementById("iframe-wrapper");
+
+        if (isBlocked) {
+          warning.style.display = "block";
+          iframeWrapper.classList.add("hidden");
+        } else {
+          warning.style.display = "none";
+          iframeWrapper.classList.remove("hidden");
+          loadIframes();
+        }
+      });
+    }
+
+    function openModal() {
+      document.getElementById("adblock-modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("adblock-modal").style.display = "none";
+      setTimeout(() => {
+        checkAndLoad();
+        openModal();
+      }, 900000); // recheck every 30min
+    }
+
+    window.onload = function() {
+      checkAndLoad();
+      openModal();
+
+    };
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QCJKG8NXX0');
+  </script>
+</body>
+</html>
