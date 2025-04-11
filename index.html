@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / SignUp</title>
+  <link rel="icon" type="image/png" href="https://assets.onecompiler.app/438cc35sk/43bubkrae/Web%20Wizards%20Studio%20logo%20with%20a%20black%20background,%20designed%20for%20Gen%20Z.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-image: url("https://media.istockphoto.com/id/162542504/photo/earth-sunrise-in-space.jpg?s=612x612&w=0&k=20&c=yOz6xe894yVDOtt29uFDybMbNyKdpW_4vOUUEkAlaEI=");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .auth-container {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .auth-container:hover {
+      transform: translateY(-10px);
+    }
+
+    .auth-container h2 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .auth-container input {
+      width: 100%;
+      padding: 14px;
+      margin: 15px 0;
+      background: transparent;
+      border: 2px solid #fff;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      transition: border-color 0.3s;
+      outline: none;
+    }
+
+    .auth-container input:focus {
+      border-color: #2575fc;
+    }
+
+    .auth-container button {
+      width: 100%;
+      padding: 14px;
+      background: #2575fc;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 20px;
+    }
+
+    .auth-container button:hover {
+      background: #1a5db8;
+    }
+
+    .auth-container .toggle-link {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .auth-container .toggle-link:hover {
+      color: #2575fc;
+    }
+    .password-wrapper { position: relative; }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #fff;
+    }
+    .auth-container input:focus {
+      border-color: #00cfff;
+      outline: none;
+    }
+    .auth-container button {
+      width: 100%;
+      padding: 12px;
+      background: #00cfff;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .auth-container button:hover {
+      background: #00a4cc;
+    }
+    .info-section {
+      margin-top: 30px;
+      text-align: left;
+    }
+    .info-section h3 {
+      font-size: 18px;
+      color: #0ff;
+      margin-bottom: 10px;
+    }
+    .info-section code {
+      display: block;
+      background: black;
+      padding: 10px 15px;
+      border-radius: 12px;
+      margin: 6px 0;
+      font-size: 15px;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      word-break: break-word;
+      color: #fff;
+      border: 3.5px solid darkblue; /* modern red accent */
+      background-blend-mode: overlay;
+      box-shadow: 0 2px 6px rgba(255, 76, 76, 0.3);
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #2575fc;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+      display: none;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .success-message {
+      font-size: 16px;
+      color: #28a745;
+      margin-top: 20px;
+      display: none;
+    }
+    @media (max-width: 480px) {
+      .auth-container { padding: 20px; }
+      .auth-container h2 { font-size: 24px; }
+    }
+    /* FULLSCREEN LOADER STYLES */
+    .fullscreen-loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url("https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8d2hpdGUlMjBuYXR1cmV8ZW58MHx8MHx8fDA%3D");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 9999;
+      display: none;
+    }
+
+    .glow-loader {
+      width: 80px;
+      height: 80px;
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid darkblue ;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 20px #fff;
+    }
+
+    .fullscreen-loader span {
+      margin-top: 20px;
+      color: black;
+      font-size: 1.2rem;
+      animation: fadeIn 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h2>Sign Up</h2>
+    <form id="auth-form">
+      <div id="credentials">
+        <input type="email" id="email" placeholder="Email" required />
+        <div class="password-wrapper">
+          <input type="password" id="password" placeholder="Password" required />
+          <span class="toggle-password" id="toggle-password">🔒️</span>
+        </div>
+        <button type="submit">Sign up</button>
+      </div>
+
+      <div class="loader" id="loader"></div>
+
+      <div class="info-section" id="userinfo-container" style="display: none;">
+        <h3>Your Info</h3>
+        <div id="info">Loading...</div>
+        <div id="current-time" style="margin-top: 10px; text-align: center;"></div>
+        <button type="button" id="confirm-btn" style="margin-top: 20px;">Continue</button>
+      </div>
+    </form>
+  </div>
+  <!-- FULLSCREEN LOADER -->
+  <div class="fullscreen-loader" id="fullscreen-loader">
+    <div class="glow-loader"></div>
+    <span>Launching your experience...</span>
+  </div>
+  <script>
+    // 🔁 Redirect immediately if user already signed in
+    if (localStorage.getItem('userLoggedIn') === 'true') {
+      window.location.replace('https://wizstu.github.io/cloudgaminghub/cgh.html');
+    }
+  
+    const authForm = document.getElementById('auth-form');
+    const credentials = document.getElementById('credentials');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('toggle-password');
+    const loader = document.getElementById('loader');
+    const userInfoContainer = document.getElementById('userinfo-container');
+    const confirmBtn = document.getElementById('confirm-btn');
+    const fullscreenLoader = document.getElementById('fullscreen-loader');
+  
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.textContent = type === 'password' ? '🔒️' : '🔓';
+    });
+  
+    authForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      credentials.style.display = 'none';
+      loader.style.display = 'block';
+  
+      localStorage.setItem('tempEmail', emailInput.value);
+      localStorage.setItem('tempPassword', passwordInput.value);
+  
+      // Extract name and store in localStorage
+      const name = extractNameFromEmail(emailInput.value);
+      localStorage.setItem('userName', name);
+  
+      setTimeout(() => {
+        loader.style.display = 'none';
+        userInfoContainer.style.display = 'block';
+        loadUserInfo();
+      }, 3000);
+    });
+  
+    confirmBtn.addEventListener('click', () => {
+      fullscreenLoader.style.display = 'flex';
+  
+      localStorage.setItem('userEmail', localStorage.getItem('tempEmail'));
+      localStorage.setItem('userPassword', localStorage.getItem('tempPassword'));
+      localStorage.setItem('userLoggedIn', 'true');
+  
+      setTimeout(() => {
+        window.location.href = 'https://wizstu.github.io/cloudgaminghub/cgh.html';
+      }, 3000);
+    });
+  
+    // Function to extract name from email (removes numbers and @ domain part)
+    function extractNameFromEmail(email) {
+      const atIndex = email.indexOf('@');
+      if (atIndex === -1) return 'Unknown';  // Return 'Unknown' if '@' is not found
+  
+      const namePart = email.substring(0, atIndex);  // Get part before '@'
+      const cleanedName = namePart.replace(/[0-9]/g, '');  // Remove numbers from the name part
+  
+      // Capitalize the first letter of the name
+      const capitalizedName = cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1).toLowerCase();
+      
+      return capitalizedName || 'User';  // Return 'User' if name is empty
+    }
+  
+    async function loadUserInfo() {
+      const email = localStorage.getItem('tempEmail');  // Get email from localStorage
+      const name = localStorage.getItem('userName');  // Get name from localStorage
+      
+      const info = {
+        Name: name,  // Use the name stored in localStorage
+        Email: email,
+        UserAgent: navigator.userAgent,
+        Platform: navigator.platform,
+        Language: navigator.language,
+        Screen: `${screen.width}x${screen.height}`,
+        Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        Referrer: document.referrer || "None"
+      };
+  
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+        info.IP = data.ip;
+        info.City = data.city;
+        info.Region = data.region;
+        info.Country = data.country_name;
+        info.Street = `${data.city}, ${data.region}`;
+        info.Organization = data.org;
+      } catch {
+        info.IP = "Could not fetch IP info.";
+      }
+  
+      document.getElementById("info").innerHTML = Object.entries(info).map(
+        ([k, v]) => `<code><strong>${k}:</strong> ${v}</code>`
+      ).join('<br>');
+  
+      const timeDiv = document.getElementById("current-time");
+      function updateTime() {
+        timeDiv.textContent = "Current Time: " + new Date().toLocaleTimeString();
+      }
+      updateTime();
+      setInterval(updateTime, 100);
+    }
+  
+    // Auto-login
+    if (localStorage.getItem('userLoggedIn') === 'true') {
+      window.location.href = 'https://wizstu.github.io/cloudgaminghub/cgh.html';
+    }
+  </script>
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-QCJKG8NXX0');
+  </script>
+</body>
+</html>
