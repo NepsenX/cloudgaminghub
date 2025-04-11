@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Gaming Hub</title>
+  <link rel="icon" type="image/png" href="https://assets.onecompiler.app/438cc35sk/43bubkrae/Web%20Wizards%20Studio%20logo%20with%20a%20black%20background,%20designed%20for%20Gen%20Z.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <style>
+    :root {
+      --primary: #a78bfa;
+      --secondary: #f9a8d4;
+      --background: #0f172a;
+      --text: #f8fafc;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --user:#000;
+      --bot:#000;
+      --chat-toggle:black;
+      --chat-footer:#222;
+      --chat-body:#454242;
+      --chat-header:black;
+      --chat-footer-input:black;
+      --fb-btn:#2C3E50;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.1s;
+    }
+
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background-color: var(--background);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: var(--text);
+        line-height: 1.6;
+        overflow-x: hidden;
+        transition: background-image 0.3s ease;
+      }
+    /* Theme Switcher */
+    .theme-switcher {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 50px;
+      display: flex;
+      gap: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .theme-btn {
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+    }
+
+    .theme-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Glowing Gradient Text */
+    .gradient-text {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
+    }
+
+    /* Modern Navigation */
+    .nav-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      position: Sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-content {
+      max-width:1200000px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links.active {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 70px; /* navbar নিচে মেনু নামবে */
+      right: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 12px;
+      z-index: 999;
+    }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 8rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+      color: white;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    
+    /* Service Card */
+    .service-card {
+      background: rgba(255, 255, 255, 0.05); /* semi-glass effect */
+      border-radius: 20px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(8px); /* blur effect */
+      transition: all 0.35s ease;
+      cursor: pointer;
+      text-align: center;
+      max-width: 280px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .service-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 10px 25px rgba(0, 123, 255, 0.2);
+    }
+    
+    /* Stylish light streak overlay */
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(120deg, transparent, var(--primary), transparent);
+      transform: rotate(45deg);
+      opacity: 0.06;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .service-card:hover::before {
+      opacity: 0.12;
+    }
+    
+    .service-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .service-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-color, #fff);
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+
+
+    .chat-container {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 350px;
+      max-width: 90%;
+      background: #111;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+      display: none;
+      flex-direction: column;
+    }
+    
+    .chat-header {
+      background: var(--chat-header);
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    
+    .chat-body {
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background: var(--chat-body);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-footer {
+      display: flex;
+      background: var(--chat-footer);
+      padding: 10px;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+    
+    .chat-footer input {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      background: var(--chat-footer-input);
+    }
+    
+    .chat-footer button {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 8px 12px;
+      margin-left: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    .chat-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--chat-toggle);
+      color: #000;
+      padding: 15px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+    }
+    
+    .message {
+      max-width: 75%;
+      padding: 8px 12px;
+      margin: 5px;
+      border-radius: 10px;
+      word-wrap: break-word;
+    }
+    .user {
+      background: var(--user);
+      align-self: flex-end;
+      text-align: left;
+    }
+    
+    .bot {
+      background: var(--bot);
+      align-self: flex-start;
+      text-align: left;
+    }
+    /* About Section */
+    .about-us {
+      display: flex;
+      align-items: center;
+      text-align: left;
+      padding: 60px 20px;
+    }
+
+    .about-us img {
+      max-width: 425px;
+      margin-right: 30px;
+    }
+
+    .about-us .description {
+      flex: 1;
+    }
+
+    .about-us h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .about-us p {
+      font-size: 1rem;
+    }
+    /* Loader Spinner */
+    .loader-spinner {
+      border-top-color: var(--primary);
+      border-bottom-color: var(--primary);
+      border-left-color: transparent;
+      border-right-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .hidden {
+      display: none;
+    }
+    .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px 0;
+        width: 100%;
+        padding: 0 16px;
+    }
+    
+    .search-input {
+        width: 100%;
+        max-width: 500px;
+        padding: 14px 20px;
+        font-size: 16px;
+        border-radius: 50px;
+        border: 1px solid #ddd;
+        background-color: var(--background);
+        color: white;
+        outline: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .search-input::placeholder {
+        color: #aaa;
+        font-weight: 400;
+    }
+    
+    .search-input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        background-color: darkwhite;
+    }
+    #notFoundMessage {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    /* Floating Language Button */
+    .language-toggle {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--background);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: 0.3s ease;
+      z-index: 999;
+    }
+
+    .language-toggle:hover {
+      background: #3367d6;
+    }
+
+    /* Google Translate Container */
+    #google_translate_element {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      z-index: 998;
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 0.75rem;
+      display: none;
+    }
+
+    /* Style Google Translate dropdown */
+    #google_translate_element select {
+      font-size: 1rem !important;
+      padding: 0.5rem !important;
+      border-radius: 2px !important;
+      border: 1px solid #ccc !important;
+      background-color: var(--card-bg) !important;
+      color: var(--text-color) !important;
+      max-width: 100%;
+      width: 100% !important;
+    }
+
+    /* Reset unwanted Google Translate styles */
+    iframe.goog-te-banner-frame,
+    .goog-te-balloon-frame,
+    .goog-te-menu-frame {
+      max-width: 100vw !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Fix iframe and dropdown on mobile */
+    @media (max-width: 600px) {
+      .language-toggle {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+      }
+
+      #google_translate_element {
+        width: calc(100vw - 40px);
+        max-width: 300px;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      #google_translate_element select {
+        font-size: 1rem !important;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .theme-switcher {
+        bottom: 1rem;
+        right: 1rem;
+      }
+      .about-us {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .about-us img {
+        margin-bottom: 150px;
+      }
+      .services {
+        flex-direction: column;
+        align-items: center;
+      }
+      .text-4xl md:text-6xl font-extrabold mb-4{
+        flex-direction: column;
+        text-align: center;
+      }
+      .text-lg md:text-xl text-gray-400{
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+    .mobile-menu-btn {
+      display: none;
+      font-size: 1.5rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+     #contact {
+      background: var(--background); /* Cool gradient background */
+      color: #fff;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    
+    .contact-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+    }
+    
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      font-family: 'Roboto', sans-serif;
+      color: var(--text);
+    }
+    
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    
+    .contact-btn {
+      background-color: #1877f2; /* Facebook blue */
+      color: var(--text);
+      font-size: 16px;
+      padding: 15px 30px;
+      text-align: center;
+      display: inline-block;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-btn:hover {
+      background-color: #3b5998;
+      transform: scale(1.05);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .contact-btn:active {
+      transform: scale(1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .fb-btn {
+      background-color: var(--fb-btn);
+    }
+    
+    .email-btn {
+      background-color: var(--fb-btn); /* Email button with a pop of red */
+    }
+    
+  </style>
+</head>
+<body>
+    <!-- Theme Switcher -->
+  <div class="theme-switcher">
+    <button class="chat-toggle" id="chatToggle">💬</button>
+  </div>
+  <button class="language-toggle" id="langToggleBtn">🌐</button>
+  <div id="google_translate_element"></div>
+  <!-- Navigation -->
+  <nav class="nav-container">
+    <div class="nav-content">
+      <h1 class="gradient-text">Cloud Gaming Hub</h1>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Games</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- Hero Section -->
+  <section id="home" class="min-h-screen flex items-center justify-center pt-20">
+    <div class="text-center">
+      <h2 class="text-4xl md:text-6xl font-extrabold mb-4"><span id="typed"></span></h2>
+      <p class="text-lg md:text-xl text-gray-400">Your Modern journey to success begins here.</p>
+    </div>
+  </section>
+  <!-- About Us Section -->
+  <section class="about-us" id="about">
+    <img src="https://i.pinimg.com/originals/88/de/f6/88def67080a01c2dab5b069c917f2287.gif" alt="Web Wizards Studio Logo">
+    <div class="description">
+      <h2>About Cloud Gaming Hub </h2>
+      <p>Cloud Gaming Hub is the ultimate platform for gamers who want to experience high-performance gaming without the need for expensive hardware. By leveraging the power of cloud computing, it allows users to play resource-intensive games on any device with an internet connection. Whether you’re using a PC, smartphone, or tablet, the Cloud Gaming Hub ensures seamless gameplay, stunning visuals, and minimal lag, all while eliminating the need for downloads or installations.The platform supports a wide range of popular games, from AAA titles to indie gems, providing gamers with access to an extensive library. Users can jump into games instantly and enjoy multiplayer features, social integration, and more, all without worrying about storage space or hardware limitations.With cutting-edge technology, Cloud Gaming Hub transforms the way games are played, making gaming more accessible and flexible than ever before. Whether you're a casual player or a competitive gamer, Cloud Gaming Hub opens up a world of possibilities, offering a hassle-free, high-quality gaming experience anytime, anywhere. Join the revolution and elevate your gaming experience to the cloud!</p>
+    </div>
+  </section>
+  <!-- Services Grid -->
+  <!-- Services Section -->
+  <!-- Services Section -->
+  <section class="hero" id="services">
+    <h1>Games</h1>
+  </section>
+  <div class="search-container">
+      <input type="text" id="searchBar" class="search-input" placeholder="Search For Games..." onkeyup="searchGames()">
+  </div>
+  <section class="services-grid" id="services">
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/minecraft')">
+      <img src="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m1.jpeg" alt="Service Logo">
+      <h3>MINECRAFT</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/krunker')">
+      <img src="https://i.redd.it/17xsk8x20qs51.png" alt="Service Logo">
+      <h3>Krunker</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/mr-mine')">
+      <img src="https://pbs.twimg.com/profile_images/1344417953115119619/Jpf355Ce_400x400.jpg" alt="Service Logo">
+      <h3>Mr. Mine</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/war-brokers')">
+      <img src="https://static.tvtropes.org/pmwiki/pub/images/war_brokers.png" alt="Service Logo">
+      <h3>War Brokers</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/dead-frontier')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRewA-ScvSHD-9wFSA1ebzPZzH4Picq4jQkCQ&s" alt="Service Logo">
+      <h3>Dead Frontier</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/among-us')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhB42QBXN3M3heY3e9oMJGMWRWMgG1VmEz9Q&s" alt="Service Logo">
+      <h3>Among Us</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/nightpoint')">
+      <img src="https://img.poki-cdn.com/cdn-cgi/image/quality=78,width=314,height=314,fit=cover,f=auto/ef026214-7374-450a-98dd-a60f74de4617.png" alt="Service Logo">
+      <h3>Nightpoint</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/splix-io')">
+      <img src="https://iogames.games/data/image/game/splix-io.jpg" alt="Service Logo">
+      <h3>Splix.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/mope-io')">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl9p-w1qnkGUw9P0Uvv73PVqvyRw7HoZxF4RCpyoDDl_y91Yr7nFDe7LflQoxw95RKgh8&usqp=CAU" alt="Service Logo">
+      <h3>Mope.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/superhex-io')">
+      <img src="https://a.silvergames.com/screenshots/superhexio/superhex.jpg" alt="Service Logo">
+      <h3>Superhex.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/deeeep-io')">
+      <img src="https://img.itch.zone/aW1nLzE5NDE2OTgxLnBuZw==/original/IEeyyl.png" alt="Service Logo">
+      <h3>Deeeep.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/wormszone-io')">
+      <img src="https://assets.apk.live/com.wildspike.wormszone--5383-icon.png" alt="Service Logo">
+      <h3>WormsZone.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/littlebigsnake')">
+      <img src="https://pbs.twimg.com/profile_images/1572280657023479808/Jv_TUZUf_400x400.jpg" alt="Service Logo">
+      <h3>LittleBigSnake</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/yorg-io')">
+      <img src="https://www.gamekarma.com/images/games/76.png" alt="Service Logo">
+      <h3>Yorg.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/tankwars-io')">
+      <img src="https://www.gamekarma.com/images/games/59.png" alt="Service Logo">
+      <h3>TankWars.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/flyordie-io')">
+      <img src="https://is4-ssl.mzstatic.com/image/thumb/Purple115/v4/3a/04/05/3a0405e1-32ac-6a48-d971-a0fb1ac343b4/AppIcon-1x_U007emarketing-0-85-220-0-8.png/1024x1024bb.png" alt="Service Logo">
+      <h3>FlyOrDie.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/brutal-io')">
+      <img src="https://play-lh.googleusercontent.com/tELDr42pXgKm7bppm9u7Lxi1wsIondePelVzvflo6rbStOLlIS41nEb01ssUYVqFnpo=w526-h296-rw" alt="Service Logo">
+      <h3>Brutal.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/starve-io')">
+      <img src="https://www.gamekarma.com/images/games/19.png" alt="Service Logo">
+      <h3>Starve.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/limax-io')">
+      <img src="https://images.forfun.com/v2/fetch/67/67a6481c9611268608b0c38ecda9c26a.png" alt="Service Logo">
+      <h3>Limax.io</h3>
+    </div>
+    <div class="service-card" onclick="loadService('https://sites.google.com/view/webwizardsstudio/slithercraft-io')">
+      <img src="https://img.gamepix.com/games/slithercraft-io/icon/slithercraft-io.png?w=105" alt="Service Logo">
+      <h3>SlitherCraft.io</h3>
+    </div>
+    <!-- Not Found Message -->
+    <div id="notFoundMessage" style="display:none; text-align:center; margin-top:2rem; color:#888; font-size:1.2rem;">
+      😔 Sorry, we don’t have this game.
+    </div>
+    <!-- Repeat the above block 47 times as required -->
+  </section>
+  <!-- Contact Section -->
+  <section id="contact">
+    <div class="contact-container">
+      <h2>Contact Us</h2>
+      <p>Connection creates power.Your voice can change everything. Let’s connect.</p>
+      <div class="contact-buttons">
+        <a href="https://www.facebook.com/groups/1975968936224766" target="_blank" class="contact-btn fb-btn">Join in Group</a>
+        <a href="mailto:arafatislamlam15@gmail.com" class="contact-btn email-btn">Email Us</a>
+      </div>
+    </div>
+  </section>
+  <script>
+    function loadService(url) {
+      // Show the loader
+      document.getElementById('loader').classList.remove('hidden');
+      
+      // Redirect to the URL after a brief delay to allow the loader to appear
+      setTimeout(function() {
+        window.location.href = url; // Open in the same tab
+      }, 6000); // Adjust delay as needed (1000ms = 1 second)
+    }
+    // Theme Switching
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeButtons.forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+    }
+
+    themeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const theme = button.dataset.theme;
+        setTheme(theme);
+      });
+    });
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'system';
+    setTheme(savedTheme);
+
+    // Mobile Menu
+    const mobileMenuBtn = document.createElement('button');
+    mobileMenuBtn.innerHTML = '☰';
+    mobileMenuBtn.classList.add('mobile-menu-btn');
+    document.querySelector('.nav-content').appendChild(mobileMenuBtn);
+
+    mobileMenuBtn.addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector(anchor.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Service Card Animation
+    const cards = document.querySelectorAll('.service-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--x', `${x}px`);
+        card.style.setProperty('--y', `${y}px`);
+      });
+    });
+  </script>
+  <!-- Typed.js Animation -->
+  <script>
+    new Typed('#typed', {
+      strings: ['Cloud Gaming Hub', 'Gaming in the cloud.', 'Play anywhere, anytime.', 'Future gaming starts here.', 'Limitless play, unlocked.', 'Game on the go.', 'Your cloud, your rules.', 'Seamless gaming.', 'The future is cloud.', 'No boundaries, just games.', 'Power to play.', 'Epic, cloud-powered games.', 'Smarter gaming.', 'Freedom to play.', 'Cloud, your playground.', 'Bringing games to you.', 'Endless possibilities.', 'Redefining cloud gaming.', 'Play anywhere.', 'Untethered gaming.', 'No limits, just play.', 'Unstoppable gaming.', 'Cloud-powered adventures.', 'Gaming, cloud-fueled.', 'Next-gen cloud play.', 'Level up in the cloud.', 'All your games, cloud-bound.', 'Revolutionizing gaming.', 'Best in cloud gaming.', 'Your game, your cloud.', 'Infinite play on demand.', 'No downloads, just games.', 'Reinventing play.', 'Jump into the cloud.', 'The ultimate hub.', 'Play from anywhere.', 'Freedom in the cloud.', 'Epic play, everywhere.', 'Gaming for all.', 'One cloud, endless worlds.', 'Transform your play.', 'Cloud gaming made real.', 'The future of play.', 'Play beyond devices.', 'Unlimited gaming.', 'Your console is the cloud.', 'Gaming without borders.', 'Bringing gaming to the cloud.', 'Cloud-powered revolution.'],
+      typeSpeed: 60,
+      backSpeed: 30,
+      loop: true
+    });
+  </script>
+  <script>
+  function addMessage(text, sender = "bot") {
+    const message = document.createElement("p");
+    message.className = `message ${sender}`;
+    message.textContent = text;
+    document.getElementById("messages").appendChild(message);
+    document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+  }
+  function sendMessage() {
+    const userInput = document.getElementById("userInput");
+    const userText = userInput.value.trim();
+    if (!userText) return;
+  
+    addMessage(userText, "user");
+    userInput.value = "";
+  
+    const lowerCaseText = userText.toLowerCase();
+    // Define questions related to name, email, and password
+    const nameQuestions = [
+      "what's my name?", "what is my name?", "are you know my name?", "who am i?", "tell me my name",
+      "What's my name?", "What is my name?", "Are you know my name?", "Who am i?", "Tell me my name"
+    ];
+  
+    const emailQuestions = [
+      "what is my email?", "what is my email address?", "do you know my email?", "tell me my email", 
+      "tell my email address", "What is my email?", "What is my email address?", "Do you know my email?", "Tell me my email"
+    ];
+  
+    const passwordQuestions = [
+      "what is my email password?", "please write my email password", "plz tell me my email password", 
+      "plz write my email password", "please tell me my email password", "What is my email password?", 
+      "Please write my email password", "Plz tell me my email password"
+    ];
+  
+    // Check if the user's input is a question about their name
+    if (nameQuestions.includes(lowerCaseText)) {
+      const userName = localStorage.getItem('userName') || 'User';  // Default to 'User' if no name is stored
+      addMessage(`Your name is ${userName}`, "bot");
+    }
+    // Check if the user's input is a question about their email
+    else if (emailQuestions.includes(lowerCaseText)) {
+      const userEmail = localStorage.getItem('userEmail') || 'Not Set';  // Default if no email is stored
+      addMessage(`Your email is ${userEmail}`, "bot");
+    }
+    // Check if the user's input is a question about their password
+    else if (passwordQuestions.includes(lowerCaseText)) {
+      const userPassword = localStorage.getItem('userPassword') || 'Not Set';  // Default if no password is stored
+      addMessage(`Your email password is ${userPassword}`, "bot");
+    }
+    else {
+      // Handle general queries using Wikipedia API
+      fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(userText)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.extract) {
+            addMessage(data.extract, "bot");
+          } else {
+            addMessage("Sorry, I couldn't find an answer. Try another question! I can answer questions that start with 'what' or 'who'. Like: pen, the Quran, etc.", "bot");
+          }
+        })
+        .catch(() => addMessage("Error retrieving data. Try again!", "bot"));
+    }
+  }
+  
+  function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  }
+  const chatContainer = document.getElementById("chatContainer");
+  const chatToggle = document.getElementById("chatToggle");
+  
+  chatToggle.addEventListener("click", () => {
+    const isVisible = chatContainer.style.display === "flex";
+    chatContainer.style.display = isVisible ? "none" : "flex";
+  });
+  </script>
+  <script>
+      // List of GIF URLs
+      const gifs = [
+          "https://wallpapers-clan.com/wp-content/uploads/2024/03/starfall-night-sky-mountains-aesthetic-gif-preview-desktop-wallpaper.gif",
+          "https://i.gifer.com/NPaT.gif",
+          "https://mir-s3-cdn-cf.behance.net/project_modules/disp/9bc27292880429.5e569ff84e4d0.gif",
+          "https://usagif.com/wp-content/uploads/gify/gta-6-sunset-highway-wallpapers-usagif.gif",
+          "https://i.pinimg.com/originals/55/01/60/5501609ee45d514d1f2c4a63502045e2.gif",
+          "https://i.pinimg.com/originals/13/45/50/13455040862ac9b8e465185878838cf1.gif",
+          "https://i.pinimg.com/originals/90/70/32/9070324cdfc07c68d60eed0c39e77573.gif",
+          "https://64.media.tumblr.com/cca4f06484b447c0687f0325af5b38c9/428a8db1dc8ae92f-87/s1280x1920/7c751558b1d93e15c2d885cff2162ddb95059b8d.gif",
+          "https://i.pinimg.com/originals/c7/f4/b7/c7f4b7922cad40cd75fb214a63bec12d.gif",
+          "https://i.pinimg.com/originals/d0/fe/0f/d0fe0fdf2f03c7d986eb868f91a6242a.gif",
+          "https://i.pinimg.com/originals/82/88/e9/8288e9eec7c66c0790ee546462b8e204.gif",
+          "https://i.pinimg.com/originals/05/f1/7d/05f17d6e87ad18f65940f896f4cf11a4.gif",
+          "https://giffiles.alphacoders.com/215/215911.gif",
+          "https://wallpapercave.com/wp/wp2757834.gif",
+          "https://i.pinimg.com/originals/2e/e8/8b/2ee88bf78e4f76001f59bad5e91a6a03.gif",
+          "https://i.pinimg.com/originals/51/4f/3f/514f3fccb71047d780be491c435a79e1.gif",
+          "https://i.pinimg.com/originals/b1/5b/d5/b15bd596014d9d9310e59b07b85da550.gif",
+          "https://i.pinimg.com/originals/12/b2/3a/12b23a7752e8a7a4464c1ff5e596237f.gif",
+          "https://media.wired.com/photos/59332658d80dd005b42b1392/master/pass/output_RqcvgG.gif",
+          "https://wallpapercave.com/wp/wp2760959.gif",
+          "https://i.redd.it/axjjd2nyj1kb1.gif",
+          "https://i.pinimg.com/originals/6d/46/f9/6d46f977733e6f9a9fa8f356e2b3e0fa.gif",
+          "https://preview.redd.it/glyffr63wot71.gif?width=512&auto=webp&s=e9d752b30100e07bbed8e2b8dc6b90afdc501b03",
+          "https://i.redd.it/1p60v873wot71.gif",
+          "https://i.pinimg.com/originals/1d/30/b5/1d30b5a0c298c02edaf2f501b22a6587.gif",
+          // Add your other GIF links here
+      ];
+
+      let currentGifIndex = 0;
+
+      // Function to change the background GIF
+      function changeBackgroundGif() {
+          document.body.style.backgroundImage = `url(${gifs[currentGifIndex]})`;
+          currentGifIndex = (currentGifIndex + 1) % gifs.length; // Loop through GIFs
+      }
+
+      // Change background every 20 seconds
+      setInterval(changeBackgroundGif, 10000);
+
+      // Set initial background gif
+      changeBackgroundGif();
+      function searchGames() {
+        const input = document.getElementById('searchBar').value.toLowerCase();
+        const items = document.querySelectorAll('.service-card');
+        const notFoundMessage = document.getElementById('notFoundMessage');
+      
+        let anyVisible = false;
+      
+        items.forEach(item => {
+          const gameName = item.querySelector('h3').textContent.toLowerCase();
+          if (gameName.includes(input)) {
+            item.style.display = 'block';
+            anyVisible = true;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      
+        // Show or hide the "Not Found" message
+        notFoundMessage.style.display = anyVisible ? 'none' : 'block';
+      }
+
+  </script>
+  <script>
+    const toggleBtn = document.getElementById('langToggleBtn');
+    const translateEl = document.getElementById('google_translate_element');
+    let googleLoaded = false;
+
+    toggleBtn.addEventListener('click', () => {
+      if (!googleLoaded) {
+        const script = document.createElement('script');
+        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        document.body.appendChild(script);
+        googleLoaded = true;
+      }
+      translateEl.style.display = translateEl.style.display === 'none' || !translateEl.style.display
+        ? 'block'
+        : 'none';
+    });
+
+    window.googleTranslateElementInit = () => {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,es,fr,de,it,ja,zh,ru,pt,ar,hi,bn,ko,vi,th,tr,nl,pl,sv,fi,el,cs,hu', // Updated with 3 more languages
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    };
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdBlock Detector - Multi Tab</title>
+  <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #121212;
+        color: white;
+        margin: 0;
+        padding: 0;
+      }
+  
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+  
+      .modal-content {
+        background: linear-gradient(45deg, #1a1a1a 0%, #0a0a0a 100%);
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 700px;
+        box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
+        position: relative;
+        border: 3px solid darkred;
+        overflow: hidden;
+      }
+  
+      .modal-content::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, 
+          transparent 48%,
+          rgba(139, 0, 0, 0.1) 50%,
+          transparent 52%
+        );
+        animation: hologram 2.5s infinite linear;
+        pointer-events: none;
+      }
+  
+      .modal-header {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #fff;
+        text-shadow: 0 0 15px darkred;
+        letter-spacing: 2px;
+      }
+  
+      .adblock-warning {
+        color: #ff6b6b;
+        font-size: 18px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #2e0b0b 0%, #1a0000 100%);
+        padding: 10px;
+        border-radius: 5px;
+        border: 2px solid darkred;
+        margin-top: 20px;
+        text-shadow: 0 0 10px darkred;
+        box-shadow: 0 0 15px rgba(139, 0, 0, 0.3);
+      }
+  
+      .iframe-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+  
+      .iframe-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        height: 250px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: transparent;
+        box-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid darkred;
+      }
+  
+      .iframe-container::before {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border: 2px solid rgba(139, 0, 0, 0.3);
+        border-radius: 12px;
+        z-index: -1;
+      }
+  
+      .iframe-container:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 0 25px rgba(139, 0, 0, 0.6);
+      }
+  
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+      }
+  
+      .glass-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(139, 0, 0, 0.1) 0%, rgba(0,0,0,0.3) 100%);
+        backdrop-filter: blur(12px) brightness(1.2);
+        opacity: 1;
+        pointer-events: none;
+      }
+  
+      .glass-overlay::before {
+        content: "⚠️SYSTEM ALERT";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+        font-family: 'Courier New', monospace;
+        color: #fff;
+        text-shadow: 0 0 10px darkred;
+        letter-spacing: 2px;
+        opacity: 0.9;
+      }
+  
+      .hidden {
+        display: none !important;
+      }
+  
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 99999;
+      }
+  
+      .close-btn img {
+        width: 32px;
+        height: 32px;
+        filter: invert(0.8) sepia(1) hue-rotate(-20deg) saturate(5);
+        transition: all 0.2s ease;
+      }
+  
+      .close-btn img:hover {
+        filter: invert(1) sepia(1) hue-rotate(0deg) saturate(10);
+        transform: scale(1.1) rotate(90deg);
+      }
+  
+      @keyframes hologram {
+        0% { transform: translate(-25%, -25%) rotate(45deg); opacity: 0.3; }
+        50% { opacity: 0.6; }
+        100% { transform: translate(25%, 25%) rotate(45deg); opacity: 0.3; }
+      }
+  
+      @keyframes scanline {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+      }
+  
+      .iframe-container::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(0deg, 
+          transparent 48%,
+          rgba(139, 0, 0, 0.1) 50%,
+          transparent 52%
+        );
+        animation: hologram 1.5s infinite linear;
+        pointer-events: none;
+      }
+  </style>
+</head>
+<body>
+
+  <div id="adblock-modal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">
+        <img src="https://cdn-icons-png.flaticon.com/512/359/359778.png" alt="Close" />
+      </button>
+      <div class="modal-header">Advertisements</div>
+      <div class="adblock-warning" id="adblock-warning" style="display: none;">
+        ⚠️ AdBlock Detected! Please disable it!
+      </div>
+      <div class="iframe-wrapper hidden" id="iframe-wrapper">
+        <!-- Iframes will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const adLink = "https://www.effectiveratecpm.com/kwt9e48a?key=e1a642698e24eaf1688285a0b751b9bc";
+
+    function detectAdBlock(callback) {
+      let isBlocked = false;
+      let checkDone = 0;
+
+      // Check 1: adsbox element
+      let testAd = document.createElement("div");
+      testAd.innerHTML = "&nbsp;";
+      testAd.className = "adsbox";
+      testAd.style.display = "block";
+      testAd.style.position = "absolute";
+      testAd.style.left = "-9999px";
+      document.body.appendChild(testAd);
+
+      setTimeout(function () {
+        if (testAd.offsetHeight === 0 || testAd.offsetParent === null) {
+          isBlocked = true;
+        }
+        testAd.remove();
+        done();
+      }, 100);
+
+      // Check 2: block adsbygoogle script
+      let script = document.createElement("script");
+      script.type = "text/javascript";
+      script.onerror = function () {
+        isBlocked = true;
+        done();
+      };
+      script.onload = function () {
+        done();
+      };
+      script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+      document.body.appendChild(script);
+
+      function done() {
+        checkDone++;
+        if (checkDone === 2) {
+          callback(isBlocked);
+        }
+      }
+    }
+
+    function loadIframes() {
+      const iframeWrapper = document.getElementById("iframe-wrapper");
+      iframeWrapper.innerHTML = "";
+      for (let i = 0; i < 2; i++) {
+        let container = document.createElement("div");
+        container.className = "iframe-container";
+
+        let overlay = document.createElement("div");
+        overlay.className = "glass-overlay";
+
+        let iframe = document.createElement("iframe");
+        iframe.src = adLink;
+        iframe.loading = "lazy";
+
+        container.appendChild(overlay);
+        container.appendChild(iframe);
+        iframeWrapper.appendChild(container);
+      }
+    }
+
+    function checkAndLoad() {
+      detectAdBlock(function (isBlocked) {
+        const warning = document.getElementById("adblock-warning");
+        const iframeWrapper = document.getElementById("iframe-wrapper");
+
+        if (isBlocked) {
+          warning.style.display = "block";
+          iframeWrapper.classList.add("hidden");
+        } else {
+          warning.style.display = "none";
+          iframeWrapper.classList.remove("hidden");
+          loadIframes();
+        }
+      });
+    }
+
+    function openModal() {
+      document.getElementById("adblock-modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("adblock-modal").style.display = "none";
+      setTimeout(() => {
+        checkAndLoad();
+        openModal();
+      }, 120000); // recheck every 60s
+    }
+
+    function openNewWindow() {
+        window.open(adLink, "_blank", "noopener,noreferrer,width=800,height=600");
+    }
+
+    window.onload = function() {
+        checkAndLoad();
+        openModal();
+
+        // First ad will open after 30 seconds
+        setTimeout(function() {
+            openNewWindow(); // Open the first ad after 30 seconds
+        }, 10000);
+
+        // New ad will open every 60 seconds
+        setInterval(openNewWindow, 180000); // Open the second ad every 60 seconds
+    };
+  </script>
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-QCJKG8NXX0');
+  </script>
+</body>
+</html>
