@@ -592,10 +592,19 @@
   </style>
 </head>
 <body>
-    <!-- Theme Switcher -->
-  <div class="theme-switcher">
-    <button class="chat-toggle" id="chatToggle">💬</button>
+  <button class="chat-toggle" id="chatToggle">💬</button>
+  <!-- Chat Bubble -->
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-header">Chatbot</div>
+    <div class="chat-body" id="messages">
+      <p class="message bot">Hello! How can I help you? I can answer questions that start with "what" or "who".</p>
+    </div>
+    <div class="chat-footer">
+      <input type="text" id="userInput" placeholder="Type here..." onkeypress="handleKeyPress(event)">
+      <button onclick="sendMessage()">Send</button>
+    </div>
   </div>
+  
   <button class="language-toggle" id="langToggleBtn">🌐</button>
   <div id="google_translate_element"></div>
   <!-- Navigation -->
