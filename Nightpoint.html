@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nightpoint</title>
+  <link rel="icon" href="https://img.poki-cdn.com/cdn-cgi/image/quality=78,width=314,height=314,fit=cover,f=auto/ef026214-7374-450a-98dd-a60f74de4617.png" type="image/x-icon">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(-45deg, #000, #333, #000, #111);
+      background-size: 400% 400%;
+      animation: gradientBG 6s infinite alternate;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    .loader-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+    }
+
+    .ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 5px solid transparent;
+      animation: rotate 2s linear infinite;
+    }
+
+    .ring:nth-child(1) {
+      border-top: 3px solid white;
+      border-bottom: 3px solid white;
+      animation-duration: 1.5s;
+    }
+
+    .ring:nth-child(2) {
+      border-left: 3px solid gray;
+      border-right: 3px solid gray;
+      animation-duration: 2s;
+    }
+
+    .crosshair {
+      position: absolute;
+      background-color: white;
+    }
+
+    .horizontal {
+      width: 130px;
+      height: 2px;
+      top: 50%;
+      left: 10px;
+    }
+
+    .vertical {
+      width: 2px;
+      height: 130px;
+      left: 50%;
+      top: 10px;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .loader-text {
+      margin-top: 20px;
+      font-size: 20px;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .iframe-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    iframe.fullscreen {
+      width: 100%;
+      height: 100%;
+      border: none;
+      transition: opacity 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="loader-container">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="crosshair horizontal"></div>
+    <div class="crosshair vertical"></div>
+    <img src="https://img.poki-cdn.com/cdn-cgi/image/quality=78,width=314,height=314,fit=cover,f=auto/ef026214-7374-450a-98dd-a60f74de4617.png" alt="Logo" class="logo">
+  </div>
+
+  <div class="loader-text">Nightpoint</div>
+  <div class="loader-text">If You Use phone</div>
+  <div class="loader-text">!!rotate it!!</div>
+
+  <!-- Fullscreen iframe (Game) -->
+  <div class="iframe-container" id="iframe-container">
+    <iframe id="fullscreen-iframe" class="fullscreen" src="about:blank" loading="lazy" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    function startGame() {
+      document.querySelector(".loader-container").style.display = "none";
+      const iframe = document.getElementById("fullscreen-iframe");
+      iframe.src = "https://nightpoint.io/";
+    }
+
+    setTimeout(startGame, 5000);
+
+    // Forward mouse events into the iframe
+    ['mousedown', 'mouseup'].forEach(eventType => {
+      document.addEventListener(eventType, event => {
+        const iframe = document.getElementById("fullscreen-iframe");
+        if (iframe.contentWindow) {
+          iframe.contentWindow.dispatchEvent(new MouseEvent(eventType, {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            clientX: event.clientX,
+            clientY: event.clientY,
+            button: event.button
+          }));
+        }
+      });
+    });
+
+    // FPS optimization placeholder
+    function optimizeRendering() {
+      requestAnimationFrame(optimizeRendering);
+    }
+    optimizeRendering();
+  </script>
+
+</body>
+</html>
