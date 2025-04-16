@@ -1210,116 +1210,136 @@
     </div>
   </div>
 
-  <script>
+<script>
     const adLink = "https://www.effectiveratecpm.com/kwt9e48a?key=e1a642698e24eaf1688285a0b751b9bc";
+    let adTimer; // Variable to store the timer for re-showing ads after 5 minutes
 
+    // Anti-AdBlock Detection Function
     function detectAdBlock(callback) {
-      let isBlocked = false;
-      let checkDone = 0;
+        let isBlocked = false;
+        let checkDone = 0;
 
-      // Check 1: adsbox element
-      let testAd = document.createElement("div");
-      testAd.innerHTML = "&nbsp;";
-      testAd.className = "adsbox";
-      testAd.style.display = "block";
-      testAd.style.position = "absolute";
-      testAd.style.left = "-9999px";
-      document.body.appendChild(testAd);
+        // Check 1: adsbox element
+        let testAd = document.createElement("div");
+        testAd.innerHTML = "&nbsp;";
+        testAd.className = "adsbox";
+        testAd.style.display = "block";
+        testAd.style.position = "absolute";
+        testAd.style.left = "-9999px";
+        document.body.appendChild(testAd);
 
-      setTimeout(function () {
-        if (testAd.offsetHeight === 0 || testAd.offsetParent === null) {
-          isBlocked = true;
+        setTimeout(function () {
+            if (testAd.offsetHeight === 0 || testAd.offsetParent === null) {
+                isBlocked = true;
+            }
+            testAd.remove();
+            done();
+        }, 100);
+
+        // Check 2: block adsbygoogle script
+        let script = document.createElement("script");
+        script.type = "text/javascript";
+        script.onerror = function () {
+            isBlocked = true;
+            done();
+        };
+        script.onload = function () {
+            done();
+        };
+        script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+        document.body.appendChild(script);
+
+        function done() {
+            checkDone++;
+            if (checkDone === 2) {
+                callback(isBlocked);
+            }
         }
-        testAd.remove();
-        done();
-      }, 100);
-
-      // Check 2: block adsbygoogle script
-      let script = document.createElement("script");
-      script.type = "text/javascript";
-      script.onerror = function () {
-        isBlocked = true;
-        done();
-      };
-      script.onload = function () {
-        done();
-      };
-      script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
-      document.body.appendChild(script);
-
-      function done() {
-        checkDone++;
-        if (checkDone === 2) {
-          callback(isBlocked);
-        }
-      }
     }
 
+    // Load iframes into the modal
     function loadIframes() {
-      const iframeWrapper = document.getElementById("iframe-wrapper");
-      iframeWrapper.innerHTML = "";
-      for (let i = 0; i < 2; i++) {
-        let container = document.createElement("div");
-        container.className = "iframe-container";
-
-        let overlay = document.createElement("div");
-        overlay.className = "glass-overlay";
-
-        let iframe = document.createElement("iframe");
-        iframe.src = adLink;
-        iframe.loading = "lazy";
-
-        container.appendChild(overlay);
-        container.appendChild(iframe);
-        iframeWrapper.appendChild(container);
-      }
-    }
-
-    function checkAndLoad() {
-      detectAdBlock(function (isBlocked) {
-        const warning = document.getElementById("adblock-warning");
         const iframeWrapper = document.getElementById("iframe-wrapper");
+        iframeWrapper.innerHTML = ""; // Clear any previous content
+        for (let i = 0; i < 2; i++) {
+            let container = document.createElement("div");
+            container.className = "iframe-container";
 
-        if (isBlocked) {
-          warning.style.display = "block";
-          iframeWrapper.classList.add("hidden");
-        } else {
-          warning.style.display = "none";
-          iframeWrapper.classList.remove("hidden");
-          loadIframes();
+            let overlay = document.createElement("div");
+            overlay.className = "glass-overlay";
+
+            let iframe = document.createElement("iframe");
+            iframe.src = adLink;
+            iframe.loading = "lazy";
+
+            container.appendChild(overlay);
+            container.appendChild(iframe);
+            iframeWrapper.appendChild(container);
         }
-      });
     }
 
+    // Function to check AdBlock status and load iframes
+    function checkAndLoad() {
+        detectAdBlock(function (isBlocked) {
+            const warning = document.getElementById("adblock-warning");
+            const iframeWrapper = document.getElementById("iframe-wrapper");
+
+            if (isBlocked) {
+                warning.style.display = "block";
+                iframeWrapper.classList.add("hidden");
+            } else {
+                warning.style.display = "none";
+                iframeWrapper.classList.remove("hidden");
+                loadIframes();
+            }
+        });
+    }
+
+    // Function to open the modal
     function openModal() {
-      document.getElementById("adblock-modal").style.display = "flex";
+        document.getElementById("adblock-modal").style.display = "flex";
     }
 
+    // Function to close the modal and reset timer for re-opening after 5 minutes
     function closeModal() {
-      document.getElementById("adblock-modal").style.display = "none";
-      setTimeout(() => {
-        checkAndLoad();
-        openModal();
-      }, 120000); // recheck every 60s
+        document.getElementById("adblock-modal").style.display = "none";
+        adTimer = setTimeout(() => {
+            checkAndLoad();
+            openModal(); // Reopen the modal after 5 minutes
+        }, 300000); // 300000 ms = 5 minutes
     }
 
+    // Function to open a new tab ad (only on desktop)
     function openNewWindow() {
-        window.open(adLink, "_blank", "noopener,noreferrer,width=800,height=600");
+        if (window.innerWidth >= 1024) { // Check for desktop (1024px width and above)
+            window.open(adLink, "_blank", "noopener,noreferrer,width=800,height=600");
+        }
     }
 
-    window.onload = function() {
-        checkAndLoad();
-        openModal();
+    // Check screen size and prevent new tab ads on mobile/tablets
+    function shouldOpenInNewTab() {
+        return window.innerWidth >= 1024; // Desktop only
+    }
 
-        // First ad will open after 30 seconds
-        setTimeout(function() {
-            openNewWindow(); // Open the first ad after 30 seconds
-        }, 10000);
+    window.onload = function () {
+        checkAndLoad(); // Check AdBlock and load content
+        openModal(); // Open the modal initially
 
-        // New ad will open every 60 seconds
-        setInterval(openNewWindow, 180000); // Open the second ad every 60 seconds
+        // First ad will open after 10 seconds
+        setTimeout(function () {
+            if (shouldOpenInNewTab()) {
+                openNewWindow(); // Open first ad in a new tab after 10 seconds on desktop
+            }
+        }, 10000); // 10 seconds after page load
+
+        // New ad will open every 3 minutes (only on desktop)
+        setInterval(function () {
+            if (shouldOpenInNewTab()) {
+                openNewWindow(); // Open a new ad in a new tab every 3 minutes (only on desktop)
+            }
+        }, 180000); // 180000 ms = 3 minutes
     };
-  </script>
+</script>
     <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
   <script>
