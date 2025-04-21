@@ -1,364 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" type="image/png" href="https://assets.onecompiler.app/438cc35sk/43etbxnkm/th-removebg-preview%20(2)%20(2).png">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-  <title>Login / SignUp</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-image: url("https://cdn.myportfolio.com/03fb13c64084a4ecb1180901ecedad0d/8adac8f8-473c-444c-af16-fa398a6cf39d_rw_600.gif?h=2914222a7c48be52a47ed5fdca2cbd93");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .auth-container {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 20px;
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      transition: transform 0.3s ease-in-out;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoDot</title>
+    <meta name="google-adsense-account" content="ca-pub-9289713479529007">
+    <link rel="icon" type="image/png" href="https://assets.onecompiler.app/438cc35sk/43ekedjqg/Screenshot_2025-04-12_175711-Photoroom-fotor-20250412183519-removebg-preview.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
-    .auth-container:hover {
-      transform: translateY(-10px);
-    }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background: radial-gradient(circle at center, 
+                #0a1a2a 0%, 
+                #07162a 30%, 
+                #051225 70%);
+            color: #e0f2ff;
+        }
 
-    .auth-container h2 {
-      font-size: 32px;
-      font-weight: 600;
-      margin-bottom: 30px;
-      letter-spacing: 1px;
-    }
+        /* Futuristic grid overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            background: 
+                linear-gradient(90deg, 
+                    rgba(64, 164, 255, 0.05) 1px, 
+                    transparent 1px),
+                linear-gradient(rgba(64, 164, 255, 0.05) 1px, 
+                    transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 60s linear infinite;
+            mix-blend-mode: overlay;
+            z-index: 0;
+        }
 
-    .auth-container input {
-      width: 100%;
-      padding: 14px;
-      margin: 15px 0;
-      background: transparent;
-      border: 2px solid #fff;
-      border-radius: 25px;
-      color: white;
-      font-size: 16px;
-      transition: border-color 0.3s;
-      outline: none;
-    }
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
 
-    .auth-container input:focus {
-      border-color: #2575fc;
-    }
+        /* Holographic particles */
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, 
+                rgba(100, 220, 255, 0.3) 0%, 
+                transparent 70%);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: particleFloat linear infinite;
+            z-index: 1;
+        }
 
-    .auth-container button {
-      width: 100%;
-      padding: 14px;
-      background: #2575fc;
-      border: none;
-      border-radius: 25px;
-      font-size: 16px;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-      margin-top: 20px;
-    }
+        @keyframes particleFloat {
+            to {
+                transform: translate(
+                    calc(var(--x) * 100vw),
+                    calc(var(--y) * 100vh)
+                );
+                opacity: 0;
+            }
+        }
 
-    .auth-container button:hover {
-      background: #1a5db8;
-    }
+        /* Quantum loader */
+        .loader-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            z-index: 10;
+            perspective: 1000px;
+        }
 
-    .auth-container .toggle-link {
-      display: block;
-      margin-top: 15px;
-      font-size: 14px;
-      color: #fff;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
+        .quantum-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            animation: quantumSpin 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            box-shadow: 0 0 15px rgba(64, 164, 255, 0.5);
+        }
 
-    .auth-container .toggle-link:hover {
-      color: #2575fc;
-    }
-    .password-wrapper { position: relative; }
-    .toggle-password {
-      position: absolute;
-      top: 50%;
-      right: 20px;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 18px;
-      color: #fff;
-    }
-    .auth-container input:focus {
-      border-color: #00cfff;
-      outline: none;
-    }
-    .auth-container button {
-      width: 100%;
-      padding: 12px;
-      background: #00cfff;
-      border: none;
-      border-radius: 25px;
-      font-size: 16px;
-      color: white;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .auth-container button:hover {
-      background: #00a4cc;
-    }
-    .info-section {
-      margin-top: 30px;
-      text-align: left;
-    }
-    .info-section h3 {
-      font-size: 18px;
-      color: #0ff;
-      margin-bottom: 10px;
-    }
-    .info-section code {
-      display: block;
-      background: black;
-      padding: 10px 15px;
-      border-radius: 12px;
-      margin: 6px 0;
-      font-size: 15px;
-      font-family: 'Fira Code', 'Courier New', monospace;
-      word-break: break-word;
-      color: #fff;
-      border: 3.5px solid darkblue; /* modern red accent */
-      background-blend-mode: overlay;
-      box-shadow: 0 2px 6px rgba(255, 76, 76, 0.3);
-      transition: background 0.3s, transform 0.3s;
-    }
+        .quantum-ring:nth-child(1) {
+            border-top: 2px solid #40a4ff;
+            border-bottom: 2px solid #40a4ff;
+            animation-delay: 0.1s;
+        }
 
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #2575fc;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-      display: none;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .success-message {
-      font-size: 16px;
-      color: #28a745;
-      margin-top: 20px;
-      display: none;
-    }
-    @media (max-width: 480px) {
-      .auth-container { padding: 20px; }
-      .auth-container h2 { font-size: 24px; }
-    }
-    /* FULLSCREEN LOADER STYLES */
-    .fullscreen-loader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-image: url("https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8d2hpdGUlMjBuYXR1cmV8ZW58MHx8MHx8fDA%3D");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-      z-index: 9999;
-      display: none;
-    }
+        .quantum-ring:nth-child(2) {
+            border-left: 2px solid #88d3ff;
+            border-right: 2px solid #88d3ff;
+            animation-delay: 0.2s;
+        }
 
-    .glow-loader {
-      width: 80px;
-      height: 80px;
-      border: 6px solid rgba(255, 255, 255, 0.2);
-      border-top: 6px solid darkblue ;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      box-shadow: 0 0 20px #fff;
-    }
+        .quantum-ring:nth-child(3) {
+            border-top: 2px solid #00c8ff;
+            border-bottom: 2px solid #00c8ff;
+            animation-delay: 0.3s;
+            transform: rotateX(60deg);
+        }
 
-    .fullscreen-loader span {
-      margin-top: 20px;
-      color: black;
-      font-size: 1.2rem;
-      animation: fadeIn 1.5s ease-in-out infinite alternate;
-    }
+        @keyframes quantumSpin {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            50% { transform: rotateY(180deg) rotateX(180deg); }
+            100% { transform: rotateY(360deg) rotateX(360deg); }
+        }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+        /* Neural connection lines */
+        .neural-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0.5; }
-      to { opacity: 1; }
-    }
-  </style>
+        .neural-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #40a4ff, transparent);
+            height: 1px;
+            width: 100%;
+            top: 50%;
+            opacity: 0.5;
+            animation: neuralPulse 2s infinite;
+        }
+
+        @keyframes neuralPulse {
+            0%, 100% { opacity: 0.2; transform: scaleX(0.5); }
+            50% { opacity: 0.8; transform: scaleX(1); }
+        }
+
+        /* Holographic logo */
+        .logo {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+            filter: 
+                drop-shadow(0 0 10px rgba(64, 164, 255, 0.7))
+                drop-shadow(0 0 20px rgba(100, 220, 255, 0.5));
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-15px); }
+        }
+
+        /* Futuristic text */
+        .loader-text {
+            margin-top: 40px;
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 10;
+            position: relative;
+            color: transparent;
+            background: linear-gradient(90deg, #e0f2ff, #88d3ff, #e0f2ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: textShine 3s linear infinite;
+            text-shadow: 0 0 10px rgba(100, 220, 255, 0.3);
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Status indicator */
+        .status {
+            position: absolute;
+            bottom: 30px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #88d3ff;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+        }
+
+        .status::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00c8ff;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #00c8ff;
+            animation: statusPulse 1.5s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        /* Binary rain effect */
+        .binary-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .binary-column {
+            position: absolute;
+            top: -100%;
+            width: 1em;
+            color: rgba(100, 220, 255, 0.3);
+            font-family: monospace;
+            font-size: 16px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            animation: binaryFall linear infinite;
+        }
+
+        @keyframes binaryFall {
+            to { top: 100%; }
+        }
+
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+    </style>
 </head>
 <body>
-  <div class="auth-container">
-    <h2>Sign Up</h2>
-    <form id="auth-form">
-      <div id="credentials">
-        <input type="email" id="email" placeholder="Email" required />
-        <div class="password-wrapper">
-          <input type="password" id="password" placeholder="Password" required />
-          <span class="toggle-password" id="toggle-password">🔒️</span>
+    <div class="binary-rain" id="binaryRain"></div>
+    
+    <div class="loader-container">
+        <div class="quantum-ring"></div>
+        <div class="quantum-ring"></div>
+        <div class="quantum-ring"></div>
+        <div class="neural-lines">
+            <div class="neural-line" style="top: 30%; animation-delay: 0.1s;"></div>
+            <div class="neural-line" style="top: 70%; animation-delay: 0.3s;"></div>
         </div>
-        <button type="submit">Sign up</button>
-      </div>
+        <img src="https://assets.onecompiler.app/438cc35sk/43ekedjqg/Screenshot_2025-04-12_175711-Photoroom-fotor-20250412183519-removebg-preview.png" alt="Logo" class="logo">
+    </div>
 
-      <div class="loader" id="loader"></div>
+    <div class="loader-text">Napsen</div>
+    <div class="status">SYSTEM INITIALIZATION</div>
 
-      <div class="info-section" id="userinfo-container" style="display: none;">
-        <h3>Your Info</h3>
-        <div id="info">Loading...</div>
-        <div id="current-time" style="margin-top: 10px; text-align: center;"></div>
-        <button type="button" id="confirm-btn" style="margin-top: 20px;">Continue</button>
-      </div>
-    </form>
-  </div>
-  <!-- FULLSCREEN LOADER -->
-  <div class="fullscreen-loader" id="fullscreen-loader">
-    <div class="glow-loader"></div>
-    <span>Launching your experience...</span>
-  </div>
-  <script>
-    // 🔁 Redirect immediately if user already signed in
-    if (localStorage.getItem('userLoggedIn') === 'true') {
-      window.location.replace('https://nepsen.github.io/cloudgaminghub/cgh.html');
-    }
-  
-    const authForm = document.getElementById('auth-form');
-    const credentials = document.getElementById('credentials');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const togglePassword = document.getElementById('toggle-password');
-    const loader = document.getElementById('loader');
-    const userInfoContainer = document.getElementById('userinfo-container');
-    const confirmBtn = document.getElementById('confirm-btn');
-    const fullscreenLoader = document.getElementById('fullscreen-loader');
-  
-    togglePassword.addEventListener('click', () => {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      togglePassword.textContent = type === 'password' ? '🔒️' : '🔓';
-    });
-  
-    authForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      credentials.style.display = 'none';
-      loader.style.display = 'block';
-  
-      localStorage.setItem('tempEmail', emailInput.value);
-      localStorage.setItem('tempPassword', passwordInput.value);
-  
-      // Extract name and store in localStorage
-      const name = extractNameFromEmail(emailInput.value);
-      localStorage.setItem('userName', name);
-  
-      setTimeout(() => {
-        loader.style.display = 'none';
-        userInfoContainer.style.display = 'block';
-        loadUserInfo();
-      }, 3000);
-    });
-  
-    confirmBtn.addEventListener('click', () => {
-      fullscreenLoader.style.display = 'flex';
-  
-      localStorage.setItem('userEmail', localStorage.getItem('tempEmail'));
-      localStorage.setItem('userPassword', localStorage.getItem('tempPassword'));
-      localStorage.setItem('userLoggedIn', 'true');
-  
-      setTimeout(() => {
-        window.location.href = 'https://nepsen.github.io/cloudgaminghub/cgh.html';
-      }, 3000);
-    });
-  
-    // Function to extract name from email (removes numbers and @ domain part)
-    function extractNameFromEmail(email) {
-      const atIndex = email.indexOf('@');
-      if (atIndex === -1) return 'Unknown';  // Return 'Unknown' if '@' is not found
-  
-      const namePart = email.substring(0, atIndex);  // Get part before '@'
-      const cleanedName = namePart.replace(/[0-9]/g, '');  // Remove numbers from the name part
-  
-      // Capitalize the first letter of the name
-      const capitalizedName = cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1).toLowerCase();
-      
-      return capitalizedName || 'User';  // Return 'User' if name is empty
-    }
-  
-    async function loadUserInfo() {
-      const email = localStorage.getItem('tempEmail');  // Get email from localStorage
-      const name = localStorage.getItem('userName');  // Get name from localStorage
-      
-      const info = {
-        Name: name,  // Use the name stored in localStorage
-        Email: email,
-        UserAgent: navigator.userAgent,
-        Platform: navigator.platform,
-        Language: navigator.language,
-        Screen: `${screen.width}x${screen.height}`,
-        Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        Referrer: document.referrer || "None"
-      };
-  
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-        info.IP = data.ip;
-        info.City = data.city;
-        info.Region = data.region;
-        info.Country = data.country_name;
-        info.Street = `${data.city}, ${data.region}`;
-        info.Organization = data.org;
-      } catch {
-        info.IP = "Could not fetch IP info.";
-      }
-  
-      document.getElementById("info").innerHTML = Object.entries(info).map(
-        ([k, v]) => `<code><strong>${k}:</strong> ${v}</code>`
-      ).join('<br>');
-  
-      const timeDiv = document.getElementById("current-time");
-      function updateTime() {
-        timeDiv.textContent = "Current Time: " + new Date().toLocaleTimeString();
-      }
-      updateTime();
-      setInterval(updateTime, 100);
-    }
-  
-    // Auto-login
-    if (localStorage.getItem('userLoggedIn') === 'true') {
-      window.location.href = 'https://nepsen.github.io/cloudgaminghub/cgh.html';
-    }
-  </script>
+    <script>
+        // Create futuristic particles
+        function createParticles() {
+            const particleCount = 20;
+            for(let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    --x: ${Math.random() * 2 - 1};
+                    --y: ${Math.random() * 2 - 1};
+                    width: ${Math.random() * 100 + 50}px;
+                    height: ${Math.random() * 100 + 50}px;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation-duration: ${15 + Math.random() * 30}s;
+                    animation-delay: ${Math.random() * 5}s;
+                    opacity: ${Math.random() * 0.2 + 0.1};
+                `;
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Create binary rain effect
+        function createBinaryRain() {
+            const binaryRain = document.getElementById('binaryRain');
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for(let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'binary-column';
+                column.style.left = `${(i * 20) + (Math.random() * 10)}px`;
+                column.style.animationDuration = `${5 + Math.random() * 10}s`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // Generate random binary (with some 1s and 0s)
+                let binaryText = '';
+                const length = 20 + Math.floor(Math.random() * 10);
+                for(let j = 0; j < length; j++) {
+                    binaryText += Math.random() > 0.7 ? '1' : '0';
+                }
+                
+                column.textContent = binaryText;
+                binaryRain.appendChild(column);
+            }
+        }
+
+        // System initialization sequence
+        function updateStatus(text) {
+            document.querySelector('.status').textContent = text;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            createBinaryRain();
+            
+            // Simulate system boot sequence
+            setTimeout(() => updateStatus("LOADING QUANTUM CORE..."), 500);
+            setTimeout(() => updateStatus("CONNECTING NEURAL NET..."), 1500);
+            setTimeout(() => updateStatus("SYNCING DATA STREAMS..."), 2500);
+            setTimeout(() => updateStatus("OPTIMIZING MATRIX..."), 3500);
+            setTimeout(() => updateStatus("SYSTEM READY"), 4500);
+            
+            setTimeout(() => {
+                document.querySelector(".loader-container").classList.add("fade-out");
+                document.querySelector(".loader-text").classList.add("fade-out");
+                document.querySelector(".status").classList.add("fade-out");
+                setTimeout(() => {
+                    window.location.href = "https://nepsen.github.io/NeoDot/login.html";
+                }, 1000);
+            }, 6500);
+        });
+    </script>
     <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'G-QCJKG8NXX0');
-  </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QCJKG8NXX0');
+    </script>
 </body>
 </html>
