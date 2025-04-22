@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brutal.io</title>
+    <title>Minecraft</title>
     <link rel="icon" href="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" type="image/png">
     <style>
         * {
@@ -27,7 +27,6 @@
                 #051225 70%);
             color: #e0f2ff;
         }
-
 
         /* Futuristic grid overlay */
         body::before {
@@ -493,6 +492,9 @@
         iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
 
         iframe.onload = function () {
+            // Focus the iframe when it loads
+            iframe.contentWindow.focus();
+            
             iframe.contentWindow.document.addEventListener("click", function () {
                 if (iframe.contentWindow.document.pointerLockElement === null) {
                     iframe.contentWindow.document.body.requestPointerLock();
@@ -547,6 +549,32 @@
         document.querySelector('.status').textContent = text;
     }
 
+    // Forward keyboard events to the iframe
+    function forwardKeyboardEvent(event) {
+        const iframe = document.getElementById("fullscreen-iframe");
+        if (iframe.contentWindow) {
+            // Create a new event to dispatch to the iframe
+            const newEvent = new KeyboardEvent(event.type, {
+                key: event.key,
+                code: event.code,
+                keyCode: event.keyCode,
+                which: event.which,
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            });
+            
+            // Dispatch to both the iframe's window and document
+            iframe.contentWindow.dispatchEvent(newEvent);
+            iframe.contentWindow.document.dispatchEvent(newEvent);
+            
+            // Prevent default only for certain keys to avoid browser shortcuts
+            if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) {
+                event.preventDefault();
+            }
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         createParticles();
         createBinaryRain();
@@ -566,6 +594,7 @@
         }, 5500);
     });
 
+    // Mouse event forwarding
     document.addEventListener("mousedown", function (event) {
         const iframe = document.getElementById("fullscreen-iframe");
         if (iframe.contentWindow) {
@@ -591,6 +620,22 @@
                 clientY: event.clientY,
                 button: event.button
             }));
+        }
+    });
+
+    // Keyboard event forwarding
+    document.addEventListener("keydown", function(event) {
+        forwardKeyboardEvent(event);
+    });
+
+    document.addEventListener("keyup", function(event) {
+        forwardKeyboardEvent(event);
+    });
+
+    // Prevent default for space bar to avoid page scrolling
+    document.addEventListener('keydown', function(e) {
+        if(e.code === 'Space' && e.target === document.body) {
+            e.preventDefault();
         }
     });
 </script>
