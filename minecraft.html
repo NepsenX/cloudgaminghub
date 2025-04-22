@@ -1,196 +1,606 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Minecraft</title>
-  <link rel="icon" type="image/png" href="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brutal.io</title>
+    <link rel="icon" href="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background: radial-gradient(circle at center, 
+                #0a1a2a 0%, 
+                #07162a 30%, 
+                #051225 70%);
+            color: #e0f2ff;
+        }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(-45deg, #000, #333, #000, #111);
-      background-size: 400% 400%;
-      animation: gradientBG 6s infinite alternate;
-    }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
+        /* Futuristic grid overlay */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            background: 
+                linear-gradient(90deg, 
+                    rgba(64, 164, 255, 0.05) 1px, 
+                    transparent 1px),
+                linear-gradient(rgba(64, 164, 255, 0.05) 1px, 
+                    transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 60s linear infinite;
+            mix-blend-mode: overlay;
+            z-index: 0;
+        }
 
-    .loader-container {
-      position: relative;
-      width: 150px;
-      height: 150px;
-    }
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
 
-    .ring {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 5px solid transparent;
-      animation: rotate 2s linear infinite;
-    }
+        /* Holographic particles */
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, 
+                rgba(100, 220, 255, 0.3) 0%, 
+                transparent 70%);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: particleFloat linear infinite;
+            z-index: 1;
+        }
 
-    .ring:nth-child(1) {
-      border-top: 3px solid white;
-      border-bottom: 3px solid white;
-      animation-duration: 1.5s;
-    }
+        @keyframes particleFloat {
+            to {
+                transform: translate(
+                    calc(var(--x) * 100vw),
+                    calc(var(--y) * 100vh)
+                );
+                opacity: 0;
+            }
+        }
 
-    .ring:nth-child(2) {
-      border-left: 3px solid gray;
-      border-right: 3px solid gray;
-      animation-duration: 2s;
-    }
+        /* Quantum loader */
+        .loader-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            z-index: 10;
+            perspective: 1000px;
+        }
 
-    .crosshair {
-      position: absolute;
-      background-color: white;
-    }
+        .quantum-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            animation: quantumSpin 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            box-shadow: 0 0 15px rgba(64, 164, 255, 0.5);
+        }
 
-    .horizontal {
-      width: 130px;
-      height: 2px;
-      top: 50%;
-      left: 10px;
-    }
+        .quantum-ring:nth-child(1) {
+            border-top: 2px solid #40a4ff;
+            border-bottom: 2px solid #40a4ff;
+            animation-delay: 0.1s;
+        }
 
-    .vertical {
-      width: 2px;
-      height: 130px;
-      left: 50%;
-      top: 10px;
-    }
+        .quantum-ring:nth-child(2) {
+            border-left: 2px solid #88d3ff;
+            border-right: 2px solid #88d3ff;
+            animation-delay: 0.2s;
+        }
 
-    @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+        .quantum-ring:nth-child(3) {
+            border-top: 2px solid #00c8ff;
+            border-bottom: 2px solid #00c8ff;
+            animation-delay: 0.3s;
+            transform: rotateX(60deg);
+        }
 
-    .logo {
-      width: 80px;
-      height: 80px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      z-index: 2;
-    }
+        @keyframes quantumSpin {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            50% { transform: rotateY(180deg) rotateX(180deg); }
+            100% { transform: rotateY(360deg) rotateX(360deg); }
+        }
 
-    .loader-text {
-      margin-top: 20px;
-      font-size: 20px;
-      color: white;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    }
+        /* Neural connection lines */
+        .neural-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
 
-    .iframe-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      display: none;
-    }
+        .neural-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #40a4ff, transparent);
+            height: 1px;
+            width: 100%;
+            top: 50%;
+            opacity: 0.5;
+            animation: neuralPulse 2s infinite;
+        }
 
-    iframe.fullscreen {
-      width: 100%;
-      height: 100%;
-      border: none;
-      transition: opacity 0.5s ease-out;
-    }
-  </style>
+        @keyframes neuralPulse {
+            0%, 100% { opacity: 0.2; transform: scaleX(0.5); }
+            50% { opacity: 0.8; transform: scaleX(1); }
+        }
+
+        /* Holographic logo */
+        .logo {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+            filter: 
+                drop-shadow(0 0 10px rgba(64, 164, 255, 0.7))
+                drop-shadow(0 0 20px rgba(100, 220, 255, 0.5));
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-15px); }
+        }
+
+        /* Futuristic text */
+        .loader-text {
+            margin-top: 40px;
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 10;
+            position: relative;
+            color: transparent;
+            background: linear-gradient(90deg, #e0f2ff, #88d3ff, #e0f2ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: textShine 3s linear infinite;
+            text-shadow: 0 0 10px rgba(100, 220, 255, 0.3);
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Status indicator */
+        .status {
+            position: absolute;
+            bottom: 30px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #88d3ff;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+        }
+
+        .status::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00c8ff;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #00c8ff;
+            animation: statusPulse 1.5s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        /* Binary rain effect */
+        .binary-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .binary-column {
+            position: absolute;
+            top: -100%;
+            width: 1em;
+            color: rgba(100, 220, 255, 0.3);
+            font-family: monospace;
+            font-size: 16px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            animation: binaryFall linear infinite;
+        }
+
+        @keyframes binaryFall {
+            to { top: 100%; }
+        }
+
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        /* Fullscreen iframe */
+        .iframe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        iframe.fullscreen {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* Negative Banner Styles */
+        .negative-banner {
+            position: fixed;
+            top: -60px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: rgba(20, 20, 30, 0.95);
+            border-bottom: 1px solid rgba(64, 164, 255, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            transition: top 0.5s ease-out;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .negative-banner.visible {
+            top: 0;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #88d3ff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: rgba(64, 164, 255, 0.2);
+            color: #e0f2ff;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+        }
+
+        .delay-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delay-label {
+            color: #88d3ff;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .delay-option {
+            background: rgba(64, 164, 255, 0.1);
+            border: 1px solid rgba(64, 164, 255, 0.3);
+            color: #88d3ff;
+            padding: 2px 5px;
+            font-size: 11px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delay-option:hover {
+            background: rgba(64, 164, 255, 0.3);
+            color: #e0f2ff;
+        }
+
+        .delay-option.active {
+            background: rgba(64, 164, 255, 0.5);
+            color: #fff;
+            border-color: rgba(64, 164, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .negative-banner {
+                display: none !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Negative Banner (Desktop Only) -->
+    <div class="negative-banner" id="negativeBanner">
+        <button class="back-button" id="backButton">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <div class="delay-controls">
+            <span class="delay-label">Banner Delay:</span>
+            <span class="delay-option active" data-delay="0">0s</span>
+            <span class="delay-option" data-delay="3">3s</span>
+            <span class="delay-option" data-delay="4">4s</span>
+            <span class="delay-option" data-delay="5">5s</span>
+            <span class="delay-option" data-delay="6">6s</span>
+            <span class="delay-option" data-delay="7">7s</span>
+            <span class="delay-option" data-delay="10">10s</span>
+            <span class="delay-option" data-delay="15">15s</span>
+            <span class="delay-option" data-delay="30">30s</span>
+        </div>
+    </div>
 
-  <div class="loader-container">
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="crosshair horizontal"></div>
-    <div class="crosshair vertical"></div>
-    <img src="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" alt="Logo" class="logo">
-  </div>
+    <div class="binary-rain" id="binaryRain"></div>
+    
+    <div class="loader-container">
+        <div class="quantum-ring"></div>
+        <div class="quantum-ring"></div>
+        <div class="quantum-ring"></div>
+        <div class="neural-lines">
+            <div class="neural-line" style="top: 30%; animation-delay: 0.1s;"></div>
+            <div class="neural-line" style="top: 70%; animation-delay: 0.3s;"></div>
+        </div>
+        <img src="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" alt="Logo" class="logo">
+    </div>
 
-  <div class="loader-text">Minecraft</div>
-  <div class="loader-text">This version may not work on mobile</div>
+    <div class="loader-text">Minecraft</div>
+    <div class="status">SYSTEM INITIALIZATION</div>
 
-  <div class="iframe-container" id="iframe-container">
-    <iframe id="fullscreen-iframe" class="fullscreen" src="about:blank" loading="lazy" allowfullscreen></iframe>
-  </div>
+    <!-- Fullscreen iframe (Game) -->
+    <div class="iframe-container" id="iframe-container">
+        <iframe id="fullscreen-iframe" class="fullscreen" src="about:blank" loading="lazy" frameborder="0" allowfullscreen></iframe>
+    </div>
 
-  <script>
-    function startGame() {
-      document.querySelector(".loader-container").style.display = "none";
-      const iframe = document.getElementById("fullscreen-iframe");
-      const container = document.getElementById("iframe-container");
+<script>
+    // Negative Banner Functionality
+    function setupNegativeBanner() {
+        if (window.innerWidth <= 768) return;
 
-      iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
-      container.style.display = "block";
+        const banner = document.getElementById('negativeBanner');
+        const backButton = document.getElementById('backButton');
+        const delayOptions = document.querySelectorAll('.delay-option');
+        let bannerDelay = 0;
 
-      iframe.onload = function () {
-        iframe.contentWindow.document.addEventListener("click", function () {
-          if (iframe.contentWindow.document.pointerLockElement === null) {
-            iframe.contentWindow.document.body.requestPointerLock();
-          }
+        const savedDelay = localStorage.getItem('bannerDelay');
+        if (savedDelay !== null) {
+            bannerDelay = parseInt(savedDelay) * 1000;
+            delayOptions.forEach(option => {
+                if (parseInt(option.dataset.delay) * 1000 === bannerDelay) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }
+
+        function showBanner() {
+            console.log('Show Banner');
+            banner.style.display = 'flex';
+            setTimeout(() => {
+                banner.classList.add('visible');
+            }, 10);
+        }
+
+        function hideBanner() {
+            console.log('Hide Banner');
+            banner.classList.remove('visible');
+            setTimeout(() => {
+                banner.style.display = 'none';
+            }, 500);
+        }
+
+        let isMouseOnBanner = false;
+
+        function handleMouseMove(e) {
+            const nowAtTop = e.clientY <= 5;
+
+            if (nowAtTop) {
+                if (bannerDelay === 0) {
+                    showBanner();
+                } else {
+                    if (!banner.classList.contains('visible')) {
+                        setTimeout(() => {
+                            if (!banner.classList.contains('visible') && e.clientY <= 5) {
+                                showBanner();
+                            }
+                        }, bannerDelay);
+                    }
+                }
+            } else {
+                if (!isMouseOnBanner) {
+                    hideBanner();
+                }
+            }
+        }
+
+        document.addEventListener('mousemove', handleMouseMove);
+
+        banner.addEventListener('mouseenter', () => {
+            isMouseOnBanner = true;
+            console.log('Mouse entered banner');
         });
-      };
+
+        banner.addEventListener('mouseleave', () => {
+            isMouseOnBanner = false;
+            console.log('Mouse left banner');
+            hideBanner();
+        });
+
+        // ✅ Updated Back Button Functionality
+        backButton.addEventListener('click', () => {
+            window.location.href = 'https://nepsen.github.io/cloudgaminghub/cgh.html';
+        });
+
+        delayOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                delayOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+
+                const newDelay = parseInt(option.dataset.delay);
+                bannerDelay = newDelay * 1000;
+                localStorage.setItem('bannerDelay', newDelay.toString());
+                hideBanner();
+            });
+        });
     }
 
-    setTimeout(startGame, 5000);
-
-    ["mousedown", "mouseup"].forEach((type) => {
-      document.addEventListener(type, function (event) {
+    function startGame() {
+        document.querySelector(".loader-container").style.display = "none";
+        const iframeContainer = document.getElementById("iframe-container");
         const iframe = document.getElementById("fullscreen-iframe");
-        if (iframe.contentWindow) {
-          iframe.contentWindow.dispatchEvent(
-            new MouseEvent(type, {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-              clientX: event.clientX,
-              clientY: event.clientY,
-              button: event.button,
-            })
-          );
+
+        iframeContainer.style.display = "block";
+        iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
+
+        iframe.onload = function () {
+            iframe.contentWindow.document.addEventListener("click", function () {
+                if (iframe.contentWindow.document.pointerLockElement === null) {
+                    iframe.contentWindow.document.body.requestPointerLock();
+                }
+            });
+        };
+    }
+
+    function createParticles() {
+        const particleCount = 20;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.cssText = `
+                --x: ${Math.random() * 2 - 1};
+                --y: ${Math.random() * 2 - 1};
+                width: ${Math.random() * 100 + 50}px;
+                height: ${Math.random() * 100 + 50}px;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                animation-duration: ${15 + Math.random() * 30}s;
+                animation-delay: ${Math.random() * 5}s;
+                opacity: ${Math.random() * 0.2 + 0.1};
+            `;
+            document.body.appendChild(particle);
         }
-      });
+    }
+
+    function createBinaryRain() {
+        const binaryRain = document.getElementById('binaryRain');
+        const columns = Math.floor(window.innerWidth / 20);
+
+        for (let i = 0; i < columns; i++) {
+            const column = document.createElement('div');
+            column.className = 'binary-column';
+            column.style.left = `${(i * 20) + (Math.random() * 10)}px`;
+            column.style.animationDuration = `${5 + Math.random() * 10}s`;
+            column.style.animationDelay = `${Math.random() * 5}s`;
+
+            let binaryText = '';
+            const length = 20 + Math.floor(Math.random() * 10);
+            for (let j = 0; j < length; j++) {
+                binaryText += Math.random() > 0.7 ? '1' : '0';
+            }
+
+            column.textContent = binaryText;
+            binaryRain.appendChild(column);
+        }
+    }
+
+    function updateStatus(text) {
+        document.querySelector('.status').textContent = text;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        createParticles();
+        createBinaryRain();
+        setupNegativeBanner();
+
+        setTimeout(() => updateStatus("LOADING QUANTUM CORE..."), 500);
+        setTimeout(() => updateStatus("CONNECTING NEURAL NET..."), 1500);
+        setTimeout(() => updateStatus("SYNCING DATA STREAMS..."), 2500);
+        setTimeout(() => updateStatus("OPTIMIZING MATRIX..."), 3500);
+        setTimeout(() => updateStatus("SYSTEM READY"), 4500);
+
+        setTimeout(() => {
+            document.querySelector(".loader-container").classList.add("fade-out");
+            document.querySelector(".loader-text").classList.add("fade-out");
+            document.querySelector(".status").classList.add("fade-out");
+            setTimeout(startGame, 1000);
+        }, 5500);
     });
 
-    function optimizeRendering() {
-      requestAnimationFrame(optimizeRendering);
-      // FPS optimization hooks can be added here
-    }
+    document.addEventListener("mousedown", function (event) {
+        const iframe = document.getElementById("fullscreen-iframe");
+        if (iframe.contentWindow) {
+            iframe.contentWindow.dispatchEvent(new MouseEvent("mousedown", {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: event.clientX,
+                clientY: event.clientY,
+                button: event.button
+            }));
+        }
+    });
 
-    optimizeRendering();
-  </script>
-  </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-QCJKG8NXX0');
-  </script>
+    document.addEventListener("mouseup", function (event) {
+        const iframe = document.getElementById("fullscreen-iframe");
+        if (iframe.contentWindow) {
+            iframe.contentWindow.dispatchEvent(new MouseEvent("mouseup", {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: event.clientX,
+                clientY: event.clientY,
+                button: event.button
+            }));
+        }
+    });
+</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QCJKG8NXX0');
+    </script>
 </body>
 </html>
