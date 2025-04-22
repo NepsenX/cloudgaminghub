@@ -392,165 +392,140 @@
     </div>
 
 <script>
-    // Negative Banner Functionality
-    function setupNegativeBanner() {
-        if (window.innerWidth <= 768) return;
+document.addEventListener('DOMContentLoaded', () => {
+    createParticles(10);         // Reduced for performance
+    createBinaryRain(20);        // Reduced for performance
+    setupNegativeBanner();
+    runLoadingSequence();
+});
 
-        const banner = document.getElementById('negativeBanner');
-        const backButton = document.getElementById('backButton');
-        const delayOptions = document.querySelectorAll('.delay-option');
-        let bannerDelay = 0;
+function setupNegativeBanner() {
+    if (window.innerWidth <= 768) return;
 
-        const savedDelay = localStorage.getItem('bannerDelay');
-        if (savedDelay !== null) {
-            bannerDelay = parseInt(savedDelay) * 1000;
-            delayOptions.forEach(option => {
-                if (parseInt(option.dataset.delay) * 1000 === bannerDelay) {
-                    option.classList.add('active');
-                } else {
-                    option.classList.remove('active');
-                }
-            });
+    const banner = document.getElementById('negativeBanner');
+    const backButton = document.getElementById('backButton');
+    const delayOptions = document.querySelectorAll('.delay-option');
+    let bannerDelay = +localStorage.getItem('bannerDelay') * 1000 || 0;
+
+    delayOptions.forEach(opt => {
+        if (+opt.dataset.delay * 1000 === bannerDelay) {
+            opt.classList.add('active');
         }
+    });
 
-        function showBanner() {
-            console.log('Show Banner');
-            banner.style.display = 'flex';
+    document.addEventListener('mousemove', debounce((e) => {
+        if (e.clientY <= 5 && !banner.classList.contains('visible')) {
             setTimeout(() => {
-                banner.classList.add('visible');
-            }, 10);
+                if (e.clientY <= 5) showBanner();
+            }, bannerDelay);
+        } else if (e.clientY > 10 && !banner.matches(':hover')) {
+            hideBanner();
         }
+    }, 200));
 
-        function hideBanner() {
-            console.log('Hide Banner');
-            banner.classList.remove('visible');
-            setTimeout(() => {
-                banner.style.display = 'none';
-            }, 500);
-        }
+    banner.addEventListener('mouseenter', () => banner.classList.add('hovering'));
+    banner.addEventListener('mouseleave', () => {
+        banner.classList.remove('hovering');
+        hideBanner();
+    });
 
-        let isMouseOnBanner = false;
+    backButton.onclick = () => window.location.href = 'https://nepsen.github.io/cloudgaminghub/cgh.html';
 
-        function handleMouseMove(e) {
-            const nowAtTop = e.clientY <= 5;
-
-            if (nowAtTop) {
-                if (bannerDelay === 0) {
-                    showBanner();
-                } else {
-                    if (!banner.classList.contains('visible')) {
-                        setTimeout(() => {
-                            if (!banner.classList.contains('visible') && e.clientY <= 5) {
-                                showBanner();
-                            }
-                        }, bannerDelay);
-                    }
-                }
-            } else {
-                if (!isMouseOnBanner) {
-                    hideBanner();
-                }
-            }
-        }
-
-        document.addEventListener('mousemove', handleMouseMove);
-
-        banner.addEventListener('mouseenter', () => {
-            isMouseOnBanner = true;
-            console.log('Mouse entered banner');
-        });
-
-        banner.addEventListener('mouseleave', () => {
-            isMouseOnBanner = false;
-            console.log('Mouse left banner');
+    delayOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            delayOptions.forEach(o => o.classList.remove('active'));
+            option.classList.add('active');
+            bannerDelay = +option.dataset.delay * 1000;
+            localStorage.setItem('bannerDelay', option.dataset.delay);
             hideBanner();
         });
+    });
 
-        // ✅ Updated Back Button Functionality
-        backButton.addEventListener('click', () => {
-            window.location.href = 'https://nepsen.github.io/cloudgaminghub/cgh.html';
-        });
-
-        delayOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                delayOptions.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-
-                const newDelay = parseInt(option.dataset.delay);
-                bannerDelay = newDelay * 1000;
-                localStorage.setItem('bannerDelay', newDelay.toString());
-                hideBanner();
-            });
-        });
+    function showBanner() {
+        banner.style.display = 'flex';
+        setTimeout(() => banner.classList.add('visible'), 10);
     }
 
-    function startGame() {
-        const loaderContainer = document.getElementById("loaderContainer");
-        const loaderText = document.getElementById("loaderText");
-        const statusText = document.getElementById("statusText");
-        const binaryRain = document.getElementById("binaryRain");
-        const iframeContainer = document.getElementById("iframe-container");
-        const iframe = document.getElementById("fullscreen-iframe");
+    function hideBanner() {
+        banner.classList.remove('visible');
+        setTimeout(() => banner.style.display = 'none', 400);
+    }
 
-        // Hide all loader elements
-        loaderContainer.style.display = "none";
-        loaderText.style.display = "none";
-        statusText.style.display = "none";
-        binaryRain.style.display = "none";
-
-        // Show iframe
-        iframeContainer.style.display = "block";
-        iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
-
-        // Focus management
-        let focusInterval;
-        
-        iframe.onload = function() {
-            // Focus the iframe immediately
-            iframe.contentWindow.focus();
-            
-            // Set up periodic focus check
-            focusInterval = setInterval(() => {
-                if (document.activeElement !== iframe) {
-                    iframe.contentWindow.focus();
-                }
-            }, 1000);
-            
-            // Pointer lock setup
-            iframe.contentWindow.document.addEventListener("click", function() {
-                if (iframe.contentWindow.document.pointerLockElement === null) {
-                    iframe.contentWindow.document.body.requestPointerLock();
-                }
-            });
+    function debounce(fn, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => fn.apply(this, args), delay);
         };
+    }
+}
 
-        // Clean up interval when page unloads
-        window.addEventListener('beforeunload', function() {
-            if (focusInterval) {
-                clearInterval(focusInterval);
+function runLoadingSequence() {
+    const statusText = document.getElementById('statusText');
+    const loaderContainer = document.getElementById("loaderContainer");
+
+    const messages = [
+        "LOADING QUANTUM CORE...",
+        "CONNECTING NEURAL NET...",
+        "SYNCING DATA STREAMS...",
+        "OPTIMIZING MATRIX...",
+        "SYSTEM READY"
+    ];
+
+    messages.forEach((msg, index) => {
+        setTimeout(() => updateStatus(msg), index * 1000);
+    });
+
+    setTimeout(() => {
+        loaderContainer.classList.add("fade-out");
+        document.getElementById("loaderText").classList.add("fade-out");
+        statusText.classList.add("fade-out");
+        setTimeout(startGame, 800);
+    }, 5000);
+}
+
+function updateStatus(text) {
+    document.getElementById('statusText').textContent = text;
+}
+
+function startGame() {
+    const iframe = document.getElementById("fullscreen-iframe");
+    document.getElementById("iframe-container").style.display = "block";
+    document.getElementById("loaderContainer").style.display = "none";
+    document.getElementById("binaryRain").style.display = "none";
+
+    iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
+
+    iframe.onload = () => {
+        iframe.contentWindow.focus();
+
+        const focusInterval = setInterval(() => {
+            if (document.activeElement !== iframe) {
+                iframe.contentWindow.focus();
             }
-        });
-    }
+        }, 1000);
 
-    function createParticles() {
-        const particleCount = 20;
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.cssText = `
-                --x: ${Math.random() * 2 - 1};
-                --y: ${Math.random() * 2 - 1};
-                width: ${Math.random() * 100 + 50}px;
-                height: ${Math.random() * 100 + 50}px;
-                left: ${Math.random() * 100}%;
-                top: ${Math.random() * 100}%;
-                animation-duration: ${15 + Math.random() * 30}s;
-                animation-delay: ${Math.random() * 5}s;
-                opacity: ${Math.random() * 0.2 + 0.1};
-            `;
-            document.body.appendChild(particle);
-        }
+        window.addEventListener('beforeunload', () => clearInterval(focusInterval));
+    };
+}
+
+function createParticles(count) {
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.cssText = `
+            --x: ${Math.random() * 2 - 1};
+            --y: ${Math.random() * 2 - 1};
+            width: ${Math.random() * 60 + 30}px;
+            height: ${Math.random() * 60 + 30}px;
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            animation-duration: ${10 + Math.random() * 15}s;
+            opacity: ${Math.random() * 0.15 + 0.05};
+        `;
+        document.body.appendChild(particle);
     }
+}
 
     function createBinaryRain() {
         const binaryRain = document.getElementById('binaryRain');
@@ -573,104 +548,23 @@
             binaryRain.appendChild(column);
         }
     }
-
-    function updateStatus(text) {
-        document.getElementById('statusText').textContent = text;
-    }
-
-    // Keyboard event forwarding with focus management
-    function handleKeyboardEvent(event) {
+// Input forwarding (mouse + keyboard)
+["mousedown", "mouseup", "keydown", "keyup"].forEach(type => {
+    document.addEventListener(type, event => {
         const iframe = document.getElementById("fullscreen-iframe");
-        
-        if (iframe.contentWindow) {
-            // Create a new event with all original properties
-            const newEvent = new KeyboardEvent(event.type, {
-                key: event.key,
-                code: event.code,
-                keyCode: event.keyCode,
-                which: event.which,
-                shiftKey: event.shiftKey,
-                ctrlKey: event.ctrlKey,
-                altKey: event.altKey,
-                metaKey: event.metaKey,
-                bubbles: true,
-                cancelable: true
-            });
-            
-            // Dispatch to both window and document of iframe
+        if (iframe && iframe.contentWindow) {
+            const newEvent = new event.constructor(event.type, event);
             iframe.contentWindow.dispatchEvent(newEvent);
             iframe.contentWindow.document.dispatchEvent(newEvent);
-            
-            // Prevent default for game controls
-            const gameKeys = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 
-                            'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE', 'KeyQ', 'Shift'];
-            if (gameKeys.includes(event.code)) {
-                event.preventDefault();
-            }
-            
-            // Ensure iframe stays focused
-            iframe.contentWindow.focus();
         }
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        createParticles();
-        createBinaryRain();
-        setupNegativeBanner();
-
-        setTimeout(() => updateStatus("LOADING QUANTUM CORE..."), 500);
-        setTimeout(() => updateStatus("CONNECTING NEURAL NET..."), 1500);
-        setTimeout(() => updateStatus("SYNCING DATA STREAMS..."), 2500);
-        setTimeout(() => updateStatus("OPTIMIZING MATRIX..."), 3500);
-        setTimeout(() => updateStatus("SYSTEM READY"), 4500);
-
-        setTimeout(() => {
-            document.getElementById("loaderContainer").classList.add("fade-out");
-            document.getElementById("loaderText").classList.add("fade-out");
-            document.getElementById("statusText").classList.add("fade-out");
-            setTimeout(startGame, 1000);
-        }, 5500);
-    });
-
-    // Mouse event forwarding
-    document.addEventListener("mousedown", function (event) {
-        const iframe = document.getElementById("fullscreen-iframe");
-        if (iframe.contentWindow) {
-            iframe.contentWindow.dispatchEvent(new MouseEvent("mousedown", {
-                bubbles: true,
-                cancelable: true,
-                view: window,
-                clientX: event.clientX,
-                clientY: event.clientY,
-                button: event.button
-            }));
+        // Prevent scrolling with space bar or arrows
+        if (["Space", "ArrowUp", "ArrowDown"].includes(event.code)) {
+            event.preventDefault();
         }
     });
+});
 
-    document.addEventListener("mouseup", function (event) {
-        const iframe = document.getElementById("fullscreen-iframe");
-        if (iframe.contentWindow) {
-            iframe.contentWindow.dispatchEvent(new MouseEvent("mouseup", {
-                bubbles: true,
-                cancelable: true,
-                view: window,
-                clientX: event.clientX,
-                clientY: event.clientY,
-                button: event.button
-            }));
-        }
-    });
-
-    // Keyboard event listeners
-    document.addEventListener("keydown", handleKeyboardEvent);
-    document.addEventListener("keyup", handleKeyboardEvent);
-
-    // Prevent default for space bar to avoid page scrolling
-    document.addEventListener('keydown', function(e) {
-        if(e.code === 'Space' && e.target === document.body) {
-            e.preventDefault();
-        }
-    });
 </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
