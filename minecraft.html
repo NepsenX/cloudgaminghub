@@ -254,6 +254,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            display: none;
         }
 
         iframe.fullscreen {
@@ -371,7 +372,7 @@
 
     <div class="binary-rain" id="binaryRain"></div>
     
-    <div class="loader-container">
+    <div class="loader-container" id="loaderContainer">
         <div class="quantum-ring"></div>
         <div class="quantum-ring"></div>
         <div class="quantum-ring"></div>
@@ -382,8 +383,8 @@
         <img src="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" alt="Logo" class="logo">
     </div>
 
-    <div class="loader-text">Minecraft</div>
-    <div class="status">SYSTEM INITIALIZATION</div>
+    <div class="loader-text" id="loaderText">Minecraft</div>
+    <div class="status" id="statusText">SYSTEM INITIALIZATION</div>
 
     <!-- Fullscreen iframe (Game) -->
     <div class="iframe-container" id="iframe-container">
@@ -484,23 +485,51 @@
     }
 
     function startGame() {
-        document.querySelector(".loader-container").style.display = "none";
+        const loaderContainer = document.getElementById("loaderContainer");
+        const loaderText = document.getElementById("loaderText");
+        const statusText = document.getElementById("statusText");
+        const binaryRain = document.getElementById("binaryRain");
         const iframeContainer = document.getElementById("iframe-container");
         const iframe = document.getElementById("fullscreen-iframe");
 
+        // Hide all loader elements
+        loaderContainer.style.display = "none";
+        loaderText.style.display = "none";
+        statusText.style.display = "none";
+        binaryRain.style.display = "none";
+
+        // Show iframe
         iframeContainer.style.display = "block";
         iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
 
-        iframe.onload = function () {
-            // Focus the iframe when it loads
+        // Focus management
+        let focusInterval;
+        
+        iframe.onload = function() {
+            // Focus the iframe immediately
             iframe.contentWindow.focus();
             
-            iframe.contentWindow.document.addEventListener("click", function () {
+            // Set up periodic focus check
+            focusInterval = setInterval(() => {
+                if (document.activeElement !== iframe) {
+                    iframe.contentWindow.focus();
+                }
+            }, 1000);
+            
+            // Pointer lock setup
+            iframe.contentWindow.document.addEventListener("click", function() {
                 if (iframe.contentWindow.document.pointerLockElement === null) {
                     iframe.contentWindow.document.body.requestPointerLock();
                 }
             });
         };
+
+        // Clean up interval when page unloads
+        window.addEventListener('beforeunload', function() {
+            if (focusInterval) {
+                clearInterval(focusInterval);
+            }
+        });
     }
 
     function createParticles() {
@@ -546,32 +575,41 @@
     }
 
     function updateStatus(text) {
-        document.querySelector('.status').textContent = text;
+        document.getElementById('statusText').textContent = text;
     }
 
-    // Forward keyboard events to the iframe
-    function forwardKeyboardEvent(event) {
+    // Keyboard event forwarding with focus management
+    function handleKeyboardEvent(event) {
         const iframe = document.getElementById("fullscreen-iframe");
+        
         if (iframe.contentWindow) {
-            // Create a new event to dispatch to the iframe
+            // Create a new event with all original properties
             const newEvent = new KeyboardEvent(event.type, {
                 key: event.key,
                 code: event.code,
                 keyCode: event.keyCode,
                 which: event.which,
+                shiftKey: event.shiftKey,
+                ctrlKey: event.ctrlKey,
+                altKey: event.altKey,
+                metaKey: event.metaKey,
                 bubbles: true,
-                cancelable: true,
-                composed: true
+                cancelable: true
             });
             
-            // Dispatch to both the iframe's window and document
+            // Dispatch to both window and document of iframe
             iframe.contentWindow.dispatchEvent(newEvent);
             iframe.contentWindow.document.dispatchEvent(newEvent);
             
-            // Prevent default only for certain keys to avoid browser shortcuts
-            if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) {
+            // Prevent default for game controls
+            const gameKeys = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 
+                            'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE', 'KeyQ', 'Shift'];
+            if (gameKeys.includes(event.code)) {
                 event.preventDefault();
             }
+            
+            // Ensure iframe stays focused
+            iframe.contentWindow.focus();
         }
     }
 
@@ -587,9 +625,9 @@
         setTimeout(() => updateStatus("SYSTEM READY"), 4500);
 
         setTimeout(() => {
-            document.querySelector(".loader-container").classList.add("fade-out");
-            document.querySelector(".loader-text").classList.add("fade-out");
-            document.querySelector(".status").classList.add("fade-out");
+            document.getElementById("loaderContainer").classList.add("fade-out");
+            document.getElementById("loaderText").classList.add("fade-out");
+            document.getElementById("statusText").classList.add("fade-out");
             setTimeout(startGame, 1000);
         }, 5500);
     });
@@ -623,14 +661,9 @@
         }
     });
 
-    // Keyboard event forwarding
-    document.addEventListener("keydown", function(event) {
-        forwardKeyboardEvent(event);
-    });
-
-    document.addEventListener("keyup", function(event) {
-        forwardKeyboardEvent(event);
-    });
+    // Keyboard event listeners
+    document.addEventListener("keydown", handleKeyboardEvent);
+    document.addEventListener("keyup", handleKeyboardEvent);
 
     // Prevent default for space bar to avoid page scrolling
     document.addEventListener('keydown', function(e) {
