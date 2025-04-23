@@ -392,11 +392,16 @@
     </div>
 
 <script>
+let lastTime = 0;
+const targetFPS = 120; // Target FPS for smooth gameplay
+const performanceOptimizations = true; // Flag to enable performance enhancements
+
 document.addEventListener('DOMContentLoaded', () => {
     createParticles(10);         // Reduced for performance
     createBinaryRain(20);        // Reduced for performance
     setupNegativeBanner();
     runLoadingSequence();
+    requestAnimationFrame(gameLoop); // Start the game loop
 });
 
 function setupNegativeBanner() {
@@ -527,27 +532,107 @@ function createParticles(count) {
     }
 }
 
-    function createBinaryRain() {
-        const binaryRain = document.getElementById('binaryRain');
-        const columns = Math.floor(window.innerWidth / 20);
+function createBinaryRain() {
+    const binaryRain = document.getElementById('binaryRain');
+    const columns = Math.floor(window.innerWidth / 20);
 
-        for (let i = 0; i < columns; i++) {
-            const column = document.createElement('div');
-            column.className = 'binary-column';
-            column.style.left = `${(i * 20) + (Math.random() * 10)}px`;
-            column.style.animationDuration = `${5 + Math.random() * 10}s`;
-            column.style.animationDelay = `${Math.random() * 5}s`;
+    for (let i = 0; i < columns; i++) {
+        const column = document.createElement('div');
+        column.className = 'binary-column';
+        column.style.left = `${(i * 20) + (Math.random() * 10)}px`;
+        column.style.animationDuration = `${5 + Math.random() * 10}s`;
+        column.style.animationDelay = `${Math.random() * 5}s`;
 
-            let binaryText = '';
-            const length = 20 + Math.floor(Math.random() * 10);
-            for (let j = 0; j < length; j++) {
-                binaryText += Math.random() > 0.7 ? '1' : '0';
-            }
-
-            column.textContent = binaryText;
-            binaryRain.appendChild(column);
+        let binaryText = '';
+        const length = 20 + Math.floor(Math.random() * 10);
+        for (let j = 0; j < length; j++) {
+            binaryText += Math.random() > 0.7 ? '1' : '0';
         }
+
+        column.textContent = binaryText;
+        binaryRain.appendChild(column);
     }
+}
+
+// Main game loop for achieving 60 FPS
+function gameLoop(timestamp) {
+    if (timestamp - lastTime >= 1000 / targetFPS) {
+        updateGameLogic();
+        renderGame();
+        lastTime = timestamp;
+    }
+    requestAnimationFrame(gameLoop); // Recursively call the game loop for next frame
+}
+
+function updateGameLogic() {
+    // Example: Update game logic here (movement, physics, etc.)
+    // Keep this as optimized as possible
+
+    // Handle player movement (example)
+    if (player.isMoving) {
+        player.position.x += player.velocity.x;
+        player.position.y += player.velocity.y;
+    }
+
+    // Update other game elements, like enemies, obstacles, etc.
+    updateEnemies();
+    updatePhysics();
+}
+
+function updateEnemies() {
+    // Example: Move enemies towards the player or within the game world
+    // (This logic should be simplified or deferred to Web Workers for performance)
+    enemies.forEach(enemy => {
+        if (enemy.isActive) {
+            enemy.position.x += enemy.velocity.x;
+            enemy.position.y += enemy.velocity.y;
+        }
+    });
+}
+
+function updatePhysics() {
+    // Example: Simplified physics calculations (e.g., gravity, collision detection)
+    // Example: Apply gravity to objects
+    objects.forEach(obj => {
+        if (obj.y < groundLevel) {
+            obj.velocity.y += gravity;
+        }
+    });
+}
+
+function renderGame() {
+    // Use Canvas/WebGL rendering for smooth and efficient updates
+    const ctx = document.getElementById('gameCanvas').getContext('2d');
+    
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw the player
+    ctx.beginPath();
+    ctx.arc(player.position.x, player.position.y, player.size, 0, Math.PI * 2);
+    ctx.fillStyle = 'green';
+    ctx.fill();
+
+    // Draw enemies
+    enemies.forEach(enemy => {
+        ctx.beginPath();
+        ctx.arc(enemy.position.x, enemy.position.y, enemy.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+    });
+
+    // Additional rendering for background, UI elements, etc.
+    renderUI(ctx);
+}
+
+function renderUI(ctx) {
+    // Example: Render game UI (score, health, etc.)
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText(`Score: ${score}`, 10, 30);
+    ctx.fillText(`Health: ${health}`, 10, 60);
+}
+
 // Input forwarding (mouse + keyboard)
 ["mousedown", "mouseup", "keydown", "keyup"].forEach(type => {
     document.addEventListener(type, event => {
@@ -559,12 +644,11 @@ function createParticles(count) {
         }
 
         // Prevent scrolling with space bar or arrows
-        if (["Space", "ArrowUp", "ArrowDown"].includes(event.code)) {
+        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "W", "A", "S", "D","Q","N","M" ,"Shift","Ctrl", "Control", "Alt", "Enter", "Esc","F5"].includes(event.code)) {
             event.preventDefault();
         }
     });
 });
-
 </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
