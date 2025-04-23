@@ -1,662 +1,574 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft</title>
-    <link rel="icon" href="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" type="image/png">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Minecraft</title>
+  <link rel="icon" href="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #1b3a4b; /* Vibrant Blue */
+      --primary1color: #3498db;
+      --secondary-color: #0f1923; /* Dark Navy */
+      --accent-color: #5dade2; /* Lighter Blue */
+      --text-color: #ffffff;
+      --loader-size: min(25vw, 150px);
+    }
 
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            position: relative;
-            background: radial-gradient(circle at center, 
-                #0a1a2a 0%, 
-                #07162a 30%, 
-                #051225 70%);
-            color: #e0f2ff;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        /* Futuristic grid overlay */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 300%;
-            height: 300%;
-            background: 
-                linear-gradient(90deg, 
-                    rgba(64, 164, 255, 0.05) 1px, 
-                    transparent 1px),
-                linear-gradient(rgba(64, 164, 255, 0.05) 1px, 
-                    transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 60s linear infinite;
-            mix-blend-mode: overlay;
-            z-index: 0;
-        }
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(-45deg, #0f1923, #1b2d3a, #0f1923, #0a141e);
+      background-size: 400% 400%;
+      animation: gradientBG 8s ease infinite;
+      font-family: 'Roboto', sans-serif;
+      color: var(--text-color);
+      perspective: 1000px;
+    }
 
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-50px, -50px); }
-        }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        /* Holographic particles */
-        .particle {
-            position: absolute;
-            background: radial-gradient(circle, 
-                rgba(100, 220, 255, 0.3) 0%, 
-                transparent 70%);
-            border-radius: 50%;
-            filter: blur(1px);
-            animation: particleFloat linear infinite;
-            z-index: 1;
-        }
+    .loader-wrapper {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    }
 
-        @keyframes particleFloat {
-            to {
-                transform: translate(
-                    calc(var(--x) * 100vw),
-                    calc(var(--y) * 100vh)
-                );
-                opacity: 0;
-            }
-        }
+    .loader-container {
+      position: relative;
+      width: var(--loader-size);
+      height: var(--loader-size);
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 0 10px rgba(52, 152, 219, 0.5));
+    }
 
-        /* Quantum loader */
-        .loader-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            z-index: 10;
-            perspective: 1000px;
-        }
+    .ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      animation: rotate linear infinite;
+      backface-visibility: hidden;
+    }
 
-        .quantum-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            animation: quantumSpin 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-            box-shadow: 0 0 15px rgba(64, 164, 255, 0.5);
-        }
+    .ring:nth-child(1) {
+      border-top: 3px solid var(--primary-color);
+      border-bottom: 3px solid var(--primary-color);
+      animation-duration: 2s;
+      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);
+    }
 
-        .quantum-ring:nth-child(1) {
-            border-top: 2px solid #40a4ff;
-            border-bottom: 2px solid #40a4ff;
-            animation-delay: 0.1s;
-        }
+    .ring:nth-child(2) {
+      border-left: 3px solid var(--accent-color);
+      border-right: 3px solid var(--accent-color);
+      animation-duration: 3s;
+      animation-direction: reverse;
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
+    }
 
-        .quantum-ring:nth-child(2) {
-            border-left: 2px solid #88d3ff;
-            border-right: 2px solid #88d3ff;
-            animation-delay: 0.2s;
-        }
+    .ring:nth-child(3) {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      animation-duration: 4s;
+      width: 120%;
+      height: 120%;
+      top: -10%;
+      left: -10%;
+    }
 
-        .quantum-ring:nth-child(3) {
-            border-top: 2px solid #00c8ff;
-            border-bottom: 2px solid #00c8ff;
-            animation-delay: 0.3s;
-            transform: rotateX(60deg);
-        }
+    @keyframes rotate {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.05); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
 
-        @keyframes quantumSpin {
-            0% { transform: rotateY(0deg) rotateX(0deg); }
-            50% { transform: rotateY(180deg) rotateX(180deg); }
-            100% { transform: rotateY(360deg) rotateX(360deg); }
-        }
+    .crosshair {
+      position: absolute;
+      background-color: var(--text-color);
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
 
-        /* Neural connection lines */
-        .neural-lines {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
+    .crosshair:hover {
+      opacity: 1;
+      background-color: var(--primary-color);
+    }
 
-        .neural-line {
-            position: absolute;
-            background: linear-gradient(90deg, transparent, #40a4ff, transparent);
-            height: 1px;
-            width: 100%;
-            top: 50%;
-            opacity: 0.5;
-            animation: neuralPulse 2s infinite;
-        }
+    .horizontal {
+      width: calc(var(--loader-size) - 20px);
+      height: 2px;
+      top: 50%;
+      left: 10px;
+    }
 
-        @keyframes neuralPulse {
-            0%, 100% { opacity: 0.2; transform: scaleX(0.5); }
-            50% { opacity: 0.8; transform: scaleX(1); }
-        }
+    .vertical {
+      width: 2px;
+      height: calc(var(--loader-size) - 20px);
+      left: 50%;
+      top: 10px;
+    }
 
-        /* Holographic logo */
-        .logo {
-            width: 80px;
-            height: 80px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 15;
-            filter: 
-                drop-shadow(0 0 10px rgba(64, 164, 255, 0.7))
-                drop-shadow(0 0 20px rgba(100, 220, 255, 0.5));
-            animation: logoFloat 4s ease-in-out infinite;
-        }
+    .logo {
+      width: calc(var(--loader-size) * 0.6);
+      height: calc(var(--loader-size) * 0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: 2;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      filter: brightness(1.1);
+    }
 
-        @keyframes logoFloat {
-            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-            50% { transform: translate(-50%, -50%) translateY(-15px); }
-        }
+    .logo:hover {
+      transform: translate(-50%, -50%) scale(1.05) rotate(5deg);
+      box-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
+    }
 
-        /* Futuristic text */
-        .loader-text {
-            margin-top: 40px;
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            z-index: 10;
-            position: relative;
-            color: transparent;
-            background: linear-gradient(90deg, #e0f2ff, #88d3ff, #e0f2ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            background-size: 200% auto;
-            animation: textShine 3s linear infinite;
-            text-shadow: 0 0 10px rgba(100, 220, 255, 0.3);
-        }
+    .loader-text {
+      margin: 0.5rem 0;
+      font-size: clamp(16px, 3vw, 24px);
+      color: var(--text-color);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+      font-family: 'Press Start 2P', cursive;
+    }
 
-        @keyframes textShine {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
+    .loader-text:nth-child(2) { animation-delay: 0.5s; }
+    .loader-text:nth-child(3) { animation-delay: 1s; }
+    .loader-text:nth-child(4) {
+      color: var(--primary-color);
+      animation-delay: 1.5s;
+      animation: pulse 1.5s infinite alternate;
+    }
 
-        /* Status indicator */
-        .status {
-            position: absolute;
-            bottom: 30px;
-            font-size: 14px;
-            letter-spacing: 1px;
-            color: #88d3ff;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .status::before {
-            content: '';
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #00c8ff;
-            margin-right: 8px;
-            box-shadow: 0 0 10px #00c8ff;
-            animation: statusPulse 1.5s infinite;
-        }
+    @keyframes pulse {
+      from { opacity: 0.6; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1.05); }
+    }
 
-        @keyframes statusPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-        }
+    .progress-container {
+      width: calc(var(--loader-size) + 50px);
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin-top: 2rem;
+      overflow: hidden;
+      display: none;
+    }
 
-        /* Binary rain effect */
-        .binary-rain {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--secondary-color), var(--primary1color));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
 
-        .binary-column {
-            position: absolute;
-            top: -100%;
-            width: 1em;
-            color: rgba(100, 220, 255, 0.3);
-            font-family: monospace;
-            font-size: 16px;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            animation: binaryFall linear infinite;
-        }
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      animation: shimmer 2s infinite;
+    }
 
-        @keyframes binaryFall {
-            to { top: 100%; }
-        }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
 
-        .fade-out {
-            opacity: 0;
-            visibility: hidden;
-            transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
-        }
+    .iframe-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      background: var(--secondary-color);
+    }
 
-        /* Fullscreen iframe */
-        .iframe-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            display: none;
-        }
+    iframe.fullscreen {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: var(--secondary-color);
+    }
 
-        iframe.fullscreen {
-            width: 100%;
-            height: 100%;
-            border: none;
-            transition: opacity 0.5s ease-out;
-        }
+    .loading-percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: var(--text-color);
+      font-family: 'Press Start 2P', cursive;
+      display: none;
+    }
 
-        /* Negative Banner Styles */
-        .negative-banner {
-            position: fixed;
-            top: -60px;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background-color: rgba(20, 20, 30, 0.95);
-            border-bottom: 1px solid rgba(64, 164, 255, 0.3);
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
-            transition: top 0.5s ease-out;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        }
+    .orientation-warning {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--secondary-color);
+      z-index: 100;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
 
-        .negative-banner.visible {
-            top: 0;
-        }
+    .orientation-warning i {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      animation: rotateDevice 2s infinite ease-in-out;
+    }
 
-        .back-button {
-            background: none;
-            border: none;
-            color: #88d3ff;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
+    @keyframes rotateDevice {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(90deg); }
+    }
 
-        .back-button:hover {
-            background-color: rgba(64, 164, 255, 0.2);
-            color: #e0f2ff;
-        }
+    .btn-start {
+      margin-top: 2rem;
+      padding: 12px 30px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
 
-        .back-button i {
-            margin-right: 5px;
-        }
+    .btn-start:hover {
+      background: #2e86c1;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+    }
 
-        .delay-controls {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    .btn-start:active {
+      transform: translateY(1px);
+    }
 
-        .delay-label {
-            color: #88d3ff;
-            font-size: 12px;
-            margin-right: 5px;
-        }
+    @media (max-width: 768px) and (orientation: portrait) {
+      .orientation-warning {
+        display: flex;
+      }
+    }
 
-        .delay-option {
-            background: rgba(64, 164, 255, 0.1);
-            border: 1px solid rgba(64, 164, 255, 0.3);
-            color: #88d3ff;
-            padding: 2px 5px;
-            font-size: 11px;
-            border-radius: 3px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+    @media (max-width: 768px) {
+      :root {
+        --loader-size: 180px;
+      }
 
-        .delay-option:hover {
-            background: rgba(64, 164, 255, 0.3);
-            color: #e0f2ff;
-        }
+      .loader-text {
+        font-size: 14px;
+      }
+    }
 
-        .delay-option.active {
-            background: rgba(64, 164, 255, 0.5);
-            color: #fff;
-            border-color: rgba(64, 164, 255, 0.7);
-        }
-
-        @media (max-width: 768px) {
-            .negative-banner {
-                display: none !important;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    #binaryRain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      background: #0f1923;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
-    <!-- Negative Banner (Desktop Only) -->
-    <div class="negative-banner" id="negativeBanner">
-        <button class="back-button" id="backButton">
-            <i class="fas fa-arrow-left"></i> Back
-        </button>
-        <div class="delay-controls">
-            <span class="delay-label">Banner Delay:</span>
-            <span class="delay-option active" data-delay="0">0s</span>
-            <span class="delay-option" data-delay="3">3s</span>
-            <span class="delay-option" data-delay="4">4s</span>
-            <span class="delay-option" data-delay="5">5s</span>
-            <span class="delay-option" data-delay="6">6s</span>
-            <span class="delay-option" data-delay="7">7s</span>
-            <span class="delay-option" data-delay="10">10s</span>
-            <span class="delay-option" data-delay="15">15s</span>
-            <span class="delay-option" data-delay="30">30s</span>
-        </div>
+  <!-- Binary Rain Canvas -->
+  <canvas id="binaryRain"></canvas>
+
+  <!-- Loading Sound -->
+  <audio id="loadingSound" autoplay>
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.wav" type="audio/wav">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="loader-wrapper">
+    <div class="loader-container">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="crosshair horizontal"></div>
+      <div class="crosshair vertical"></div>
+      <img src="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" alt="Among Us Logo" class="logo">
     </div>
 
-    <div class="binary-rain" id="binaryRain"></div>
-    
-    <div class="loader-container" id="loaderContainer">
-        <div class="quantum-ring"></div>
-        <div class="quantum-ring"></div>
-        <div class="quantum-ring"></div>
-        <div class="neural-lines">
-            <div class="neural-line" style="top: 30%; animation-delay: 0.1s;"></div>
-            <div class="neural-line" style="top: 70%; animation-delay: 0.3s;"></div>
-        </div>
-        <img src="https://assets.onecompiler.app/438cc35sk/43bydtfrq/m.jpeg" alt="Logo" class="logo">
+    <div class="loader-text">Minecraft</div>
+    <div class="loader-text">Please Wait...</div>
+
+    <div class="progress-container" id="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
     </div>
+  </div>
 
-    <div class="loader-text" id="loaderText">Minecraft</div>
-    <div class="status" id="statusText">SYSTEM INITIALIZATION</div>
+  <!-- Orientation warning for mobile -->
+  <div class="orientation-warning">
+    <i class="fas fa-rotate"></i>
+    <h2>Please Rotate Your Device</h2>
+    <p>For the best gaming experience, please switch to landscape mode.</p>
+  </div>
 
-    <!-- Fullscreen iframe (Game) -->
-    <div class="iframe-container" id="iframe-container">
-        <iframe id="fullscreen-iframe" class="fullscreen" src="about:blank" loading="lazy" frameborder="0" allowfullscreen></iframe>
-    </div>
+  <!-- Fullscreen Game -->
+  <div class="iframe-container" id="iframe-container">
+    <iframe id="fullscreen-iframe" class="fullscreen" src="about:blank" loading="eager" allowfullscreen allow="autoplay; fullscreen"></iframe>
+  </div>
 
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Binary Rain Animation -->
 <script>
-let lastTime = 0;
-const targetFPS = 120; // Target FPS for smooth gameplay
-const performanceOptimizations = true; // Flag to enable performance enhancements
+  const canvas = document.getElementById('binaryRain');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const chars = "01";
+  const fontSize = 14;
+  const columns = Math.floor(canvas.width / fontSize);
+  const drops = Array(columns).fill(1);
 
-document.addEventListener('DOMContentLoaded', () => {
-    createParticles(10);         // Reduced for performance
-    createBinaryRain(20);        // Reduced for performance
-    setupNegativeBanner();
-    runLoadingSequence();
-    requestAnimationFrame(gameLoop); // Start the game loop
-});
+  // Adjust the speed of the rain effect
+  function drawRain() {
+    // Clear the canvas with a translucent background to create the rain effect
+    ctx.fillStyle = "rgba(15, 25, 35, 0.08)";  // slightly darkened background for better contrast
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-function setupNegativeBanner() {
-    if (window.innerWidth <= 768) return;
+    // Set the color of the rain to dark blue (uses the defined primary color)
+    ctx.fillStyle = "#1b3a4b"; // Dark Blue (updated color)
+    ctx.font = fontSize + "px monospace"; // Ensure the text size is consistent
 
-    const banner = document.getElementById('negativeBanner');
-    const backButton = document.getElementById('backButton');
-    const delayOptions = document.querySelectorAll('.delay-option');
-    let bannerDelay = +localStorage.getItem('bannerDelay') * 1000 || 0;
+    // Loop through the drops array to draw each character
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-    delayOptions.forEach(opt => {
-        if (+opt.dataset.delay * 1000 === bannerDelay) {
-            opt.classList.add('active');
-        }
-    });
+      // Reset drop position when it moves off-screen
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
 
-    document.addEventListener('mousemove', debounce((e) => {
-        if (e.clientY <= 5 && !banner.classList.contains('visible')) {
-            setTimeout(() => {
-                if (e.clientY <= 5) showBanner();
-            }, bannerDelay);
-        } else if (e.clientY > 10 && !banner.matches(':hover')) {
-            hideBanner();
-        }
-    }, 200));
-
-    banner.addEventListener('mouseenter', () => banner.classList.add('hovering'));
-    banner.addEventListener('mouseleave', () => {
-        banner.classList.remove('hovering');
-        hideBanner();
-    });
-
-    backButton.onclick = () => window.location.href = 'https://nepsen.github.io/cloudgaminghub/cgh.html';
-
-    delayOptions.forEach(option => {
-        option.addEventListener('click', () => {
-            delayOptions.forEach(o => o.classList.remove('active'));
-            option.classList.add('active');
-            bannerDelay = +option.dataset.delay * 1000;
-            localStorage.setItem('bannerDelay', option.dataset.delay);
-            hideBanner();
-        });
-    });
-
-    function showBanner() {
-        banner.style.display = 'flex';
-        setTimeout(() => banner.classList.add('visible'), 10);
+      // Move the drop down the screen
+      drops[i]++;
     }
+  }
 
-    function hideBanner() {
-        banner.classList.remove('visible');
-        setTimeout(() => banner.style.display = 'none', 400);
-    }
-
-    function debounce(fn, delay) {
-        let timeout;
-        return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => fn.apply(this, args), delay);
-        };
-    }
-}
-
-function runLoadingSequence() {
-    const statusText = document.getElementById('statusText');
-    const loaderContainer = document.getElementById("loaderContainer");
-
-    const messages = [
-        "LOADING QUANTUM CORE...",
-        "CONNECTING NEURAL NET...",
-        "SYNCING DATA STREAMS...",
-        "OPTIMIZING MATRIX...",
-        "SYSTEM READY"
-    ];
-
-    messages.forEach((msg, index) => {
-        setTimeout(() => updateStatus(msg), index * 1000);
-    });
-
-    setTimeout(() => {
-        loaderContainer.classList.add("fade-out");
-        document.getElementById("loaderText").classList.add("fade-out");
-        statusText.classList.add("fade-out");
-        setTimeout(startGame, 800);
-    }, 5000);
-}
-
-function updateStatus(text) {
-    document.getElementById('statusText').textContent = text;
-}
-
-function startGame() {
-    const iframe = document.getElementById("fullscreen-iframe");
-    document.getElementById("iframe-container").style.display = "block";
-    document.getElementById("loaderContainer").style.display = "none";
-    document.getElementById("binaryRain").style.display = "none";
-
-    iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
-
-    iframe.onload = () => {
-        iframe.contentWindow.focus();
-
-        const focusInterval = setInterval(() => {
-            if (document.activeElement !== iframe) {
-                iframe.contentWindow.focus();
-            }
-        }, 1000);
-
-        window.addEventListener('beforeunload', () => clearInterval(focusInterval));
-    };
-}
-
-function createParticles(count) {
-    for (let i = 0; i < count; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.cssText = `
-            --x: ${Math.random() * 2 - 1};
-            --y: ${Math.random() * 2 - 1};
-            width: ${Math.random() * 60 + 30}px;
-            height: ${Math.random() * 60 + 30}px;
-            left: ${Math.random() * 100}%;
-            top: ${Math.random() * 100}%;
-            animation-duration: ${10 + Math.random() * 15}s;
-            opacity: ${Math.random() * 0.15 + 0.05};
-        `;
-        document.body.appendChild(particle);
-    }
-}
-
-function createBinaryRain() {
-    const binaryRain = document.getElementById('binaryRain');
-    const columns = Math.floor(window.innerWidth / 20);
-
-    for (let i = 0; i < columns; i++) {
-        const column = document.createElement('div');
-        column.className = 'binary-column';
-        column.style.left = `${(i * 20) + (Math.random() * 10)}px`;
-        column.style.animationDuration = `${5 + Math.random() * 10}s`;
-        column.style.animationDelay = `${Math.random() * 5}s`;
-
-        let binaryText = '';
-        const length = 20 + Math.floor(Math.random() * 10);
-        for (let j = 0; j < length; j++) {
-            binaryText += Math.random() > 0.7 ? '1' : '0';
-        }
-
-        column.textContent = binaryText;
-        binaryRain.appendChild(column);
-    }
-}
-
-// Main game loop for achieving 60 FPS
-function gameLoop(timestamp) {
-    if (timestamp - lastTime >= 1000 / targetFPS) {
-        updateGameLogic();
-        renderGame();
-        lastTime = timestamp;
-    }
-    requestAnimationFrame(gameLoop); // Recursively call the game loop for next frame
-}
-
-function updateGameLogic() {
-    // Example: Update game logic here (movement, physics, etc.)
-    // Keep this as optimized as possible
-
-    // Handle player movement (example)
-    if (player.isMoving) {
-        player.position.x += player.velocity.x;
-        player.position.y += player.velocity.y;
-    }
-
-    // Update other game elements, like enemies, obstacles, etc.
-    updateEnemies();
-    updatePhysics();
-}
-
-function updateEnemies() {
-    // Example: Move enemies towards the player or within the game world
-    // (This logic should be simplified or deferred to Web Workers for performance)
-    enemies.forEach(enemy => {
-        if (enemy.isActive) {
-            enemy.position.x += enemy.velocity.x;
-            enemy.position.y += enemy.velocity.y;
-        }
-    });
-}
-
-function updatePhysics() {
-    // Example: Simplified physics calculations (e.g., gravity, collision detection)
-    // Example: Apply gravity to objects
-    objects.forEach(obj => {
-        if (obj.y < groundLevel) {
-            obj.velocity.y += gravity;
-        }
-    });
-}
-
-function renderGame() {
-    // Use Canvas/WebGL rendering for smooth and efficient updates
-    const ctx = document.getElementById('gameCanvas').getContext('2d');
-    
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw the player
-    ctx.beginPath();
-    ctx.arc(player.position.x, player.position.y, player.size, 0, Math.PI * 2);
-    ctx.fillStyle = 'green';
-    ctx.fill();
-
-    // Draw enemies
-    enemies.forEach(enemy => {
-        ctx.beginPath();
-        ctx.arc(enemy.position.x, enemy.position.y, enemy.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-    });
-
-    // Additional rendering for background, UI elements, etc.
-    renderUI(ctx);
-}
-
-function renderUI(ctx) {
-    // Example: Render game UI (score, health, etc.)
-    ctx.font = '20px Arial';
-    ctx.fillStyle = 'white';
-    ctx.fillText(`Score: ${score}`, 10, 30);
-    ctx.fillText(`Health: ${health}`, 10, 60);
-}
-
-// Input forwarding (mouse + keyboard)
-["mousedown", "mouseup", "keydown", "keyup"].forEach(type => {
-    document.addEventListener(type, event => {
-        const iframe = document.getElementById("fullscreen-iframe");
-        if (iframe && iframe.contentWindow) {
-            const newEvent = new event.constructor(event.type, event);
-            iframe.contentWindow.dispatchEvent(newEvent);
-            iframe.contentWindow.document.dispatchEvent(newEvent);
-        }
-
-        // Prevent scrolling with space bar or arrows
-        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "W", "A", "S", "D","Q","N","M" ,"Shift","Ctrl", "Control", "Alt", "Enter", "Esc","F5"].includes(event.code)) {
-            event.preventDefault();
-        }
-    });
-});
+  // Set an interval to continuously draw the rain effect
+  setInterval(drawRain, 33); // Set a frame rate of about 30 FPS (33ms per frame)
 </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-QCJKG8NXX0');
-    </script>
+
+
+  <!-- Main Loader Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const progressBar = document.getElementById('progress-bar');
+      const progressContainer = document.getElementById('progress-container');
+      const loadingSound = document.getElementById('loadingSound');
+
+      setTimeout(() => {
+        progressContainer.style.display = 'block';
+
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 5;
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+
+            setTimeout(() => {
+              startGame(); // Auto-start the game
+            }, 500);
+          }
+
+          progressBar.style.width = `${progress}%`;
+        }, 200);
+      }, 2000);
+    });
+
+    function startGame() {
+      const loaderWrapper = document.querySelector('.loader-wrapper');
+      const iframeContainer = document.getElementById('iframe-container');
+      const iframe = document.getElementById('fullscreen-iframe');
+      const canvas = document.getElementById('binaryRain');
+
+      loaderWrapper.style.opacity = '0';
+      loaderWrapper.style.transform = 'translateY(-50px) scale(0.9)';
+
+      iframeContainer.style.display = 'block';
+      canvas.style.display = 'none';
+
+      setTimeout(() => {
+        iframeContainer.style.opacity = '1';
+      }, 50);
+
+      iframe.src = "https://eaglercraft.com/mc/1.12.2-wasm/?userscript=flameddogo99-eaglermobile.js";
+
+      setupGameControls(iframe);
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'game_start', {
+          'event_category': 'engagement',
+          'event_label': 'Among Us Game Start'
+        });
+      }
+    }
+
+    function setupGameControls(iframe) {
+      iframe.onload = function() {
+        try {
+          iframe.contentWindow.document.addEventListener('click', function() {
+            if (iframe.contentWindow.document.pointerLockElement === null) {
+              iframe.contentWindow.document.body.requestPointerLock();
+            }
+          });
+        } catch (e) {
+          console.warn('Pointer lock not allowed across domains');
+        }
+      };
+
+      const mouseEvents = ['mousedown', 'mouseup', 'mousemove'];
+      mouseEvents.forEach(eventType => {
+        document.addEventListener(eventType, function(e) {
+          try {
+            if (iframe.contentWindow) {
+              iframe.contentWindow.dispatchEvent(new MouseEvent(eventType, {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: e.clientX,
+                clientY: e.clientY,
+                button: e.button
+              }));
+            }
+          } catch (e) {}
+        });
+      });
+
+      if ('ontouchstart' in window) {
+        const touchEvents = ['touchstart', 'touchend', 'touchmove'];
+        touchEvents.forEach(eventType => {
+          document.addEventListener(eventType, function(e) {
+            try {
+              if (iframe.contentWindow) {
+                const touch = e.touches[0] || e.changedTouches[0];
+                iframe.contentWindow.dispatchEvent(new MouseEvent(
+                  eventType === 'touchmove' ? 'mousemove' :
+                  eventType === 'touchstart' ? 'mousedown' : 'mouseup', {
+                  bubbles: true,
+                  cancelable: true,
+                  view: window,
+                  clientX: touch.clientX,
+                  clientY: touch.clientY,
+                  button: 0
+                }));
+              }
+            } catch (e) {}
+          }, { passive: false });
+        });
+      }
+    }
+
+    function optimizePerformance() {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {});
+      }
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Optional lazy-loading logic
+            }
+          });
+        });
+      }
+    }
+
+    optimizePerformance();
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCJKG8NXX0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-QCJKG8NXX0', {
+      'anonymize_ip': true,
+      'cookie_flags': 'SameSite=None;Secure',
+      'transport_type': 'beacon'
+    });
+
+    window.addEventListener('error', function(e) {
+      gtag('event', 'exception', {
+        'description': e.message,
+        'fatal': false
+      });
+    });
+  </script>
 </body>
+
 </html>
