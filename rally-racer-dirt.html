@@ -10,10 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #e67e22; /* Orange color matching racing theme */
-      --primary1color: #d35400;
-      --secondary-color: #2c3e50; /* Dark blue */
-      --accent-color: #e74c3c; /* Red accent */
+      --primary-color: #1b3a4b; /* Vibrant Blue */
+      --primary1color: #3498db;
+      --secondary-color: #0f1923; /* Dark Navy */
+      --accent-color: #5dade2; /* Lighter Blue */
       --text-color: #ffffff;
       --loader-size: min(25vw, 150px);
     }
@@ -32,7 +32,7 @@
       align-items: center;
       min-height: 100vh;
       overflow: hidden;
-      background: linear-gradient(-45deg, #2c3e50, #34495e, #2c3e50, #1a252f);
+      background: linear-gradient(-45deg, #0f1923, #1b2d3a, #0f1923, #0a141e);
       background-size: 400% 400%;
       animation: gradientBG 8s ease infinite;
       font-family: 'Roboto', sans-serif;
@@ -62,7 +62,7 @@
       width: var(--loader-size);
       height: var(--loader-size);
       margin-bottom: 2rem;
-      filter: drop-shadow(0 0 10px rgba(230, 126, 34, 0.5));
+      filter: drop-shadow(0 0 10px rgba(52, 152, 219, 0.5));
     }
 
     .ring {
@@ -79,7 +79,7 @@
       border-top: 3px solid var(--primary-color);
       border-bottom: 3px solid var(--primary-color);
       animation-duration: 2s;
-      box-shadow: 0 0 15px rgba(230, 126, 34, 0.7);
+      box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);
     }
 
     .ring:nth-child(2) {
@@ -151,7 +151,7 @@
 
     .logo:hover {
       transform: translate(-50%, -50%) scale(1.05) rotate(5deg);
-      box-shadow: 0 0 20px rgba(230, 126, 34, 0.8);
+      box-shadow: 0 0 20px rgba(52, 152, 219, 0.8);
     }
 
     .loader-text {
@@ -297,13 +297,13 @@
       cursor: pointer;
       transition: all 0.3s ease;
       display: none;
-      box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
     }
 
     .btn-start:hover {
-      background: #d35400;
+      background: #2e86c1;
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(230, 126, 34, 0.6);
+      box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
     }
 
     .btn-start:active {
@@ -333,7 +333,7 @@
       z-index: 0;
       width: 100%;
       height: 100%;
-      background: #2c3e50;
+      background: #0f1923;
       pointer-events: none;
     }
   </style>
@@ -344,7 +344,7 @@
 
   <!-- Loading Sound -->
   <audio id="loadingSound" autoplay>
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-racing-car-engine-loop-1272.wav" type="audio/wav">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.wav" type="audio/wav">
     Your browser does not support the audio element.
   </audio>
 
@@ -355,11 +355,11 @@
       <div class="ring"></div>
       <div class="crosshair horizontal"></div>
       <div class="crosshair vertical"></div>
-      <img src="https://imgs.crazygames.com/rally-racer-dirt_16x9/20250227034748/rally-racer-dirt_16x9-cover?metadata=none&quality=70&width=499" alt="Rally Racer Dirt Logo" class="logo">
+      <img src="https://imgs.crazygames.com/rally-racer-dirt_16x9/20250227034748/rally-racer-dirt_16x9-cover?metadata=none&quality=70&width=499" alt="Among Us Logo" class="logo">
     </div>
 
     <div class="loader-text">Rally Racer Dirt</div>
-    <div class="loader-text">Revving Engines...</div>
+    <div class="loader-text">Please Wait...</div>
 
     <div class="progress-container" id="progress-container">
       <div class="progress-bar" id="progress-bar"></div>
@@ -370,7 +370,7 @@
   <div class="orientation-warning">
     <i class="fas fa-rotate"></i>
     <h2>Please Rotate Your Device</h2>
-    <p>For the best racing experience, please switch to landscape mode.</p>
+    <p>For the best gaming experience, please switch to landscape mode.</p>
   </div>
 
   <!-- Fullscreen Game -->
@@ -391,24 +391,35 @@
   const columns = Math.floor(canvas.width / fontSize);
   const drops = Array(columns).fill(1);
 
+  // Adjust the speed of the rain effect
   function drawRain() {
-    ctx.fillStyle = "rgba(44, 62, 80, 0.08)";
+    // Clear the canvas with a translucent background to create the rain effect
+    ctx.fillStyle = "rgba(15, 25, 35, 0.08)";  // slightly darkened background for better contrast
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#e67e22";
-    ctx.font = fontSize + "px monospace";
 
+    // Set the color of the rain to dark blue (uses the defined primary color)
+    ctx.fillStyle = "#1b3a4b"; // Dark Blue (updated color)
+    ctx.font = fontSize + "px monospace"; // Ensure the text size is consistent
+
+    // Loop through the drops array to draw each character
     for (let i = 0; i < drops.length; i++) {
       const text = chars[Math.floor(Math.random() * chars.length)];
       ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
+      // Reset drop position when it moves off-screen
       if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
         drops[i] = 0;
       }
+
+      // Move the drop down the screen
       drops[i]++;
     }
   }
-  setInterval(drawRain, 33);
+
+  // Set an interval to continuously draw the rain effect
+  setInterval(drawRain, 33); // Set a frame rate of about 30 FPS (33ms per frame)
 </script>
+
 
   <!-- Main Loader Logic -->
   <script>
@@ -428,9 +439,10 @@
             clearInterval(interval);
 
             setTimeout(() => {
-              startGame();
+              startGame(); // Auto-start the game
             }, 500);
           }
+
           progressBar.style.width = `${progress}%`;
         }, 200);
       }, 2000);
@@ -459,7 +471,7 @@
       if (typeof gtag !== 'undefined') {
         gtag('event', 'game_start', {
           'event_category': 'engagement',
-          'event_label': 'Rally Racer Dirt Game Start'
+          'event_label': 'Among Us Game Start'
         });
       }
     }
@@ -558,4 +570,5 @@
     });
   </script>
 </body>
+
 </html>
