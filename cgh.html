@@ -24,6 +24,7 @@
       --chat-header:black;
       --chat-footer-input:black;
       --fb-btn:#2C3E50;
+      --bi:url('https://www.shutterstock.com/shutterstock/videos/3468378385/thumb/1.jpg?ip=x480');
     }
 
     * {
@@ -526,7 +527,10 @@
       }
     }
      #contact {
-      background: var(--background); /* Cool gradient background */
+      background-image:var(--bi); /* Cool gradient background */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       color: #fff;
       padding: 60px 20px;
       text-align: center;
@@ -628,6 +632,149 @@
 
 .chat-body::-webkit-scrollbar-track {
   background: transparent;
+}
+/* Contact Form - Perfectly Sized for All Devices */
+#contactForm {
+  width: 100%;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* PC/Laptop (1024px and above) */
+@media (min-width: 1024px) {
+  #contactForm {
+    max-width: 600px;
+    padding: 3rem;
+  }
+  
+  #contactForm input,
+  #contactForm textarea {
+    padding: 1.1rem 1.5rem;
+    font-size: 1.05rem;
+  }
+  
+  #contactForm button[type="submit"] {
+    padding: 1.2rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet (768px to 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  #contactForm {
+    max-width: 550px;
+    padding: 2.5rem;
+  }
+  
+  #contactForm input,
+  #contactForm textarea {
+    padding: 1rem 1.25rem;
+  }
+  
+  #contactForm button[type="submit"] {
+    padding: 1.1rem;
+  }
+}
+
+/* Mobile (up to 767px) */
+@media (max-width: 767px) {
+  #contactForm {
+    max-width: 100%;
+    padding: 2rem;
+    margin: 1.5rem;
+    border-radius: 14px;
+  }
+  
+  #contactForm input,
+  #contactForm textarea {
+    padding: 0.9rem 1.1rem;
+    font-size: 0.95rem;
+  }
+  
+  #contactForm button[type="submit"] {
+    padding: 1rem;
+  }
+}
+
+/* Small Mobile (up to 480px) */
+@media (max-width: 480px) {
+  #contactForm {
+    padding: 1.5rem;
+    margin: 1.5rem 0.75rem;
+    border-radius: 12px;
+  }
+  
+  #contactForm label {
+    font-size: 0.95rem;
+  }
+  
+  #contactForm input,
+  #contactForm textarea {
+    padding: 0.8rem 1rem;
+  }
+  
+  #contactForm button[type="submit"] {
+    padding: 0.9rem;
+    font-size: 1rem;
+  }
+}
+
+/* Form Elements (Universal Styles) */
+#contactForm label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+#contactForm input,
+#contactForm textarea {
+  width: 100%;
+  margin-bottom: 1.25rem;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--background);
+  color: var(--text);
+  transition: all 0.3s ease;
+}
+
+#contactForm button[type="submit"] {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Focus/Hover States */
+#contactForm input:focus,
+#contactForm textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+#contactForm button[type="submit"]:hover {
+  background: var(--secondary);
+  transform: translateY(-2px);
+}
+
+#contactForm button[type="submit"]:disabled {
+  background: var(--border);
+  cursor: not-allowed;
+  transform: none;
 }
   </style>
 </head>
@@ -975,8 +1122,23 @@
       <h2>Contact Us</h2>
       <p>Connection creates power.Your voice can change everything. Let’s connect.</p>
       <div class="contact-buttons">
-        <a href="https://www.facebook.com/groups/1975968936224766" target="_blank" class="contact-btn fb-btn">Join in Group</a>
-        <a href="mailto:arafatislamlam15@gmail.com" class="contact-btn email-btn">Email Us</a>
+        <!-- Add this after the contact-buttons div -->
+        <form id="contactForm" class="mt-8 max-w-md mx-auto">
+          <div id="nameField" class="mb-4">
+            <label for="name" class="block text-sm font-medium mb-1">Your Name</label>
+            <input type="text" id="name" name="name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter your name">
+          </div>
+          <div id="emailField" class="mb-4">
+            <label for="email" class="block text-sm font-medium mb-1">Your Email</label>
+            <input type="email" id="email" name="email" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter your email">
+          </div>
+          <div class="mb-4">
+            <label for="message" class="block text-sm font-medium mb-1">Your Message</label>
+            <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter your message"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">Send Message</button>
+          <div id="formMessage" class="form-message mt-2 text-center"></div>
+        </form>
       </div>
     </div>
   </section>
@@ -1193,7 +1355,87 @@
         // Show or hide the "Not Found" message
         notFoundMessage.style.display = anyVisible ? 'none' : 'block';
       }
-
+  // Contact Form Submission
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const formMessage = document.getElementById('formMessage');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    // Get form data
+    const formData = new FormData(form);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+      to: 'arafatislamlam15@gmail.com' // Your email address
+    };
+    
+    // Validate form
+    if (!data.name || !data.email || !data.message) {
+      formMessage.textContent = 'Please fill in all fields';
+      formMessage.className = 'form-message error-message';
+      return;
+    }
+    
+    if (!data.email.includes('@') || !data.email.includes('.')) {
+      formMessage.textContent = 'Please enter a valid email address';
+      formMessage.className = 'form-message error-message';
+      return;
+    }
+    
+    // Change button text
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    formMessage.textContent = '';
+    
+    // Send email using FormSubmit.co
+    fetch('https://formsubmit.co/ajax/arafatislamlam15@gmail.com', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      formMessage.textContent = 'Message sent successfully! We will respond soon.';
+      formMessage.className = 'form-message success-message';
+      form.reset();
+    })
+    .catch(error => {
+      formMessage.textContent = 'Error sending message. Please try again later.';
+      formMessage.className = 'form-message error-message';
+      console.error('Error:', error);
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Message';
+      
+      // Reset message after 5 seconds
+      setTimeout(() => {
+        formMessage.textContent = '';
+      }, 5000);
+    });
+  });
+  
+  // Check localStorage and hide/show fields accordingly
+  document.addEventListener('DOMContentLoaded', function() {
+    const userName = localStorage.getItem('userName');
+    const userEmail = localStorage.getItem('userEmail');
+    
+    if (userName) {
+      document.getElementById('name').value = userName;
+      document.getElementById('nameField').style.display = 'none';
+    }
+    
+    if (userEmail) {
+      document.getElementById('email').value = userEmail;
+      document.getElementById('emailField').style.display = 'none';
+    }
+  });
   </script>
   <script>
     const toggleBtn = document.getElementById('langToggleBtn');
