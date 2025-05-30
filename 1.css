@@ -1,0 +1,534 @@
+        :root {
+            --primary-color: #00ff9d;
+            --primary-hover: #00e68a;
+            --text-color: #e0e0e0;
+            --text-color-dark: #f0f0f0;
+            --bg-color: #121212;
+            --bg-color-dark: #0a0a0a;
+            --sidebar-bg: #1e1e1e;
+            --sidebar-bg-dark: #151515;
+            --message-user-bg: #252525;
+            --message-user-bg-dark: #2a2a2a;
+            --message-assistant-bg: #1a1a1a;
+            --message-assistant-bg-dark: #1f1f1f;
+            --border-color: #333333;
+            --border-color-dark: #3a3a3a;
+            --nav-bg: #1a1a1a;
+            --nav-bg-dark: #121212;
+            --neon-shadow: 0 0 10px rgba(0, 255, 157, 0.7);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .dark {
+            --text-color: var(--text-color-dark);
+            --bg-color: var(--bg-color-dark);
+            --sidebar-bg: var(--sidebar-bg-dark);
+            --message-user-bg: var(--message-user-bg-dark);
+            --message-assistant-bg: var(--message-assistant-bg-dark);
+            --border-color: var(--border-color-dark);
+            --nav-bg: var(--nav-bg-dark);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .animate-pulse {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin-right: 4px;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation: typingAnimation 1.4s infinite ease-in-out 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation: typingAnimation 1.4s infinite ease-in-out 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, #00ff9d, #00b8ff);
+        }
+        
+        /* Futuristic scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
+        }
+        
+        /* Futuristic input glow */
+        .glow-effect {
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .glow-effect:focus {
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+        }
+        
+        /* Holographic effect for messages */
+        .holographic {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .holographic::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(0, 255, 157, 0.1) 0%,
+                rgba(0, 255, 157, 0) 20%,
+                rgba(0, 255, 157, 0) 80%,
+                rgba(0, 255, 157, 0.1) 100%
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+        
+        /* Video carousel */
+        .video-carousel {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .video-carousel::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+        
+        .video-carousel-item {
+            flex: 0 0 90%;
+            scroll-snap-align: start;
+            transition: transform 0.3s ease;
+        }
+        
+        .video-carousel-item:first-child {
+            margin-left: 1rem;
+        }
+        
+        .video-carousel-item:last-child {
+            margin-right: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .video-carousel-item {
+                flex: 0 0 45%;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .video-carousel-item {
+                flex: 0 0 30%;
+            }
+        }
+        
+        /* Video container */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #000;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Download button */
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            border-radius: 0 0 8px 8px;
+            margin-top: -5px;
+            transition: background 0.2s;
+        }
+        
+        .download-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        /* Source attribution */
+        .source-attribution {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .source-attribution img {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        
+        /* Futuristic buttons */
+        .neon-btn {
+            background: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--neon-shadow);
+        }
+        
+        .neon-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.9);
+        }
+        
+        /* Avatar pulse effect */
+        @keyframes avatarPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 157, 0); }
+        }
+        
+        .avatar-pulse {
+            animation: avatarPulse 2s infinite;
+        }
+        
+        /* Floating action button */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 255, 157, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .fab:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 6px 25px rgba(0, 255, 157, 0.5);
+        }
+        
+        /* Futuristic input field */
+        .futuristic-input {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .futuristic-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        /* Glass morphism effect */
+        .glass {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hover effects */
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Loading animation */
+        @keyframes loading {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 255, 157, 0.3);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: loading 1s linear infinite;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .video-carousel-item {
+                flex: 0 0 85%;
+            }
+        }
+        pre {
+            position: relative;
+            padding-top: 2rem; /* to make space for the button */
+            overflow: auto;
+        }
+        
+        .copy-button-container {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            z-index: 10;
+        }
+        /* General Styles for Wiki Response */
+        .wiki-response {
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        /* Image Styling */
+        .wiki-image {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        /* Text Padding */
+        .wiki-text {
+            padding: 0 0.5rem;
+        }
+        
+        /* Link Styling */
+        .wiki-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+        
+        /* Section Divider */
+        .section-divider {
+            margin: 1.5rem 0;
+            border: none;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        /* AI Response */
+        .ai-response {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Responsive Tweaks */
+        @media (max-width: 768px) {
+            .wiki-text {
+                padding: 0 1rem;
+            }
+        
+            .wiki-image {
+                max-height: 200px;
+            }
+        
+            .wiki-link {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .wiki-text {
+                padding: 0 0.75rem;
+            }
+        
+            .wiki-link {
+                font-size: 0.85rem;
+            }
+        
+            .wiki-image {
+                max-height: 180px;
+            }
+        }
+        .knowledge-response {
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+        }
+        
+        .knowledge-image {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .knowledge-text {
+            padding: 0 0.5rem;
+        }
+        
+        .knowledge-text h3 {
+            margin-top: 0;
+            color: #f0f0f0;
+            font-size: 1.25rem;
+        }
+        
+        .knowledge-text p {
+            margin: 0.5rem 0;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+        
+        .source-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .source-link:hover {
+            text-decoration: underline;
+        }
+        
+        .related-topics {
+            margin-top: 1rem;
+        }
+        
+        .related-topics h4 {
+            margin-bottom: 0.5rem;
+            color: #f0f0f0;
+            font-size: 1rem;
+        }
+        
+        .related-topics ul {
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .related-topics li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .related-topics a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        
+        .related-topics a:hover {
+            text-decoration: underline;
+        }
+        .no-videos {
+            color: #888;
+            font-style: italic;
+            margin-top: 1rem;
+        }
+        /* Mobile sidebar styles */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 260px;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                display: flex !important; /* Force display flex */
+            }
+            
+            #sidebar.sidebar-open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        .avatar-icon img {
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        
+        .avatar-icon i {
+            font-size: 0.9rem;
+        }
