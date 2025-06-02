@@ -514,99 +514,112 @@
 
     // Check for personal information questions
     function checkPersonalInfoQuestions(text) {
-        const lowerCaseText = text.toLowerCase();
+        const trimmedText = text.trim();
+        const lowerCaseText = trimmedText.toLowerCase();
         
-        // Define questions related to name, email, and password
+        // Define questions related to name, email and password
         const nameQuestions = [
-            "what's my name?", "what is my name?", "do you know my name?", "who am i?", "tell me my name",
-            "What's my name?", "What is my name?", "Do you know my name?", "Who am i?", "Tell me my name",
-            "my name is", "i am", "call me"
+            "what's my name?", "what is my name?", "do you know my name?", "who am i?", "tell me my name"
         ];
     
         const emailQuestions = [
             "what is my email?", "what is my email address?", "do you know my email?", "tell me my email", 
-            "tell my email address", "What is my email?", "What is my email address?", "Do you know my email?", 
-            "Tell me my email", "my email is", "email address is"
+            "tell my email address"
         ];
     
         const passwordQuestions = [
             "what is my password?", "what is my email password?", "please write my email password", 
-            "plz tell me my email password", "plz write my email password", "please tell me my email password", 
-            "What is my password?", "What is my email password?", "Please write my email password", 
-            "Plz tell me my email password", "my password is", "password is"
+            "plz tell me my email password", "plz write my email password", "please tell me my email password"
         ];
     
         const ipQuestions = [
             "what is my ip?", "what's my ip address?", "do you know my ip?", "tell me my ip address",
-            "What is my IP?", "What's my IP address?", "Do you know my IP?", "Tell me my IP address",
             "show my ip", "what is my internet address"
         ];
     
-        // Check if the user is telling their name
-        if (nameQuestions.some(q => lowerCaseText.includes(q)) || 
-            lowerCaseText.startsWith("my name is") || 
-            lowerCaseText.startsWith("i am") || 
-            lowerCaseText.startsWith("call me")) {
-            
-            // Extract name from statement
-            let name = text;
-            if (lowerCaseText.startsWith("my name is")) {
-                name = text.substring("my name is".length).trim();
-            } else if (lowerCaseText.startsWith("i am")) {
-                name = text.substring("i am".length).trim();
-            } else if (lowerCaseText.startsWith("call me")) {
-                name = text.substring("call me".length).trim();
-            }
-            
-            // If it's a question about their name
-            if (nameQuestions.some(q => lowerCaseText === q.toLowerCase())) {
-                const userName = localStorage.getItem('userName') || 'Not Set';
-                return { type: 'name', response: `Your name is ${userName}` };
-            }
-            
-            // If they're telling their name
-            localStorage.setItem('userName', name);
-            return { type: 'name', response: `Okay, I'll remember your name is ${name}` };
+        // Helper function to check exact match (case insensitive)
+        function isExactMatch(input, phrases) {
+            return phrases.some(phrase => input === phrase.toLowerCase());
         }
-        
-        // Check if the user is telling their email
-        else if (emailQuestions.some(q => lowerCaseText.includes(q)) || 
-               lowerCaseText.startsWith("my email is") || 
-               lowerCaseText.includes("email address is")) {
-            
-            // Extract email from statement
-            let email = text;
-            if (lowerCaseText.startsWith("my email is")) {
-                email = text.substring("my email is".length).trim();
-            } else if (lowerCaseText.includes("email address is")) {
-                const parts = text.split("email address is");
+    
+        // Check name-related questions and declarations
+        if (isExactMatch(lowerCaseText, nameQuestions)) {
+            const userName = localStorage.getItem('userName') || 'Not Set';
+            return { type: 'name', response: `Your name is ${userName}` };
+        }
+    
+        // Check for name declarations with strict patterns and length limit
+        const nameDeclarationPatterns = [
+            { prefix: "my name is", maxLength: 50 },
+            { prefix: "i am", maxLength: 50 },
+            { prefix: "call me", maxLength: 50 }
+        ];
+    
+        for (const pattern of nameDeclarationPatterns) {
+            if (lowerCaseText.startsWith(pattern.prefix)) {
+                const name = trimmedText.substring(pattern.prefix.length).trim();
+                
+                // Only accept as name if it's reasonably short and not empty
+                if (name.length > 0 && name.length <= pattern.maxLength) {
+                    localStorage.setItem('userName', name);
+                    return { type: 'name', response: `Okay, I'll remember your name is ${name}` };
+                }
+            }
+        }
+    
+        // Check email-related questions and declarations
+        if (isExactMatch(lowerCaseText, emailQuestions)) {
+            const userEmail = localStorage.getItem('userEmail') || 'Not Set';
+            return { type: 'email', response: `Your email is ${userEmail}` };
+        }
+    
+        // Check for email declarations with strict patterns
+        const emailDeclarationPatterns = [
+            { prefix: "my email is", validator: isValidEmail },
+            { separator: "email address is", validator: isValidEmail }
+        ];
+    
+        for (const pattern of emailDeclarationPatterns) {
+            let email = '';
+            if (pattern.prefix && lowerCaseText.startsWith(pattern.prefix)) {
+                email = trimmedText.substring(pattern.prefix.length).trim();
+            } 
+            else if (pattern.separator && lowerCaseText.includes(pattern.separator)) {
+                const parts = trimmedText.split(new RegExp(pattern.separator, 'i'));
                 email = parts[1].trim();
             }
-            
-            // If it's a question about their email
-            if (emailQuestions.some(q => lowerCaseText === q.toLowerCase())) {
-                const userEmail = localStorage.getItem('userEmail') || 'Not Set';
-                return { type: 'email', response: `Your email is ${userEmail}` };
+    
+            if (email && pattern.validator(email)) {
+                localStorage.setItem('userEmail', email);
+                userEmail = email;
+                updateUserAccountDisplay();
+                return { type: 'email', response: `I've stored your email address as ${email}` };
             }
-            
-            // If they're telling their email
-            localStorage.setItem('userEmail', email);
-            userEmail = email;
-            updateUserAccountDisplay();
-            return { type: 'email', response: `I've stored your email address as ${email}` };
         }
-        
-        // Check if the user is telling their password
-        else if (passwordQuestions.some(q => lowerCaseText.includes(q))) {
+    
+        // Check password-related questions
+        if (passwordQuestions.some(q => 
+            lowerCaseText === q.toLowerCase() || 
+            (q.length > 10 && lowerCaseText.includes(q.toLowerCase())))
+        ) {
             return { type: 'password', response: "I can't provide or store passwords for security reasons." };
         }
-        
-        // Check if the user is asking about their IP
-        else if (ipQuestions.some(q => lowerCaseText.includes(q))) {
+    
+        // Check IP-related questions
+        if (ipQuestions.some(q => 
+            lowerCaseText === q.toLowerCase() || 
+            (q.length > 10 && lowerCaseText.includes(q.toLowerCase())))
+        ) {
             return { type: 'ip', response: "For security reasons, I can't provide IP address information." };
         }
-        
+    
         return null;
+    }
+    
+    // Helper function to validate email format
+    function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email) && email.length <= 100;
     }
     async function sendMessage() {
         const message = userInput.value.trim();
