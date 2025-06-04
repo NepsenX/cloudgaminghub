@@ -621,133 +621,192 @@
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email) && email.length <= 100;
     }
-    async function sendMessage() {
-        const message = userInput.value.trim();
-        if (!message) return;
-    
-        // Clear errors and disable input
-        errorMessage.textContent = '';
-        userInput.disabled = false;
-        sendButton.disabled = false;
-    
-        // Check personal questions first
-        const personalInfoResponse = checkPersonalInfoQuestions(message);
-        if (personalInfoResponse) {
-            addMessage('user', message);
-            userInput.value = '';
-            adjustTextareaHeight();
-            addMessage('assistant', personalInfoResponse.response);
-            conversationHistory.push(
-                { role: 'user', content: message },
-                { role: 'assistant', content: personalInfoResponse.response }
-            );
-            saveConversation();
-            enableInput();
-            return;
-        }
-    
-        // Add user message
+// Image generation utility (shows 4 images side-by-side)
+function generateResponseImage(keyword) {
+    let imagesHTML = '';
+    for (let i = 1; i <= 2; i++) {
+        const imageUrl = `https://picsum.photos/seed/${encodeURIComponent(keyword + i)}/300/200`;
+        imagesHTML += `
+<div class="response-image">
+    <img src="${imageUrl}" alt="${keyword.replace(/"/g, '&quot;')} ${i}">
+</div>
+        `;
+    }
+    return `<div class="response-image-row">${imagesHTML}</div>`;
+}
+
+
+// Main sendMessage function with integrated image support
+async function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    // Clear errors and disable input
+    errorMessage.textContent = '';
+    userInput.disabled = false;
+    sendButton.disabled = false;
+
+    // Check personal questions first
+    const personalInfoResponse = checkPersonalInfoQuestions(message);
+    if (personalInfoResponse) {
         addMessage('user', message);
         userInput.value = '';
         adjustTextareaHeight();
-        conversationHistory.push({ role: 'user', content: message });
-    
-        // Show typing indicator
-        showTypingIndicator();
-    
-        try {
-            // Generate chat title if it's the first user message in a new chat
-            const isFirstMessageInNewChat = conversationHistory.length === 1 && currentChatTitle.textContent === 'New chat';
-            if (isFirstMessageInNewChat) {
-                try {
-                    const titleMessages = [
-                        { role: 'system', content: 'Generate a very short, concise, and descriptive title (3-7 words) for the following user message. Respond with just the title, no extra text, no quotes.' },
-                        { role: 'user', content: message }
-                    ];
-                    const titleResponse = await callOpenRouterAPI(titleMessages);        //create by nepsen
-                    updateChatTitle(titleResponse.trim().replace(/^"|"$/g, '')); // Remove surrounding quotes if present
-                } catch (titleError) {
-                    console.log('Failed to generate title from API:', titleError);
-                    const fallbackTitle = message.split(/\s+/).slice(0, 5).join(' ');
-                    updateChatTitle(fallbackTitle);
-                }
-            }
-            // Always get videos first since we'll include them in all responses
-            let videos = [];
-            try {
-                videos = await searchVideos(message) || [];
-            } catch (videoError) {
-                console.log('Video search failed:', videoError);
-            }
-    
-            // Try to get knowledge-based answer
-            let knowledgeResponse = await getKnowledgeResponse(message);
-            
-            // Generate AI response if no good knowledge response
-            let aiResponse = '';
-            if (!knowledgeResponse || knowledgeResponse.includes('No information found')) {
-                try {
-                    aiResponse = await callOpenRouterAPI(conversationHistory);
-                } catch (aiError) {
-                    console.log('AI response failed:', aiError);
-                    aiResponse = "Here's what I found:";
-                }
-            }
-    
-            // Build the complete response (always includes videos)
-            let fullResponse = '';
-            
-            // 1. Knowledge or AI response
-            if (knowledgeResponse && !knowledgeResponse.includes('No information found')) {
-                fullResponse += knowledgeResponse;
-            } else if (aiResponse) {
-                fullResponse += `<div class="ai-response">${aiResponse}</div>`;
-            }
-            
-            // 2. Always include videos if available
-            if (videos.length > 0) {
-                fullResponse += `<div class="videos-section">`;
-                videos.forEach(video => {
-                    fullResponse += `
-                        <div class="video-item">
-                            <div class="video-container">
-                                <iframe src="https://www.youtube.com/embed/${video.id}" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                            <div class="video-footer">
-                                <a href="https://www.y2mate.com/youtube/${video.id}" target="_blank" class="download-btn">
-                                    <i class="fas fa-download"></i> Download
-                                </a>
-                            </div>
-                        </div>`;
-                });
-                fullResponse += `</div>`;
-            } else {
-                // If no videos found, add a message
-                fullResponse += `<div class="no-videos">No related videos found</div>`;
-            }
-    
-            // Final fallback if no content at all
-            if (!fullResponse) {
-                fullResponse = "I couldn't find any information about that. Could you try rephrasing your question?";
-            }
-    
-            // Hide typing indicator and display full response immediately
-            hideTypingIndicator();
-            addMessage('assistant', fullResponse);
-
-            // Save conversation
-            conversationHistory.push({ role: 'assistant', content: fullResponse });
-            saveConversation();
-        } catch (error) {
-            console.error('Error in sendMessage:', error);
-            hideTypingIndicator();
-            addMessage('assistant', "I'm having trouble responding. Please try again later.");
-            conversationHistory.push({ role: 'assistant', content: "I'm having trouble responding. Please try again later." });
-            saveConversation();
-        } finally {
-            enableInput();
-        }
+        addMessage('assistant', personalInfoResponse.response);
+        conversationHistory.push(
+            { role: 'user', content: message },
+            { role: 'assistant', content: personalInfoResponse.response }
+        );
+        saveConversation();
+        enableInput();
+        return;
     }
+
+    // Add user message
+    addMessage('user', message);
+    userInput.value = '';
+    adjustTextareaHeight();
+    conversationHistory.push({ role: 'user', content: message });
+
+    // Show typing indicator
+    showTypingIndicator();
+
+    try {
+        // Generate chat title if first message
+        const isFirstMessageInNewChat = conversationHistory.length === 1 && currentChatTitle.textContent === 'New chat';
+        if (isFirstMessageInNewChat) {
+            try {
+                const titleMessages = [
+                    { role: 'system', content: 'Generate a very short, concise, and descriptive title (3-7 words) for the following user message. Respond with just the title, no extra text, no quotes.' },
+                    { role: 'user', content: message }
+                ];
+                const titleResponse = await callOpenRouterAPI(titleMessages);
+                updateChatTitle(titleResponse.trim().replace(/^"|"$/g, ''));
+            } catch (titleError) {
+                console.log('Title generation failed:', titleError);
+                updateChatTitle(message.split(/\s+/).slice(0, 5).join(' '));
+            }
+        }
+
+        // Get videos
+        let videos = [];
+        try {
+            videos = await searchVideos(message) || [];
+        } catch (videoError) {
+            console.log('Video search failed:', videoError);
+        }
+
+        // Try knowledge base first
+        let knowledgeResponse = await getKnowledgeResponse(message);
+        let aiResponse = '';
+        
+        if (!knowledgeResponse || knowledgeResponse.includes('No information found')) {
+            try {
+                aiResponse = await callOpenRouterAPI(conversationHistory);
+            } catch (aiError) {
+                console.log('AI response failed:', aiError);
+                aiResponse = "Here's what I found:";
+            }
+        }
+
+        // Build response
+        let fullResponse = '';
+        
+        if (knowledgeResponse && !knowledgeResponse.includes('No information found')) {
+            fullResponse += knowledgeResponse;
+        } else {
+            // Only show image when using AI response
+            fullResponse += generateResponseImage(message);
+            fullResponse += `<div class="ai-response">${aiResponse}</div>`;
+        }
+        
+        // Add videos
+        if (videos.length > 0) {
+            fullResponse += `<div class="videos-section">`;
+            videos.forEach(video => {
+                fullResponse += `
+                    <div class="video-item">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/${video.id}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-footer">
+                            <a href="https://www.y2mate.com/youtube/${video.id}" target="_blank" class="download-btn">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                    </div>`;
+            });
+            fullResponse += `</div>`;
+        } else {
+            fullResponse += `<div class="no-videos">No related videos found</div>`;
+        }
+
+        // Final fallback
+        if (!fullResponse) {
+            fullResponse = "I couldn't find any information. Please try rephrasing your question.";
+        }
+
+        // Display and save
+        hideTypingIndicator();
+        addMessage('assistant', fullResponse);
+        conversationHistory.push({ role: 'assistant', content: fullResponse });
+        saveConversation();
+    } catch (error) {
+        console.error('Error:', error);
+        hideTypingIndicator();
+        addMessage('assistant', "I'm having trouble responding. Please try again later.");
+        conversationHistory.push({ role: 'assistant', content: "I'm having trouble responding. Please try again later." });
+        saveConversation();
+    } finally {
+        enableInput();
+    }
+}
+
+// Enhanced responsive CSS for images (add once)
+if (!document.querySelector('style#response-image-style')) {
+    const style = document.createElement('style');
+    style.id = 'response-image-style';
+    style.textContent = `
+        .response-image-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .response-image {
+            flex: 0 1 45%;
+            max-width: 45%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: #f5f5f5;
+        }
+        .response-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            min-height: 200px;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+            .response-image {
+                flex: 0 1 45%;
+                max-width: 45%;
+            }
+            .response-image img {
+                min-height: 150px;
+            }
+        }
+        @media (max-width: 480px) {
+            .response-image {
+                flex: 0 1 100%;
+                max-width: 100%;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
     
     // New function with retry logic for API calls
     async function callOpenRouterAPIWithRetry(messages, retries = 2) {
