@@ -622,9 +622,38 @@
         return re.test(email) && email.length <= 100;
     }
 // Image generation utility (shows 4 images side-by-side)
-function generateResponseImage(keyword) {
+async function generateResponseImage(keyword) {
     let imagesHTML = '';
-    for (let i = 1; i <= 2; i++) {
+
+    // First try Pexels API
+    try {
+        const pexelsResponse = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(keyword)}&per_page=4`, {
+            headers: {
+                'Authorization': 'ggkfIINJV21BTXlHwvhEGEWZhrFptgF8QSSDZ7490XLkjlVNz8u7W0DM'
+            }
+        });
+
+        if (pexelsResponse.ok) {
+            const data = await pexelsResponse.json();
+            if (data.photos.length >= 4) {
+                for (let i = 0; i < 4; i++) {
+                    const imageUrl = data.photos[i].src.medium;
+                    imagesHTML += `
+<div class="response-image">
+    <img src="${imageUrl}" alt="${keyword.replace(/"/g, '&quot;')} ${i+1}">
+</div>
+                    `;
+                }
+                return `<div class="response-image-row">${imagesHTML}</div>`;
+            }
+            // If fewer than 4 images, fallback below
+        }
+    } catch (error) {
+        console.error('Pexels API error:', error);
+    }
+
+    // Fallback to Picsum.photos if Pexels fails or fewer than 4 images
+    for (let i = 1; i <= 4; i++) {
         const imageUrl = `https://picsum.photos/seed/${encodeURIComponent(keyword + i)}/300/200`;
         imagesHTML += `
 <div class="response-image">
@@ -643,8 +672,8 @@ async function sendMessage() {
 
     // Clear errors and disable input
     errorMessage.textContent = '';
-    userInput.disabled = false;
-    sendButton.disabled = false;
+    userInput.disabled = true;     // disable input while sending
+    sendButton.disabled = true;
 
     // Check personal questions first
     const personalInfoResponse = checkPersonalInfoQuestions(message);
@@ -699,7 +728,7 @@ async function sendMessage() {
         // Try knowledge base first
         let knowledgeResponse = await getKnowledgeResponse(message);
         let aiResponse = '';
-        
+
         if (!knowledgeResponse || knowledgeResponse.includes('No information found')) {
             try {
                 aiResponse = await callOpenRouterAPI(conversationHistory);
@@ -711,15 +740,16 @@ async function sendMessage() {
 
         // Build response
         let fullResponse = '';
-        
+
         if (knowledgeResponse && !knowledgeResponse.includes('No information found')) {
             fullResponse += knowledgeResponse;
         } else {
-            // Only show image when using AI response
-            fullResponse += generateResponseImage(message);
+            // Await generateResponseImage because it's async
+            const imagesHTML = await generateResponseImage(message);
+            fullResponse += imagesHTML;
             fullResponse += `<div class="ai-response">${aiResponse}</div>`;
         }
-        
+
         // Add videos
         if (videos.length > 0) {
             fullResponse += `<div class="videos-section">`;
@@ -751,6 +781,7 @@ async function sendMessage() {
         addMessage('assistant', fullResponse);
         conversationHistory.push({ role: 'assistant', content: fullResponse });
         saveConversation();
+
     } catch (error) {
         console.error('Error:', error);
         hideTypingIndicator();
@@ -761,6 +792,7 @@ async function sendMessage() {
         enableInput();
     }
 }
+
 
 // Enhanced responsive CSS for images (add once)
 if (!document.querySelector('style#response-image-style')) {
@@ -775,8 +807,8 @@ if (!document.querySelector('style#response-image-style')) {
             margin-bottom: 20px;
         }
         .response-image {
-            flex: 0 1 45%;
-            max-width: 45%;
+            flex: 0 1 22%;
+            max-width: 22%;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -791,8 +823,8 @@ if (!document.querySelector('style#response-image-style')) {
         }
         @media (max-width: 768px) {
             .response-image {
-                flex: 0 1 45%;
-                max-width: 45%;
+                flex: 0 1 30%;
+                max-width: 30%;
             }
             .response-image img {
                 min-height: 150px;
@@ -800,13 +832,15 @@ if (!document.querySelector('style#response-image-style')) {
         }
         @media (max-width: 480px) {
             .response-image {
-                flex: 0 1 100%;
-                max-width: 100%;
+                flex: 0 1 45%;
+                max-width: 45%;
             }
         }
     `;
+
     document.head.appendChild(style);
 }
+
     
     // New function with retry logic for API calls
     async function callOpenRouterAPIWithRetry(messages, retries = 2) {
