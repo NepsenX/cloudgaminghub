@@ -672,8 +672,8 @@ async function sendMessage() {
 
     // Clear errors and disable input
     errorMessage.textContent = '';
-    userInput.disabled = true;     // disable input while sending
-    sendButton.disabled = true;
+    userInput.disabled = false;     // disable input while sending
+    sendButton.disabled = false;
 
     // Check personal questions first
     const personalInfoResponse = checkPersonalInfoQuestions(message);
