@@ -1038,57 +1038,41 @@ if (!document.querySelector('style#response-image-style')) {
         const chat = chats.find(c => c.id === chatId);
         if (!chat) return;
     
-        // Set current chat ID (but never load a title)
         currentChatId = chatId;
-        localStorage.setItem('currentChatId', currentChatId);
+        currentChatTitle.textContent = 'New chat'; // 🔒 Don't load stored title
     
-        // Always show default title
-        currentChatTitle.textContent = 'New chat';
-    
-        // Load conversation history from localStorage
         const chatData = JSON.parse(localStorage.getItem(`chat_${chatId}`)) || [];
         conversationHistory = chatData;
     
-        // Render messages
         chatContainer.innerHTML = '';
         conversationHistory.forEach(msg => {
             addMessage(msg.role, msg.content, true);
         });
     
-        // Update UI visibility
         updateChatVisibility();
         welcomeMessage.style.display = conversationHistory.length === 0 ? 'block' : 'none';
     
-        // Refresh sidebar
         loadChatHistory();
-    
-        // Close sidebar on mobile
         if (window.innerWidth <= 768) toggleSidebar();
     }
     
     function saveConversation() {
-        if (!currentChatId) return;
-    
-        // Save messages to localStorage
         localStorage.setItem(`chat_${currentChatId}`, JSON.stringify(conversationHistory));
     
         const chatIndex = chats.findIndex(c => c.id === currentChatId);
-        const now = new Date().toISOString();
-    
         if (chatIndex >= 0) {
-            chats[chatIndex].updatedAt = now;
+            chats[chatIndex].updatedAt = new Date().toISOString();
         } else {
-            // Save only ID + timestamps (no title!)
             chats.unshift({
                 id: currentChatId,
-                createdAt: now,
-                updatedAt: now
+                // 🔒 No title saved
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             });
         }
-    
-        // Update chat list in storage (no titles!)
         localStorage.setItem('chats', JSON.stringify(chats));
     }
+
 
 
     async function callOpenRouterAPI(message) {
