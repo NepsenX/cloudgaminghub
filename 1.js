@@ -621,9 +621,11 @@
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email) && email.length <= 100;
     }
-// Image generation utility (shows 4 images side-by-side)
-async function generateResponseImage(keyword) {
+// Image generation utility (shows 4 images side-by-side or in a row if message is long)
+async function generateResponseImage(keyword, forceRow = false) {
     let imagesHTML = '';
+    const containerClass = 'response-image-row';
+    const inlineStyle = forceRow ? 'flex-wrap: nowrap; overflow-x: auto;' : '';
 
     // First try Pexels API
     try {
@@ -641,29 +643,31 @@ async function generateResponseImage(keyword) {
                     imagesHTML += `
 <div class="response-image">
     <img src="${imageUrl}" alt="${keyword.replace(/"/g, '&quot;')} ${i+1}">
-</div>
-                    `;
+</div>`;
                 }
-                return `<div class="response-image-row">${imagesHTML}</div>`;
+                return `<div class="${containerClass}" style="${inlineStyle}">${imagesHTML}</div>`;
             }
-            // If fewer than 4 images, fallback below
         }
     } catch (error) {
         console.error('Pexels API error:', error);
     }
 
-    // Fallback to Picsum.photos if Pexels fails or fewer than 4 images
+    // Fallback to Picsum.photos
     for (let i = 1; i <= 4; i++) {
         const imageUrl = `https://picsum.photos/seed/${encodeURIComponent(keyword + i)}/300/200`;
         imagesHTML += `
 <div class="response-image">
     <img src="${imageUrl}" alt="${keyword.replace(/"/g, '&quot;')} ${i}">
-</div>
-        `;
+</div>`;
     }
-    return `<div class="response-image-row">${imagesHTML}</div>`;
+
+    return `<div class="${containerClass}" style="${inlineStyle}">${imagesHTML}</div>`;
 }
 
+function enableInput() {
+    userInput.disabled = false;
+    sendButton.disabled = false;
+}
 
 // Main sendMessage function with integrated image support
 async function sendMessage() {
@@ -672,8 +676,8 @@ async function sendMessage() {
 
     // Clear errors and disable input
     errorMessage.textContent = '';
-    userInput.disabled = false;     // disable input while sending
-    sendButton.disabled = false;
+    userInput.disabled = false;
+    sendButton.disabled = true;
 
     // Check personal questions first
     const personalInfoResponse = checkPersonalInfoQuestions(message);
@@ -744,8 +748,8 @@ async function sendMessage() {
         if (knowledgeResponse && !knowledgeResponse.includes('No information found')) {
             fullResponse += knowledgeResponse;
         } else {
-            // Await generateResponseImage because it's async
-            const imagesHTML = await generateResponseImage(message);
+            const isLongMessage = message.split(/\s+/).length > 50;
+            const imagesHTML = await generateResponseImage(message, isLongMessage);
             fullResponse += imagesHTML;
             fullResponse += `<div class="ai-response">${aiResponse}</div>`;
         }
@@ -755,16 +759,16 @@ async function sendMessage() {
             fullResponse += `<div class="videos-section">`;
             videos.forEach(video => {
                 fullResponse += `
-                    <div class="video-item">
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/${video.id}" frameborder="0" allowfullscreen></iframe>
-                        </div>
-                        <div class="video-footer">
-                            <a href="https://www.y2mate.com/youtube/${video.id}" target="_blank" class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                    </div>`;
+<div class="video-item">
+    <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/${video.id}" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="video-footer">
+        <a href="https://www.y2mate.com/youtube/${video.id}" target="_blank" class="download-btn">
+            <i class="fas fa-download"></i> Download
+        </a>
+    </div>
+</div>`;
             });
             fullResponse += `</div>`;
         } else {
@@ -776,7 +780,6 @@ async function sendMessage() {
             fullResponse = "I couldn't find any information. Please try rephrasing your question.";
         }
 
-        // Display and save
         hideTypingIndicator();
         addMessage('assistant', fullResponse);
         conversationHistory.push({ role: 'assistant', content: fullResponse });
@@ -788,9 +791,9 @@ async function sendMessage() {
         addMessage('assistant', "I'm having trouble responding. Please try again later.");
         conversationHistory.push({ role: 'assistant', content: "I'm having trouble responding. Please try again later." });
         saveConversation();
-    } finally {
-        enableInput();
-    }
+    } 
+   // ✅ Now re-enable after everything is done
+    enableInput();
 }
 
 
@@ -805,6 +808,7 @@ if (!document.querySelector('style#response-image-style')) {
             gap: 10px;
             justify-content: center;
             margin-bottom: 20px;
+            background: transform;
         }
         .response-image {
             flex: 0 1 22%;
@@ -812,7 +816,7 @@ if (!document.querySelector('style#response-image-style')) {
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            background: #f5f5f5;
+            background: transform;
         }
         .response-image img {
             width: 100%;
@@ -820,6 +824,7 @@ if (!document.querySelector('style#response-image-style')) {
             display: block;
             min-height: 200px;
             object-fit: cover;
+            background: transform;
         }
         @media (max-width: 768px) {
             .response-image {
@@ -837,9 +842,9 @@ if (!document.querySelector('style#response-image-style')) {
             }
         }
     `;
-
     document.head.appendChild(style);
 }
+
 
     
     // New function with retry logic for API calls
@@ -1032,57 +1037,60 @@ if (!document.querySelector('style#response-image-style')) {
     function loadChat(chatId) {
         const chat = chats.find(c => c.id === chatId);
         if (!chat) return;
-        
+    
+        // Set current chat ID (but never load a title)
         currentChatId = chatId;
-        currentChatTitle.textContent = chat.title;
-        
-        // Load conversation history
+        localStorage.setItem('currentChatId', currentChatId);
+    
+        // Always show default title
+        currentChatTitle.textContent = 'New chat';
+    
+        // Load conversation history from localStorage
         const chatData = JSON.parse(localStorage.getItem(`chat_${chatId}`)) || [];
         conversationHistory = chatData;
-        
-        // Clear and render messages (only once)
+    
+        // Render messages
         chatContainer.innerHTML = '';
         conversationHistory.forEach(msg => {
             addMessage(msg.role, msg.content, true);
         });
-        
-        // Update visibility after loading
+    
+        // Update UI visibility
         updateChatVisibility();
-        if (conversationHistory.length === 0) {
-            welcomeMessage.style.display = 'block';
-        } else {
-            welcomeMessage.style.display = 'none';
-        }
-                //create by nepsen
-        // Update chat history UI
+        welcomeMessage.style.display = conversationHistory.length === 0 ? 'block' : 'none';
+    
+        // Refresh sidebar
         loadChatHistory();
-        
+    
         // Close sidebar on mobile
-        if (window.innerWidth <= 768) {
-            toggleSidebar();
-        }
+        if (window.innerWidth <= 768) toggleSidebar();
     }
-
-        
-    // Save conversation to localStorage (unchanged from previous)
+    
     function saveConversation() {
-        // Save current conversation
+        if (!currentChatId) return;
+    
+        // Save messages to localStorage
         localStorage.setItem(`chat_${currentChatId}`, JSON.stringify(conversationHistory));
-        
-        // Update chat list        //create by nepsen
+    
         const chatIndex = chats.findIndex(c => c.id === currentChatId);
+        const now = new Date().toISOString();
+    
         if (chatIndex >= 0) {
-            chats[chatIndex].updatedAt = new Date().toISOString();
+            chats[chatIndex].updatedAt = now;
         } else {
+            // Save only ID + timestamps (no title!)
             chats.unshift({
                 id: currentChatId,
-                title: currentChatTitle.textContent || 'New chat',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+                createdAt: now,
+                updatedAt: now
             });
         }
+    
+        // Update chat list in storage (no titles!)
         localStorage.setItem('chats', JSON.stringify(chats));
     }
+
+
     async function callOpenRouterAPI(message) {
         const apiKeys = [
             config.apiKey,  // Primary key
