@@ -128,14 +128,14 @@
     function loadChatHistory() {
         chatHistory.innerHTML = '';
         
-        if (chats.length === 0) {
-          currentChatId = generateId();
-          localStorage.setItem('currentChatId', currentChatId);
-          chats.unshift({
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-          });
-          localStorage.setItem('chats', JSON.stringify(chats));
+        if (chats.length <= 0) {
+            currentChatId = generateId();
+
+            chats.unshift({
+                title: 'New chat',
+                updatedAt: new Date().toISOString()
+            });
+            localStorage.setItem('chats', JSON.stringify(chats));
         }
         
         chats.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
