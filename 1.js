@@ -129,14 +129,13 @@
         chatHistory.innerHTML = '';
         
         if (chats.length === 0) {
-            // Create a default chat if none exists
-            chats.push({        //create by nepsen
-                id: currentChatId,
-                title: 'New chat',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            });
-            localStorage.setItem('chats', JSON.stringify(chats));
+          currentChatId = generateId();
+          localStorage.setItem('currentChatId', currentChatId);
+          chats.unshift({
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+          });
+          localStorage.setItem('chats', JSON.stringify(chats));
         }
         
         chats.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -1033,13 +1032,12 @@ if (!document.querySelector('style#response-image-style')) {
         
         return messageDiv;
     }
-        
     function loadChat(chatId) {
         const chat = chats.find(c => c.id === chatId);
         if (!chat) return;
     
         currentChatId = chatId;
-        currentChatTitle.textContent = 'New chat'; // 🔒 Don't load stored title
+        currentChatTitle.textContent = chat.title;
     
         const chatData = JSON.parse(localStorage.getItem(`chat_${chatId}`)) || [];
         conversationHistory = chatData;
@@ -1057,6 +1055,7 @@ if (!document.querySelector('style#response-image-style')) {
     }
     
     function saveConversation() {
+        // ✅ শুধু এই চ্যাটের বার্তা সংরক্ষণ করা হচ্ছে
         localStorage.setItem(`chat_${currentChatId}`, JSON.stringify(conversationHistory));
     
         const chatIndex = chats.findIndex(c => c.id === currentChatId);
@@ -1065,12 +1064,13 @@ if (!document.querySelector('style#response-image-style')) {
         } else {
             chats.unshift({
                 id: currentChatId,
-                // 🔒 No title saved
+                title: currentChatTitle.textContent || 'New chat',
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             });
         }
-        localStorage.setItem('chats', JSON.stringify(chats));
+    
+        localStorage.setItem('chats', JSON.stringify(chats)); // ✅ শুধু chats তালিকা সেভ হচ্ছে
     }
 
 
