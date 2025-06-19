@@ -1,4 +1,4 @@
-        :root {
+              :root {
             --primary-color: #00ff9d;
             --primary-hover: #00e68a;
             --text-color: #e0e0e0;
@@ -329,87 +329,332 @@
                 flex: 0 0 85%;
             }
         }
+        /* Code block styling */
         pre {
             position: relative;
-            padding-top: 2rem; /* to make space for the button */
-            overflow: auto;
-        }
-        
-        .copy-button-container {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            z-index: 10;
-        }
-        /* General Styles for Wiki Response */
-        .wiki-response {
-            margin-bottom: 1.5rem;
+            padding-top: 0; /* Adjusted for header */
+            overflow: auto; /* Handles both x and y by default */
+            max-height: 400px; /* Example: limit height for vertical scrolling */
             border-radius: 0.5rem;
-            overflow: hidden;
+            background-color: #1a1a1a; /* Dark background for code block */
+            margin-top: 0.5rem; /* Space after header */
+            /* Ensure scrollbar style applies consistently */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: var(--primary-color) #2a2a2a; /* Firefox */
+        }
+        /* For Webkit browsers (Chrome, Safari, Edge) */
+        pre::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        pre::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        pre::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+        pre::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
         }
         
-        /* Image Styling */
-        .wiki-image {
+        pre code {
+            padding: 1rem; /* Padding for the code itself */
+            display: block;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            position: sticky; /* Make the header sticky */
+            top: 0; /* Stick to the top of its scrolling container */
+            z-index: 10; /* Ensure it stays above content when scrolling */
+            background-color: #2a2a2a; /* Dark grey for the header bar */
+            color: #e0e0e0;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .code-header .copy-button-container {
+            position: static; /* Remove absolute positioning */
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-header button {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .code-header .copy-button {
+            background-color: #4a4a4a;
+            color: #e0e0e0;
+        }
+
+        .code-header .copy-button:hover {
+            background-color: #6a6a4a; /* Darker hover */
+        }
+
+        .code-header .run-button {
+            background-color: #00b8ff; /* A shade of blue */
+            color: #ffffff;
+        }
+
+        .code-header .run-button:hover {
+            background-color: #0099e6;
+        }
+
+        /* Input Bar Styling - Chatbot like */
+        .chat-input-area {
+            position: sticky;
+            bottom: 0;
+            background: rgba(30, 30, 30, 0.7); /* Glass effect */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            z-index: 50; /* Ensure it stays on top */
+            display: flex;
+            flex-direction: column; /* Allow stacking of file preview and input */
+            align-items: center; /* Center horizontally */
+            width: 100%;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            align-items: flex-end; /* Align items to the bottom */
+            max-width: 48rem; /* Equivalent to max-w-3xl for input area */
+            width: 100%;
+            background-color: #2a2a2a; /* Dark background for the input field */
+            border: 1px solid #4a4a4a;
+            border-radius: 1.5rem; /* More rounded */
+            padding: 0.75rem 1rem; /* Adjust padding */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
+        }
+
+        .chat-input-wrapper textarea {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none; /* Disable manual resize */
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            padding: 0; /* Remove default textarea padding */
+            height: auto; /* Allow auto height adjustment */
+            min-height: 24px; /* Minimum height for one line */
+            max-height: 200px; /* Max height before scrolling */
+            overflow-y: auto; /* Enable scroll if content exceeds max-height */
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: var(--primary-color) #2a2a2a; /* Firefox */
+        }
+
+        /* Custom scrollbar for textarea */
+        .chat-input-wrapper textarea::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-input-wrapper textarea::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+        .chat-input-wrapper textarea::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .chat-input-wrapper .input-buttons {
+            display: flex;
+            align-items: flex-end; /* Align buttons to the bottom of the textarea */
+            gap: 0.5rem;
+            padding-left: 0.5rem; /* Space between text and buttons */
+        }
+
+        .chat-input-wrapper .neon-btn {
+            width: 32px; /* Smaller buttons */
+            height: 32px;
+            padding: 0;
+            border-radius: 50%; /* Circular buttons */
+            box-shadow: none; /* Remove individual button shadow for cleaner look */
+            background: #4a4a4a; /* Darker grey for icon buttons */
+            color: #e0e0e0;
+        }
+        
+        .chat-input-wrapper .neon-btn:hover {
+            background: var(--primary-color); /* Primary color on hover */
+            color: #000;
+            transform: translateY(0); /* No vertical transform */
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5); /* Subtle glow on hover */
+        }
+        
+        .chat-input-wrapper .neon-btn#send-button {
+            background: var(--primary-color); /* Send button always primary color */
+            color: #000;
+            box-shadow: var(--neon-shadow);
+        }
+        .chat-input-wrapper .neon-btn#send-button:hover {
+             background: var(--primary-hover);
+             box-shadow: 0 0 15px rgba(0, 255, 157, 0.9);
+        }
+
+
+        /* New File Preview Area Styles */
+        #file-preview-area {
+            max-width: 48rem; /* Match chat-input-wrapper max-width */
+            width: 100%;
+            display: flex; /* Always flex for centering, control visibility with 'hidden' class */
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 0; /* Reduced padding for the container */
+            /* Removed background, border, shadow from here as they are now on the pill itself */
+            /* Initially hidden, JS will show/hide */
+        }
+        #file-preview-area.hidden { /* Use this class to control visibility */
+            display: none;
+        }
+
+        #file-attachment-pill {
+            display: inline-flex; /* Use inline-flex to wrap content */
+            align-items: center;
+            background-color: #2a2a2a; /* Dark background for the pill */
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.5rem 1rem; /* Padding inside the pill */
+            font-size: 0.875rem; /* text-sm */
+            color: #e0e0e0; /* Light text color */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            max-width: 100%; /* Ensure pill does not overflow */
+            overflow: hidden; /* Hide overflow content */
+        }
+        #file-preview-thumbnail {
+            width: 2rem; /* w-8 */
+            height: 2rem; /* h-8 */
+            border-radius: 0.25rem; /* rounded-md */
+            margin-right: 0.5rem; /* mr-2 */
+            object-fit: cover;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        #file-icon {
+            font-size: 1.25rem; /* Adjusted size for icon */
+            margin-right: 0.5rem; /* mr-2 */
+            color: #9ca3af; /* text-gray-400 */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        #file-name-display {
+            /* This will be hidden by JavaScript by clearing its textContent */
+            display: none; /* Explicitly hide the element too */
+        }
+        #file-size-display {
+            margin-left: 0.5rem; /* ml-2 */
+            color: #9ca3af; /* text-gray-400 */
+            font-size: 0.75rem; /* text-xs */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        #remove-file-button {
+            margin-left: 0.75rem; /* ml-3 */
+            padding: 0.25rem; /* p-1 */
+            border-radius: 9999px; /* rounded-full */
+            background-color: transparent;
+            color: #a0a0a0;
+            transition: background-color 0.2s;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        #remove-file-button:hover {
+            background-color: #4a4a4a; /* hover:bg-gray-600 */
+            color: #e0e0e0;
+        }
+
+        #save-image-button {
+            /* Keep its original neon-btn style, just control visibility */
+            /* Ensure it's not part of the pill itself */
+        }
+
+
+        /* Hide the old drop-zone text and file-input-wrapper */
+        #drop-zone {
+            display: none !important; 
+        }
+        #file-input-wrapper {
+            display: none !important;
+        }
+
+
+        /* Custom styling for generated images */
+        .generated-image {
             max-width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            margin-bottom: 1rem;
-            border-radius: 0.5rem;
+            height: auto;
+            border-radius: 0.75rem; /* rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
+            display: block; /* ensure it takes its own line */
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        /* Text Padding */
-        .wiki-text {
-            padding: 0 0.5rem;
+        /* Loading indicator for images */
+        .image-loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 255, 157, 0.3);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: loading 1s linear infinite;
+            margin: 1rem auto; /* center it */
         }
-        
-        /* Link Styling */
-        .wiki-link {
-            display: inline-block;
-            margin-top: 0.5rem;
-            color: #3b82f6;
+
+        /* Adjusted CSS for links within message content */
+        .message-markdown a {
+            color: var(--text-color); /* Make general links match text color */
             text-decoration: underline;
         }
-        
-        /* Section Divider */
-        .section-divider {
-            margin: 1.5rem 0;
-            border: none;
-            border-top: 1px solid #e5e7eb;
+        .message-markdown a:hover {
+            text-decoration: none; /* Optional: remove underline on hover */
         }
-        
-        /* AI Response */
-        .ai-response {
-            margin-bottom: 1.5rem;
-        }
-        
-        /* Responsive Tweaks */
+
+        /* Responsive adjustments for sidebar and main content */
         @media (max-width: 768px) {
-            .wiki-text {
-                padding: 0 1rem;
+            #sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                z-index: 1000;
+                transition: transform 0.3s ease-in-out;
             }
-        
-            .wiki-image {
-                max-height: 200px;
+            #sidebar.sidebar-open {
+                transform: translateX(0);
             }
-        
-            .wiki-link {
-                font-size: 0.9rem;
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+            .flex-1.flex-col {
+                width: 100%; /* Ensure main content takes full width on small screens */
             }
         }
-        
-        @media (max-width: 480px) {
-            .wiki-text {
-                padding: 0 0.75rem;
-            }
-        
-            .wiki-link {
-                font-size: 0.85rem;
-            }
-        
-            .wiki-image {
-                max-height: 180px;
-            }
-        }
+        /* Updated CSS for knowledge-response */
         .knowledge-response {
             margin-bottom: 1.5rem;
             border-radius: 0.5rem;
@@ -433,7 +678,7 @@
             padding: 0 0.5rem;
         }
         
-        .knowledge-text h3 {
+    .knowledge-text h3 {
             margin-top: 0;
             color: #f0f0f0;
             font-size: 1.25rem;
@@ -448,7 +693,7 @@
         .source-link {
             display: inline-block;
             margin-top: 0.5rem;
-            color: #3b82f6;
+            color: #3b82f6; /* Source links remain blue */
             text-decoration: none;
             font-weight: 500;
         }
@@ -462,22 +707,25 @@
         }
         
         .related-topics h4 {
+            /* Changed color for "Related Topics:" to match general text */
+            color: var(--text-color); /* Corrected: Using CSS variable for consistency */
             margin-bottom: 0.5rem;
-            color: #f0f0f0;
             font-size: 1rem;
         }
         
         .related-topics ul {
             padding-left: 1.5rem;
-            margin: 0.5rem 0;
+            margin: 0.8em 0 1.2em 1.5em; /* Adjusted margin for consistency with main lists */
+            padding-left: 1.8em; /* Adjusted padding for consistency with main lists */
         }
         
         .related-topics li {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.6em; /* Adjusted margin for consistency with main lists */
+            padding-left: 0.4em; /* Adjusted padding for consistency with main lists */
         }
         
         .related-topics a {
-            color: #3b82f6;
+            color: #3b82f6; /* Links within related topics remain blue */
             text-decoration: none;
         }
         
@@ -532,3 +780,223 @@
         .avatar-icon i {
             font-size: 0.9rem;
         }
+
+        /* Mermaid specific styling */
+        .mermaid-diagram-container {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            background-color: #ffffff; /* Changed to white for better diagram visibility */
+            overflow-x: auto; /* Allow horizontal scrolling for wide diagrams */
+            margin-top: 0.5rem;
+            text-align: center; /* Center the diagram within its container */
+        }
+        .mermaid-diagram-container svg {
+            max-width: 100%; /* Ensure diagram doesn't overflow */
+            height: auto;
+        }
+        .mermaid-diagram-container.hidden {
+            display: none;
+        }
+        .mermaid-code-block {
+            /* This is a <pre> element containing <code>.
+               It is hidden by default when diagram is shown, and vice-versa. */
+            display: none; 
+        }
+        /* Specific styles for Mermaid toggle buttons */
+        .code-header .diagram-button, .code-header .code-toggle-button {
+            background-color: #6a4a9a; /* A shade of purple for Mermaid buttons */
+            color: #ffffff;
+        }
+        .code-header .diagram-button:hover, .code-header .code-toggle-button:hover {
+            background-color: #8a6ab9; /* Lighter purple on hover */
+        }
+        /* CSS for attached file preview within a chat message */
+        .attached-file-preview-in-chat {
+            max-width: 100%;
+            height: auto;
+            max-height: 200px; /* Limit height for inline display */
+            object-fit: contain;
+            border-radius: 8px;
+            margin-top: 0.5rem; /* Space above image */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+        }
+/* Improved text formatting */
+.message-markdown {
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.message-markdown p {
+    margin-bottom: 1.2em;
+    white-space: pre-wrap;
+}
+
+.message-markdown ul, 
+.message-markdown ol {
+    margin: 0.8em 0 1.2em 1.5em;
+    padding-left: 1.8em;
+}
+
+.message-markdown ul {
+    list-style-type: disc;
+}
+
+.message-markdown ol {
+    list-style-type: decimal;
+}
+
+.message-markdown li {
+    margin-bottom: 0.6em;
+    padding-left: 0.4em;
+}
+
+/* Number/bullet highlighting */
+.message-markdown li::marker {
+    color: var(--primary-color);
+    font-weight: bold; /* Make markers bold */
+}
+
+/* Code block improvements */
+pre {
+    position: relative;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: #1e1e1e;
+    border-radius: 6px;
+    margin: 1em 0;
+    padding: 0;
+    border: 1px solid #333;
+}
+
+pre code {
+    display: block;
+    padding: 1.2em;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #e0e0e0;
+    tab-size: 4;
+}
+
+/* Custom scrollbars for code blocks */
+pre::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
+}
+
+/* Different styling for user vs assistant code blocks */
+.user-message pre {
+    background-color: #252525;
+    border-color: #444;
+}
+
+.assistant-message pre {
+    background-color: #1a1a1a;
+}
+
+/* Paragraph separation */
+.message-separator {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 1.5em 0;
+    width: 80%;
+}
+
+/* Number highlighting */
+.highlight-number {
+    color: var(--primary-color);
+    font-weight: bold;
+    padding: 0 2px;
+}
+
+/* Key term highlighting */
+.highlight-term {
+    background-color: rgba(0, 255, 157, 0.25); /* Increased opacity */
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-weight: 500;
+    border-left: 2px solid var(--primary-color);
+    box-shadow: 0 0 5px rgba(0, 255, 157, 0.3); /* Added subtle shadow */
+}
+/* File Upload Drop Zone Styles */
+.file-upload-container {
+    position: relative;
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto 1rem;
+    padding: 1.5rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: rgba(30, 30, 30, 0.5);
+}
+
+.file-upload-container:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(30, 30, 30, 0.7);
+}
+
+.file-upload-container.drag-over {
+    border-color: var(--primary-color);
+    background-color: rgba(0, 255, 157, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+}
+
+.file-upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-upload-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.file-upload-text {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.file-upload-text strong {
+    color: var(--primary-color);
+}
+
+.file-upload-button {
+    background-color: var(--primary-color);
+    color: #000;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-upload-button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
