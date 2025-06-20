@@ -42,7 +42,7 @@
     let currentDeepSeekApiKeyIndex = 0; // For rotating DeepSeek keys
 
     const config = {
-        geminiFlashModel: "gemini-1.5-flash-latest", // For summary, file analysis, and DeepSeek fallback
+        geminiFlashModel: "gemini-2.0-flash", // For summary, file analysis, and DeepSeek fallback
         geminiImageGenModel: "imagen-3.0-generate-002", // For image generation
         deepSeekModel: "deepseek/deepseek-r1:free", // DeepSeek model name changed to OpenRouter format
         geminiApiEndpoint: "https://generativelanguage.googleapis.com/v1beta/models/",
