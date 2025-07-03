@@ -14,21 +14,13 @@
     // IMPORTANT: For client-side applications, API keys are inherently visible in the browser's developer tools.
     // This rotation mechanism helps with rate limits and provides fallback, but DOES NOT secure the keys from discovery.
     const YOUTUBE_API_KEYS = [
-        'AIzaSyBNGX-ctd1bHFfKR1chi_xx6it7gaTbZOM',
-        'AIzaSyC93w_UsnvHB1cY-QJFOIpUUVef0Kr9thU',
-        'AIzaSyAx9tVUn94XOf_z0P8SgK4ONGvtYTnG5CQ',
-        'AIzaSyCOXQjAi6pXOf_z0P8SgK4ONGvtYTnG5CQjAi6p4AxAsmwRfiuAGZ7490XLkjlVNz8u7W0DM',
-        'AIzaSyCBpRZt8Ixw-9lOCvpPHRNS0z2IY942sZQ'
+        'AIzaSyApcT3rCOm8ExUbnkzxFKmov89xlnV9eek'
     ];
     let currentYoutubeApiKeyIndex = 0;
 
     // Gemini API Keys provided by the user
     const GEMINI_API_KEYS = [
-        'AIzaSyD3N22MpwPfObp7SmuCzdAsdXduij1CAbg',
-        'AIzaSyBrLFORMIa1Q73eot8KveqhFgHqpglI6YA',
-        'AIzaSyDSO9QllEwb6GFzxmqLSvMEsbemoCHmSkc',
-        'AIzaSyDSxBCZWuN4EkiKOAwHUNNHhsGc3U6s_hM',
-        'AIzaSyBikw4QJ_U2GGFeGHiC9kK3K_BR677z74s'
+        'AIzaSyBqW56DFI4xft0GS1xk9GNPLoG6LVpr_Rs'
     ];
     let currentGeminiApiKeyIndex = 0; // For rotating Gemini keys
 
