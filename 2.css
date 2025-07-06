@@ -1,0 +1,1930 @@
+
+    /* 1. Theme (Theme) - CSS Variables */
+    :root {
+        /* Dark Theme Default */
+        --primary-color: #00ff9d;
+        --primary-hover: #00e68a;
+        --text-color: #e0e0e0;
+        --bg-color: #121212;
+        --sidebar-bg: #1e1e1e;
+        --message-user-bg: #252525;
+        --message-assistant-bg: #1a1a1a;
+        --border-color: #333333;
+        --nav-bg: rgba(30, 30, 30, 0.7); /* Glass effect for nav */
+        --neon-shadow: 0 0 10px rgba(0, 255, 157, 0.7);
+        --scroll-thumb-color: #333; /* Light black scrollbar */
+        --scroll-track-color: rgba(255, 255, 255, 0.05);
+        --input-bg: rgba(42, 42, 42, 0.8); /* Input bar background with glass */
+        --input-border: #4a4a4a;
+        --input-focus-border: var(--primary-color);
+        --input-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+        /* Light Theme Variables */
+        --light-primary-color: #007bff; /* Blue */
+        --light-primary-hover: #0056b3;
+        --light-text-color: #333333; /* Black */
+        --light-bg-color: #ffffff; /* White */
+        --light-sidebar-bg: #f0f0f0;
+        --light-message-user-bg: #e0e0e0;
+        --light-message-assistant-bg: #f9f9f9;
+        --light-border-color: #cccccc;
+        --light-nav-bg: rgba(233, 233, 233, 0.7);
+        --light-scroll-thumb-color: #999;
+        --light-scroll-track-color: #eee;
+        --light-input-bg: rgba(255, 255, 255, 0.8);
+        --light-input-border: #cccccc;
+        --light-input-focus-border: var(--light-primary-color);
+        --light-input-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        /* Light Blue Theme Variables */
+        --light-blue-primary-color: #00b8ff;
+        --light-blue-primary-hover: #0099e6;
+        --light-blue-text-color: #333333;
+        --light-blue-bg-color: #e0f2f7; /* Light Blue */
+        --light-blue-sidebar-bg: #cceef7;
+        --light-blue-message-user-bg: #bbdefb;
+        --light-blue-message-assistant-bg: #e3f2fd;
+        --light-blue-border-color: #a7d9ed;
+        --light-blue-nav-bg: rgba(179, 229, 252, 0.7);
+        --light-blue-scroll-thumb-color: #64b5f6;
+        --light-blue-scroll-track-color: #e1f5fe;
+        --light-blue-input-bg: rgba(240, 248, 255, 0.8);
+        --light-blue-input-border: #a7d9ed;
+        --light-blue-input-focus-border: var(--light-blue-primary-color);
+        --light-blue-input-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        /* Dark Blue Theme Variables */
+        --dark-blue-primary-color: #42a5f5;
+        --dark-blue-primary-hover: #2196f3;
+        --dark-blue-text-color: #e0e0e0;
+        --dark-blue-bg-color: #1a202c; /* Dark Blue */
+        --dark-blue-sidebar-bg: #2d3748;
+        --dark-blue-message-user-bg: #4a5568;
+        --dark-blue-message-assistant-bg: #2c3440;
+        --dark-blue-border-color: #4a4a4a;
+        --dark-blue-nav-bg: rgba(42, 48, 60, 0.7);
+        --dark-blue-scroll-thumb-color: #64b5f6;
+        --dark-blue-scroll-track-color: #2c3440;
+        --dark-blue-input-bg: rgba(45, 55, 72, 0.8);
+        --dark-blue-input-border: #4a4a4a;
+        --dark-blue-input-focus-border: var(--dark-blue-primary-color);
+        --dark-blue-input-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease; /* Theme change animation */
+    }
+
+    /* Glass message background setting */
+    body.glass-enabled .message-user-bg,
+    body.glass-enabled .user-message .message-markdown {
+        background: rgba(37, 37, 37, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+    }
+
+    body.glass-enabled .message-assistant-bg,
+    body.glass-enabled .assistant-message .message-markdown {
+        background: rgba(26, 26, 26, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+    }
+
+    /* Glass message backgrounds when custom background is set */
+    body.custom-background .message-user-bg,
+    body.custom-background .user-message .message-markdown {
+        background: rgba(37, 37, 37, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+    }
+
+    body.custom-background .message-assistant-bg,
+    body.custom-background .assistant-message .message-markdown {
+        background: rgba(26, 26, 26, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+    }
+
+    /* Theme Classes */
+    body[data-theme="light"] {
+        --primary-color: var(--light-primary-color);
+        --primary-hover: var(--light-primary-hover);
+        --text-color: var(--light-text-color);
+        --bg-color: var(--light-bg-color);
+        --sidebar-bg: var(--light-sidebar-bg);
+        --message-user-bg: var(--light-message-user-bg);
+        --message-assistant-bg: var(--light-message-assistant-bg);
+        --border-color: var(--light-border-color);
+        --nav-bg: var(--light-nav-bg);
+        --scroll-thumb-color: var(--light-scroll-thumb-color);
+        --scroll-track-color: var(--light-scroll-track-color);
+        --input-bg: var(--light-input-bg);
+        --input-border: var(--light-input-border);
+        --input-focus-border: var(--light-input-focus-border);
+        --input-shadow: var(--light-input-shadow);
+    }
+    
+    body[data-theme="light"].glass-enabled .message-user-bg,
+    body[data-theme="light"].glass-enabled .user-message .message-markdown {
+        background: rgba(224, 224, 224, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body[data-theme="light"].glass-enabled .message-assistant-bg,
+    body[data-theme="light"].glass-enabled .assistant-message .message-markdown {
+        background: rgba(249, 249, 249, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body[data-theme="light"].custom-background .message-user-bg,
+    body[data-theme="light"].custom-background .user-message .message-markdown {
+        background: rgba(224, 224, 224, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body[data-theme="light"].custom-background .message-assistant-bg,
+    body[data-theme="light"].custom-background .assistant-message .message-markdown {
+        background: rgba(249, 249, 249, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    body[data-theme="light-blue"] {
+        --primary-color: var(--light-blue-primary-color);
+        --primary-hover: var(--light-blue-primary-hover);
+        --text-color: var(--light-blue-text-color);
+        --bg-color: var(--light-blue-bg-color);
+        --sidebar-bg: var(--light-blue-sidebar-bg);
+        --message-user-bg: var(--light-blue-message-user-bg);
+        --message-assistant-bg: var(--light-blue-message-assistant-bg);
+        --border-color: var(--light-blue-border-color);
+        --nav-bg: var(--light-blue-nav-bg);
+        --scroll-thumb-color: var(--light-blue-scroll-thumb-color);
+        --scroll-track-color: var(--light-blue-scroll-track-color);
+        --input-bg: var(--light-blue-input-bg);
+        --input-border: var(--light-blue-input-border);
+        --input-focus-border: var(--light-blue-input-focus-border);
+        --input-shadow: var(--light-blue-input-shadow);
+    }
+    
+    body[data-theme="light-blue"].glass-enabled .message-user-bg,
+    body[data-theme="light-blue"].glass-enabled .user-message .message-markdown {
+        background: rgba(187, 222, 251, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body[data-theme="light-blue"].glass-enabled .message-assistant-bg,
+    body[data-theme="light-blue"].glass-enabled .assistant-message .message-markdown {
+        background: rgba(227, 242, 253, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body[data-theme="light-blue"].custom-background .message-user-bg,
+    body[data-theme="light-blue"].custom-background .user-message .message-markdown {
+        background: rgba(187, 222, 251, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body[data-theme="light-blue"].custom-background .message-assistant-bg,
+    body[data-theme="light-blue"].custom-background .assistant-message .message-markdown {
+        background: rgba(227, 242, 253, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    body[data-theme="dark-blue"] {
+        --primary-color: var(--dark-blue-primary-color);
+        --primary-hover: var(--dark-blue-primary-hover);
+        --text-color: var(--dark-blue-text-color);
+        --bg-color: var(--dark-blue-bg-color);
+        --sidebar-bg: var(--dark-blue-sidebar-bg);
+        --message-user-bg: var(--dark-blue-message-user-bg);
+        --message-assistant-bg: var(--dark-blue-message-assistant-bg);
+        --border-color: var(--dark-blue-border-color);
+        --nav-bg: var(--dark-blue-nav-bg);
+        --scroll-thumb-color: var(--dark-blue-scroll-thumb-color);
+        --scroll-track-color: var(--dark-blue-scroll-track-color);
+        --input-bg: var(--dark-blue-input-bg);
+        --input-border: var(--dark-blue-input-border);
+        --input-focus-border: var(--dark-blue-input-focus-border);
+        --input-shadow: var(--dark-blue-input-shadow);
+    }
+    
+    body[data-theme="dark-blue"].glass-enabled .message-user-bg,
+    body[data-theme="dark-blue"].glass-enabled .user-message .message-markdown {
+        background: rgba(74, 85, 104, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body[data-theme="dark-blue"].glass-enabled .message-assistant-bg,
+    body[data-theme="dark-blue"].glass-enabled .assistant-message .message-markdown {
+        background: rgba(44, 52, 64, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body[data-theme="dark-blue"].custom-background .message-user-bg,
+    body[data-theme="dark-blue"].custom-background .user-message .message-markdown {
+        background: rgba(74, 85, 104, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body[data-theme="dark-blue"].custom-background .message-assistant-bg,
+    body[data-theme="dark-blue"].custom-background .assistant-message .message-markdown {
+        background: rgba(44, 52, 64, 0.7) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+    }
+    
+    .animate-pulse {
+        animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Logo loading animation - Enhanced */
+    @keyframes logoSpin {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(180deg) scale(1.1); }
+        100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes logoPulse {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7);
+        }
+        50% { 
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(0, 255, 157, 0);
+        }
+    }
+
+    .logo-thinking {
+        animation: logoSpin 2s linear infinite, logoPulse 1.5s ease-in-out infinite;
+        filter: brightness(1.2);
+    }
+    
+    /* 7. Thinking (Thinking) Upgrade - Animated Dots */
+    .typing-indicator span {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        margin-right: 4px;
+    }
+    
+    .typing-indicator span:nth-child(1) {
+        animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+    
+    .typing-indicator span:nth-child(2) {
+        animation: typingAnimation 1.4s infinite ease-in-out 0.2s;
+    }
+    
+    .typing-indicator span:nth-child(3) {
+        animation: typingAnimation 1.4s infinite ease-in-out 0.4s;
+    }
+    
+    @keyframes typingAnimation {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-5px); }
+    }
+
+    /* Real-time typing effect */
+    @keyframes typewriterCursor {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+    }
+
+    .typing-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1.2em;
+        background-color: var(--primary-color);
+        animation: typewriterCursor 1s infinite;
+        margin-left: 2px;
+        vertical-align: text-bottom;
+    }
+    
+    .gradient-text {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        background-image: linear-gradient(90deg, #00ff9d, #00b8ff);
+    }
+    
+    /* 1. Theme (Theme) - Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: var(--scroll-track-color);
+        border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--scroll-thumb-color);
+        border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-hover);
+    }
+    
+    /* Futuristic input glow */
+    .glow-effect {
+        box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .glow-effect:focus {
+        box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+    }
+    
+    /* Glass morphism effect */
+    .glass {
+        background: var(--nav-bg); /* Use theme variable for glass background */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border-color); /* Use theme variable for border */
+        color: var(--text-color); /* Ensure text color changes with theme */
+    }
+    
+    /* Hover effects */
+    .hover-scale {
+        transition: transform 0.3s ease;
+    }
+    
+    .hover-scale:hover {
+        transform: scale(1.02);
+    }
+    
+    /* Loading animation */
+    @keyframes loading {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .loading-spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(0, 255, 157, 0.3);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: loading 1s linear infinite;
+    }
+
+    /* Voice recording animation */
+    @keyframes voiceRecord {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7);
+        }
+        50% { 
+            transform: scale(1.1);
+            box-shadow: 0 0 0 10px rgba(255, 77, 77, 0);
+        }
+    }
+
+    .voice-recording {
+        animation: voiceRecord 1.5s ease-in-out infinite;
+        background: #ff4d4d !important;
+        color: white !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .video-carousel-item {
+            flex: 0 0 85%;
+        }
+        
+        /* Hide NeoDot logo on mobile - only show user avatar */
+        .assistant-message .avatar-icon {
+            display: none !important;
+        }
+        
+        /* Adjust message layout on mobile when assistant avatar is hidden */
+        .assistant-message .message-wrapper {
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+        }
+        
+        .assistant-message .message-content {
+            margin-left: 0 !important;
+        }
+    }
+
+    /* Code block styling */
+    pre {
+        position: relative;
+        padding-top: 0; /* Adjusted for header */
+        overflow: auto; /* Handles both x and y by default */
+        max-height: 400px; /* Example: limit height for vertical scrolling */
+        border-radius: 0.5rem;
+        background-color: var(--message-assistant-bg); /* Use theme variable for code block background */
+        margin-top: 0.5rem; /* Space after header */
+        /* Ensure scrollbar style applies consistently */
+        scrollbar-width: thin; /* Firefox */
+        scrollbar-color: var(--primary-color) var(--message-assistant-bg); /* Firefox */
+    }
+
+    /* For Webkit browsers (Chrome, Safari, Edge) */
+    pre::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    pre::-webkit-scrollbar-track {
+        background: var(--scroll-track-color);
+        border-radius: 3px;
+    }
+    pre::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 3px;
+    }
+    pre::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-hover);
+    }
+    
+    pre code {
+        padding: 1rem; /* Padding for the code itself */
+        display: block;
+        overflow-x: auto;
+        color: var(--text-color); /* Ensure code text color changes with theme */
+    }
+
+    .code-header {
+        position: sticky; /* Make the header sticky */
+        top: 0; /* Stick to the top of its scrolling container */
+        z-index: 10; /* Ensure it stays above content when scrolling */
+        background-color: var(--message-assistant-bg); /* Use theme variable for header bar */
+        color: var(--text-color); /* Ensure header text color changes with theme */
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        font-size: 0.875rem;
+        border-bottom: 1px solid var(--border-color); /* Use theme variable for border */
+    }
+
+    .code-header .copy-button-container {
+        position: static; /* Remove absolute positioning */
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .code-header button {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 0.25rem;
+        transition: all 0.2s;
+    }
+
+    .code-header .copy-button {
+        background-color: var(--border-color); /* Use theme variable for button background */
+        color: var(--text-color); /* Use theme variable for button text */
+    }
+
+    .code-header .copy-button:hover {
+        background-color: var(--primary-hover); /* Darker hover */
+    }
+
+    .code-header .run-button {
+        background-color: var(--light-blue-primary-color); /* A shade of blue */
+        color: #ffffff;
+    }
+
+    .code-header .run-button:hover {
+        background-color: var(--light-blue-primary-hover);
+    }    /* 5. Input Bar (Input Bar) - Style - Enhanced height */
+    .chat-input-area {
+        position: sticky;
+        bottom: 0;
+        background: var(--input-bg); /* Use theme variable for input area background */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border-color); /* Use theme variable for border */
+        padding: 1.5rem; /* Increased padding for better spacing */
+        z-index: 50; /* Ensure it stays on top */
+        display: flex;
+        flex-direction: column; /* Allow stacking of file preview and input */
+        align-items: center; /* Center horizontally */
+        width: 100%;
+        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    }
+
+    .chat-input-wrapper {
+        display: flex;
+        align-items: flex-end; /* Align items to the bottom */
+        max-width: 48rem; /* Equivalent to max-w-3xl for input area */
+        width: 100%;
+        background-color: var(--input-bg); /* Use theme variable for input field background */
+        border: 1px solid var(--input-border); /* Use theme variable for border */
+        border-radius: 2rem; /* More rounded */
+        padding: 1rem 1.5rem; /* Increased padding for double height effect */
+        box-shadow: var(--input-shadow); /* Use theme variable for shadow */
+        transition: all 0.3s ease;
+        min-height: 80px; /* Double the original height */
+    }
+
+    .chat-input-wrapper:focus-within {
+        border-color: var(--input-focus-border); /* Use theme variable for focus border */
+        box-shadow: 0 0 15px rgba(0, 255, 157, 0.4); /* Primary color glow on focus */
+    }
+
+    .chat-input-wrapper textarea {
+        flex-grow: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        resize: none; /* Disable manual resize */
+        font-size: 1.1rem; /* Slightly larger font */
+        line-height: 1.6; /* Better line spacing */
+        color: var(--text-color); /* Ensure text color changes with theme */
+        padding: 0; /* Remove default textarea padding */
+        height: auto; /* Allow auto height adjustment */
+        min-height: 48px; /* Double the minimum height */
+        max-height: 200px; /* Max height before scrolling */
+        overflow-y: auto; /* Enable scroll if content exceeds max-height */
+        scrollbar-width: thin; /* Firefox */
+        scrollbar-color: var(--primary-color) var(--input-bg); /* Firefox */
+    }
+
+    /* Custom scrollbar for textarea */
+    .chat-input-wrapper textarea::-webkit-scrollbar {
+        width: 6px;
+    }
+    .chat-input-wrapper textarea::-webkit-scrollbar-track {
+        background: var(--input-bg);
+    }
+    .chat-input-wrapper textarea::-webkit-scrollbar-thumb {
+        background-color: var(--primary-color);
+        border-radius: 3px;
+    }
+
+    .chat-input-wrapper .input-buttons {
+        display: flex;
+        align-items: flex-end; /* Align buttons to the bottom of the textarea */
+        gap: 0.75rem; /* Increased gap between buttons */
+        padding-left: 0.75rem; /* Space between text and buttons */
+    }
+
+    .chat-input-wrapper .neon-btn {
+        width: 40px; /* Larger buttons for better touch */
+        height: 40px;
+        padding: 0;
+        border-radius: 50%; /* Circular buttons */
+        box-shadow: none; /* Remove individual button shadow for cleaner look */
+        background: var(--border-color); /* Darker grey for icon buttons */
+        color: var(--text-color); /* Ensure icon button color changes with theme */
+        transition: all 0.3s ease;
+        position: relative; /* For badge positioning */
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .chat-input-wrapper .neon-btn:hover {
+        background: var(--primary-color); /* Primary color on hover */
+        color: #000;
+        transform: translateY(-2px); /* Slight lift effect */
+        box-shadow: 0 4px 15px rgba(0, 255, 157, 0.5); /* Enhanced glow on hover */
+    }
+    
+    .chat-input-wrapper .neon-btn#send-button {
+        background: var(--primary-color); /* Send button always primary color */
+        color: #000;
+        box-shadow: var(--neon-shadow);
+    }
+    .chat-input-wrapper .neon-btn#send-button:hover {
+         background: var(--primary-hover);
+         box-shadow: 0 0 20px rgba(0, 255, 157, 0.9);
+         transform: translateY(-2px);
+    }
+
+    /* Plus Menu Dropdown Styling */
+    #plus-menu-dropdown {
+        width: 200px;
+        transition: all 0.3s ease;
+        transform-origin: bottom right;
+    }
+    
+    #plus-menu-dropdown button {
+        width: 100%;
+        border: none;
+        background: transparent;
+        color: var(--text-color);
+        cursor: pointer;
+    }
+    
+    #plus-menu-dropdown button:hover {
+        background: var(--border-color) !important;
+    }
+
+    /* Emoji dropdown styling */
+    #emoji-dropdown {
+        width: 180px;
+        transition: all 0.3s ease;
+        transform-origin: bottom right;
+    }
+    .emoji-option {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+    .emoji-option:hover {
+        transform: scale(1.2);
+    }
+
+    /* Stop button styling */
+    .chat-input-wrapper .neon-btn#stop-button {
+        background: #ff4d4d; /* Red color for stop */
+        color: white;
+        box-shadow: 0 0 10px rgba(255, 77, 77, 0.7);
+    }
+    .chat-input-wrapper .neon-btn#stop-button:hover {
+         background: #cc0000;
+         box-shadow: 0 0 20px rgba(255, 77, 77, 0.9);
+         transform: translateY(-2px);
+    }
+    
+    /* Pulse animation for send button */
+    @keyframes pulse-send {
+        0% {
+            box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(0, 255, 157, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(0, 255, 157, 0);
+        }
+    }
+    
+    .pulse-animation {
+        animation: pulse-send 2s infinite;
+    }
+
+    /* 10. Message Stop - Stop Generating Button */
+    #stop-generating-button {
+        background-color: #ff4d4d; /* Red color */
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        margin-top: 1rem;
+        display: none; /* Initially hidden */
+    }
+    #stop-generating-button:hover {
+        background-color: #cc0000;
+    }
+
+    /* New File Preview Area Styles */
+    #file-preview-area {
+        max-width: 48rem; /* Match chat-input-wrapper max-width */
+        width: 100%;
+        display: flex; /* Always flex for centering, control visibility with 'hidden' class */
+        flex-direction: column;
+        align-items: center;
+        padding: 0.5rem 0; /* Reduced padding for the container */
+        /* Removed background, border, shadow from here as they are now on the pill itself */
+        /* Initially hidden, JS will show/hide */
+    }
+    #file-preview-area.hidden { /* Use this class to control visibility */
+        display: none;
+    }
+
+    #file-attachment-pill {
+        display: inline-flex; /* Use inline-flex to wrap content */
+        align-items: center;
+        background-color: var(--message-user-bg); /* Use theme variable for pill background */
+        border-radius: 9999px; /* Fully rounded */
+        padding: 0.5rem 1rem; /* Padding inside the pill */
+        font-size: 0.875rem; /* text-sm */
+        color: var(--text-color); /* Light text color */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        max-width: 100%; /* Ensure pill does not overflow */
+        overflow: hidden; /* Hide overflow content */
+    }
+    #file-preview-thumbnail {
+        width: 2rem; /* w-8 */
+        height: 2rem; /* h-8 */
+        border-radius: 0.25rem; /* rounded-md */
+        margin-right: 0.5rem; /* mr-2 */
+        object-fit: cover;
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+    #file-icon {
+        font-size: 1.25rem; /* Adjusted size for icon */
+        margin-right: 0.5rem; /* mr-2 */
+        color: var(--text-color); /* Use theme variable for icon color */
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+    #file-name-display {
+        /* This will be hidden by JavaScript by clearing its textContent */
+        display: none; /* Explicitly hide the element too */
+    }
+    #file-size-display {
+        margin-left: 0.5rem; /* ml-2 */
+        color: var(--text-color); /* Use theme variable for text color */
+        font-size: 0.75rem; /* text-xs */
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+    #remove-file-button {
+        margin-left: 0.75rem; /* ml-3 */
+        padding: 0.25rem; /* p-1 */
+        border-radius: 9999px; /* rounded-full */
+        background-color: transparent;
+        color: var(--text-color); /* Use theme variable for icon color */
+        transition: background-color 0.2s;
+        flex-shrink: 0; /* Prevent shrinking */
+        border: none;
+        cursor: pointer;
+    }
+    #remove-file-button:hover {
+        background-color: var(--border-color); /* hover:bg-gray-600 */
+        color: var(--text-color);
+    }
+
+    #save-image-button {
+        /* Keep its original neon-btn style, just control visibility */
+        /* Ensure it's not part of the pill itself */
+    }
+
+    /* Hide the old drop-zone text and file-input-wrapper */
+    #drop-zone {
+        display: none !important; 
+    }
+    #file-input-wrapper {
+        display: none !important;
+    }
+
+    /* Custom styling for generated images - Made square */
+    .generated-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 0.75rem; /* rounded corners */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        display: block; /* ensure it takes its own line */
+        margin-left: auto;
+        margin-right: auto;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .generated-image:hover {
+        transform: scale(1.02);
+    }
+
+    /* Loading indicator for images */
+    .image-loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(0, 255, 157, 0.3);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: loading 1s linear infinite;
+        margin: 1rem auto; /* center it */
+    }
+
+    /* Adjusted CSS for links within message content */
+    .message-markdown a {
+        color: var(--primary-color); /* Make general links match primary color */
+        text-decoration: underline;
+    }
+    .message-markdown a:hover {
+        text-decoration: none; /* Optional: remove underline on hover */
+    }
+
+    /* 2. Sidebar (Sidebar) - Desktop and Mobile */
+    #sidebar {
+        width: 64px; /* Default icon size on desktop when hidden */
+        overflow-x: hidden;
+        transition: width 0.3s ease, transform 0.3s ease;
+        position: relative; /* For Overlay */
+        z-index: 100; /* Above Main UI */
+        background-color: var(--sidebar-bg); /* Use theme variable for sidebar background */
+        border-right: 1px solid var(--border-color); /* Use theme variable for border */
+    }
+    /* Desktop Sidebar Open State */
+    #sidebar.sidebar-open {
+        width: 260px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    }
+    /* Desktop Hover Effect */
+    #sidebar:not(.sidebar-open):hover {
+        width: 260px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    }
+    #sidebar:not(.sidebar-open):hover .sidebar-content {
+        opacity: 1;
+    }
+    #sidebar:not(.sidebar-open):hover .sidebar-minimal {
+        display: none;
+    }
+
+    .sidebar-content {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        color: var(--text-color); /* Ensure sidebar text color changes with theme */
+    }
+    .sidebar-minimal {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0.5rem;
+        gap: 1rem;
+    }
+    .sidebar-minimal .new-chat-icon,
+    .sidebar-minimal .user-avatar-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: var(--sidebar-bg);
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    .sidebar-minimal .new-chat-icon:hover,
+    .sidebar-minimal .user-avatar-icon:hover {
+        background-color: var(--primary-color);
+        color: #000;
+        transform: scale(1.1);
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5); /* Blur/Glass Hover Overlay */
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        z-index: 99; /* Below sidebar, above main UI */
+        display: none;
+    }
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* 3. New Settings (Settings) - Modal */
+    #settings-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7); /* Middle: Blur/Glass Hover Overlay */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 1001; /* Above sidebar */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    #settings-modal.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .settings-panel {
+        background-color: var(--bg-color); /* Top: Theme-styled setting panel */
+        color: var(--text-color);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        max-width: 600px;
+        width: 90%;
+        max-height: 90%;
+        overflow-y: auto;
+        position: relative;
+        border: 1px solid var(--border-color);
+    }
+    .settings-panel h2 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+    }
+    .settings-panel .setting-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .settings-panel .setting-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .settings-panel .setting-section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-color); /* Ensure settings heading text color changes with theme */
+        transition: color 0.3s ease;
+    }
+    .settings-panel .setting-section h3:hover {
+        color: var(--primary-color);
+    }
+    .settings-panel .setting-section-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .settings-panel .setting-section-content.expanded {
+        max-height: 500px; /* Adjust as needed */
+    }
+    .settings-panel label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 500;
+    }
+    .settings-panel input[type="text"],
+    .settings-panel select {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color);
+        background-color: var(--message-user-bg);
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    .settings-panel input[type="text"]:focus,
+    .settings-panel select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+    }
+    .settings-panel .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    .settings-panel .close-button,
+    .settings-panel .save-button,
+    .settings-panel .reset-button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    .settings-panel .close-button {
+        background-color: #666;
+        color: white;
+    }
+    .settings-panel .close-button:hover {
+        background-color: #888;
+        transform: translateY(-2px);
+    }
+    .settings-panel .save-button {
+        background-color: var(--primary-color);
+        color: #000;
+    }
+    .settings-panel .save-button:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+    .settings-panel .reset-button {
+        background-color: #d32f2f;
+        color: white;
+    }
+    .settings-panel .reset-button:hover {
+        background-color: #b71c1c;
+        transform: translateY(-2px);
+    }
+
+    /* Glass effect toggle styles */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: var(--primary-color);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+    
+    /* 4. Background Changing (Background Changing) */
+    body.custom-background {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* Background remains fixed when scrolling */
+    }
+    .background-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .background-presets .color-box {
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.2s ease;
+    }
+    .background-presets .color-box.selected {
+        border-color: var(--primary-color);
+    }
+    .background-upload-area {
+        border: 2px dashed var(--border-color);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+        margin-bottom: 1rem;
+        color: var(--text-color); /* Ensure text color changes with theme */
+    }
+    .background-upload-area:hover {
+        border-color: var(--primary-color);
+    }
+    .background-upload-area.drag-over {
+        background-color: rgba(0, 255, 157, 0.1);
+        border-color: var(--primary-color);
+    }
+    .background-image-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    .background-image-preview img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+    }
+    .slider-container {
+        margin-bottom: 1rem;
+    }
+    .slider-container label {
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+        color: var(--text-color); /* Ensure text color changes with theme */
+    }
+    .slider-container input[type="range"] {
+        width: 100%;
+        -webkit-appearance: none;
+        height: 8px;
+        background: var(--message-user-bg);
+        border-radius: 5px;
+        outline: none;
+        opacity: 0.7;
+        transition: opacity .2s;
+    }
+    .slider-container input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0, 255, 157, 0.5);
+    }
+    .slider-container input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0, 255, 157, 0.5);
+    }
+
+    /* Mobile sidebar styles */
+    @media (max-width: 768px) {
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 260px;
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            display: flex !important; /* Force display flex */
+        }
+        
+        #sidebar.sidebar-open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        /* 2. Sidebar (Sidebar) - Main UI won't move in mobile view */
+        .flex-1.flex-col {
+            width: 100%;
+            position: relative; /* Ensure it doesn't move */
+        }
+        
+        /* 8. Mobile Display Fix (Mobile Display) */
+        .example-prompts-container {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+            padding-bottom: 1rem; /* Prevent scrollbar from obscuring content */
+            scrollbar-width: none; /* Firefox */
+        }
+        .example-prompts-container::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+        .example-prompts-grid {
+            display: flex; /* Change to flex for horizontal scrolling */
+            flex-wrap: nowrap; /* Prevent wrapping */
+            gap: 1rem;
+            padding: 0.5rem 0;
+        }
+        .example-prompts-grid > div {
+            flex-shrink: 0; /* Prevent items from shrinking */
+            width: 80%; /* Adjust width for better mobile viewing */
+            scroll-snap-align: start;
+        }
+
+        /* Mobile image layout - horizontal scroll */
+        .response-image-row {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            padding: 10px 0;
+            gap: 15px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .response-image-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .response-image {
+            flex: 0 0 200px !important;
+            max-width: 200px !important;
+            height: 200px;
+            scroll-snap-align: start;
+        }
+
+        .response-image img {
+            height: 200px !important;
+            min-height: 200px !important;
+            object-fit: cover;
+        }
+    }
+
+    /* Desktop example prompts improvements */
+    @media (min-width: 769px) {
+        .example-prompts-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .example-prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+        .example-prompts-grid > div {
+            width: auto;
+            transition: all 0.3s ease;
+        }
+        .example-prompts-grid > div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 255, 157, 0.15);
+        }
+    }
+
+    .avatar-icon img {
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+    
+    .avatar-icon i {
+        font-size: 0.9rem;
+    }
+
+    /* Mermaid specific styling */
+    .mermaid-diagram-container {
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        background-color: var(--light-bg-color); /* Changed to white for better diagram visibility */
+        overflow-x: auto; /* Allow horizontal scrolling for wide diagrams */
+        margin-top: 0.5rem;
+        text-align: center; /* Center the diagram within its container */
+    }
+    .mermaid-diagram-container svg {
+        max-width: 100%; /* Ensure diagram doesn't overflow */
+        height: auto;
+    }
+    .mermaid-diagram-container.hidden {
+        display: none;
+    }
+    .mermaid-code-block {
+        /* This is a <pre> element containing <code>.
+           It is hidden by default when diagram is shown, and vice-versa. */
+        display: none; 
+    }
+    /* Specific styles for Mermaid toggle buttons */
+    .code-header .diagram-button, .code-header .code-toggle-button {
+        background-color: #6a4a9a; /* A shade of purple for Mermaid buttons */
+        color: #ffffff;
+    }
+    .code-header .diagram-button:hover, .code-header .code-toggle-button:hover {
+        background-color: #8a6ab9; /* Lighter purple on hover */
+    }
+    /* CSS for attached file preview within a chat message */
+    .attached-file-preview-in-chat {
+        max-width: 100%;
+        height: auto;
+        max-height: 200px; /* Limit height for inline display */
+        object-fit: contain;
+        border-radius: 8px;
+        margin-top: 0.5rem; /* Space above image */
+        border: 1px solid var(--border-color); /* Subtle border */
+    }
+
+    /* Image fullscreen modal */
+    .image-fullscreen-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+
+    .image-fullscreen-modal.active {
+        display: flex;
+    }
+
+    .image-fullscreen-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .image-fullscreen-content img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-fullscreen-close {
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .image-fullscreen-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        .image-fullscreen-close {
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+        }
+    }
+
+/* Improved text formatting with glass effect compatibility */
+.message-markdown {
+    line-height: 1.7;
+    font-size: 15px;
+    opacity: 0; /* For fade-in animation */
+    animation: fadeIn 0.5s ease-in-out forwards;
+    color: var(--text-color); /* Ensure message text color changes with theme */
+    position: relative;
+    z-index: 1;
+}
+
+/* Message styling - Remove background bars on mobile for assistant messages */
+.user-message .message-markdown {
+    background: var(--message-user-bg);
+    padding: 1rem;
+    border-radius: 12px;
+    margin: 0.5rem 0;
+}
+
+.assistant-message .message-markdown {
+    background: var(--message-assistant-bg);
+    padding: 1rem;
+    border-radius: 12px;
+    margin: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+    .assistant-message .message-markdown {
+        background: transparent !important;
+        padding: 0.5rem 0 !important;
+        border-radius: 0 !important;
+        margin: 0.25rem 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    /* User messages keep their background on all screen sizes */
+    .user-message .message-markdown {
+        background: var(--message-user-bg) !important;
+        padding: 1rem !important;
+        border-radius: 12px !important;
+        margin: 0.5rem 0 !important;
+    }
+}
+
+/* Apply glass effects when glass is enabled */
+body.glass-enabled .user-message .message-markdown {
+    background: rgba(37, 37, 37, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.glass-enabled .assistant-message .message-markdown {
+    background: rgba(26, 26, 26, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Light theme glass effects */
+body[data-theme="light"].glass-enabled .user-message .message-markdown {
+    background: rgba(224, 224, 224, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"].glass-enabled .assistant-message .message-markdown {
+    background: rgba(249, 249, 249, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Light blue theme glass effects */
+body[data-theme="light-blue"].glass-enabled .user-message .message-markdown {
+    background: rgba(187, 222, 251, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light-blue"].glass-enabled .assistant-message .message-markdown {
+    background: rgba(227, 242, 253, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Dark blue theme glass effects */
+body[data-theme="dark-blue"].glass-enabled .user-message .message-markdown {
+    background: rgba(74, 85, 104, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark-blue"].glass-enabled .assistant-message .message-markdown {
+    background: rgba(44, 52, 64, 0.15) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.message-markdown p {
+    margin-bottom: 1.2em;
+    white-space: pre-wrap;
+}
+
+.message-markdown ul, 
+.message-markdown ol {
+    margin: 0.8em 0 1.2em 1.5em;
+    padding-left: 1.8em;
+}
+
+.message-markdown ul {
+    list-style-type: disc;
+}
+
+.message-markdown ol {
+    list-style-type: decimal;
+}
+
+.message-markdown li {
+    margin-bottom: 0.6em;
+    padding-left: 0.4em;
+}
+
+/* Number/bullet highlighting */
+.message-markdown li::marker {
+    color: var(--primary-color);
+    font-weight: bold; /* Make markers bold */
+}
+
+/* Code block improvements */
+pre {
+    background-color: var(--message-assistant-bg); /* Use theme variable */
+    border: 1px solid var(--border-color); /* Use theme variable */
+}
+
+pre code {
+    color: var(--text-color); /* Use theme variable */
+}
+
+/* Different styling for user vs assistant code blocks */
+.user-message pre {
+    background-color: var(--message-user-bg); /* Use theme variable */
+    border-color: var(--border-color); /* Use theme variable */
+}
+
+.assistant-message pre {
+    background-color: var(--message-assistant-bg); /* Use theme variable */
+}
+
+/* Paragraph separation */
+.message-separator {
+    height: 1px;
+    background: var(--border-color); /* Use theme variable */
+    margin: 1.5em 0;
+    width: 80%;
+}
+
+/* Number highlighting */
+.highlight-number {
+    color: var(--primary-color);
+    font-weight: bold;
+    padding: 0 2px;
+}
+
+/* Key term highlighting */
+.highlight-term {
+    background-color: rgba(0, 255, 157, 0.25); /* Increased opacity */
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-weight: 500;
+    border-left: 2px solid var(--primary-color);
+    box-shadow: 0 0 5px rgba(0, 255, 157, 0.3); /* Added subtle shadow */
+}
+
+/* File Upload Drop Zone Styles */
+.file-upload-container {
+    position: relative;
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto 1rem;
+    padding: 1.5rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: var(--input-bg); /* Use theme variable */
+}
+
+.file-upload-container:hover {
+    border-color: var(--primary-color);
+    background-color: var(--input-bg);
+}
+
+.file-upload-container.drag-over {
+    border-color: var(--primary-color);
+    background-color: rgba(0, 255, 157, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.2);
+}
+
+.file-upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-upload-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.file-upload-text {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.file-upload-text strong {
+    color: var(--primary-color);
+}
+
+.file-upload-button {
+    background-color: var(--primary-color);
+    color: #000;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-upload-button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* Welcome Message UI Fix */
+#welcome-message {
+    max-width: 800px; /* Fixed value instead of Tailwind class */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-top: 2.5rem; /* pt-10 */
+    color: var(--text-color); /* Ensure text color changes with theme */
+    display: block; /* Ensure it's always displayed unless specifically hidden */
+}
+#welcome-message h1 {
+    font-size: 2.25rem; /* text-3xl */
+    font-weight: bold;
+    margin-bottom: 1rem; /* mb-4 */
+    color: var(--primary-color); /* Gradient text color */
+}
+#welcome-message p {
+    color: var(--text-color); /* Ensure text color changes with theme */
+    margin-bottom: 2rem; /* mb-8 */
+}
+
+/* Mobile adjustments for welcome message example prompts */
+@media (max-width: 768px) {
+    #welcome-message {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .example-prompts-grid > div {
+        width: 90%; /* Adjust width for better mobile viewing */
+    }
+}
+
+/* Chat container background */
+#chat-container {
+    background-color: var(--bg-color); /* Use theme variable for chat background */
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Chat container glass hover effect - only when glass is enabled and no images */
+body.glass-enabled #chat-container:hover:not(.has-images) {
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+body[data-theme="light"].glass-enabled #chat-container:hover:not(.has-images) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="light-blue"].glass-enabled #chat-container:hover:not(.has-images) {
+    background-color: rgba(240, 247, 255, 0.1);
+}
+
+body[data-theme="dark-blue"].glass-enabled #chat-container:hover:not(.has-images) {
+    background-color: rgba(30, 41, 59, 0.1);
+}
+        
+/* Video carousel */
+.video-carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+}
+
+.video-carousel::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.video-carousel-item {
+    flex: 0 0 90%;
+    scroll-snap-align: start;
+    transition: transform 0.3s ease;
+}
+
+.video-carousel-item:first-child {
+    margin-left: 1rem;
+}
+
+.video-carousel-item:last-child {
+    margin-right: 1rem;
+}
+
+@media (min-width: 768px) {
+    .video-carousel-item {
+        flex: 0 0 45%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .video-carousel-item {
+        flex: 0 0 30%;
+    }
+}
+
+/* Video container */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #000;
+}
+
+.video-container iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Download button */
+.download-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    border-radius: 0 0 8px 8px;
+    margin-top: -5px;
+    transition: background 0.2s;
+}
+
+.download-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Updated CSS for knowledge-response */
+.knowledge-response {
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+}
+
+.knowledge-image {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.knowledge-text {
+    padding: 0 0.5rem;
+}
+
+.knowledge-text h3 {
+    margin-top: 0;
+    color: #f0f0f0;
+    font-size: 1.25rem;
+}
+
+.knowledge-text p {
+    margin: 0.5rem 0;
+    color: #e0e0e0;
+    line-height: 1.5;
+}
+
+.source-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #3b82f6; /* Source links remain blue */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.source-link:hover {
+    text-decoration: underline;
+}
+
+.related-topics {
+    margin-top: 1rem;
+}
+
+.related-topics h4 {
+    /* Changed color for "Related Topics:" to match general text */
+    color: var(--text-color); /* Corrected: Using CSS variable for consistency */
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.related-topics ul {
+    padding-left: 1.5rem;
+    margin: 0.8em 0 1.2em 1.5em; /* Adjusted margin for consistency with main lists */
+    padding-left: 1.8em; /* Adjusted padding for consistency with main lists */
+}
+
+.related-topics li {
+    margin-bottom: 0.6em; /* Adjusted margin for consistency with main lists */
+    padding-left: 0.4em; /* Adjusted padding for consistency with main lists */
+}
+
+.related-topics a {
+    color: #3b82f6; /* Links within related topics remain blue */
+    text-decoration: none;
+}
+
+.related-topics a:hover {
+    text-decoration: underline;
+}
+
+.no-videos {
+    color: #888;
+    font-style: italic;
+    margin-top: 1rem;
+}
+/* Replace existing .glass-enabled and .custom-background rules */
+body.custom-background #chat-container {
+  background: rgba(37, 37, 37, 0.7) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+}
+
+/* Remove hover requirement */
+body.custom-background #chat-container:hover {
+  background: rgba(37, 37, 37, 0.7) !important; /* Same as non-hover */
+}
+/* Voice button styling */
+#voice-button {
+  background: var(--primary-color) !important;
+  color: #000 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3) !important;
+}
+
+/* Different themes compatibility */
+body[data-theme="light"] #voice-button,
+body[data-theme="light-blue"] #voice-button {
+  color: #000 !important;
+  background: var(--primary-color) !important;
+}
+
+/* Ensure it stays on top of glass effect */
+.input-buttons {
+  position: relative;
+  z-index: 10;
+}
