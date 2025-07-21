@@ -585,14 +585,19 @@
     /**
      * Handle combined send/stop button click
      */
+    // Removed Plus Menu functions in favor of Tools approach
     function handleSendStop() {
-        if (isStreaming) {
+        const buttonMode = sendStopButton.getAttribute('data-mode');
+        
+        if (buttonMode === 'send' && isStreaming) {
+            // If in stop mode and currently streaming, stop the generation
             stopGeneration();
         } else {
+            // In all other cases, just send the message
+            // This works the same on all device sizes
             sendMessage();
         }
     }
-
     /**
      * Toggles the visibility of the welcome message based on conversation history.
      */
