@@ -4866,7 +4866,7 @@
 
     function setGenerateImageMode() {
         // Set placeholder text for image generation
-        userInput.placeholder = "Describe an image";
+        userInput.placeholder = "Describe an image....";
         userInput.focus();
         
         // Add visual indicator that we're in image mode
