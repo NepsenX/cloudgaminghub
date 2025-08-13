@@ -286,7 +286,88 @@ const SECURITY_CONFIG = {
         }
         
         // ====================== DEVELOPER TOOLS DETECTION ======================
-
+        
+        // Disable developer tools
+        disableDevTools() {
+            // Method 1: Override console methods
+            this.overrideConsoleMethods();
+            
+            // Method 2: Detect devtools opening
+            let devtoolsOpen = false;
+            const threshold = 160;
+            
+            const checkDevTools = () => {
+                const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                const orientation = widthThreshold ? 'vertical' : 'horizontal';
+                
+                if (!(heightThreshold && widthThreshold) && 
+                    ((window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) || 
+                     widthThreshold || heightThreshold)) {
+                    
+                    if (!devtoolsOpen) {
+                        devtoolsOpen = true;
+                        this.handleSecurityViolation("Developer tools detected");
+                        this.startConsoleSpam();
+                        this.showRandomAd();
+                        this.showRandomAd();
+                    }
+                } else {
+                    devtoolsOpen = false;
+                }
+            };
+            
+            // Check periodically
+            setInterval(checkDevTools, 500);
+            
+            // Also check on resize
+            window.addEventListener('resize', checkDevTools);
+            
+            // Method 3: Debugger trap
+            const debuggerTrap = () => {
+                if (devtoolsOpen) {
+                    // Infinite debugger loop
+                    while (true) {
+                        try {
+                            (function() {})['constructor']('debugger')();
+                        } catch(e) {
+                            // Continue the loop
+                        }
+                    }
+                }
+            };
+            
+            setInterval(debuggerTrap, 1000);
+        }
+        
+        // Override console methods to detect usage
+        overrideConsoleMethods() {
+            const consoleMethods = ['log', 'warn', 'error', 'info', 'debug', 'table', 'dir', 'trace', 'clear', 'count', 'group', 'groupEnd'];
+            
+            consoleMethods.forEach(method => {
+                const original = console[method];
+                
+                console[method] = function() {
+                    // Handle as security violation
+                    this.handleSecurityViolation(`Console.${method} called`);
+                    
+                    // Show ads
+                    this.showRandomAd();
+                    
+                    // Start console spam if not already running
+                    if (!this.consoleSpamInterval) {
+                        this.startConsoleSpam();
+                    }
+                    
+                    // Call original if needed
+                    if (original) {
+                        try {
+                            original.apply(console, arguments);
+                        } catch(e) {}
+                    }
+                }.bind(this);
+            });
+        }
         
         // ====================== CONSOLE SPAMMING ======================
         
