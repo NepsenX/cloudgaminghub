@@ -25,7 +25,11 @@
     if (blocked) {
       e.preventDefault();
       e.stopPropagation();
-      window.open("https://nepsen.github.io/home", "_blank");
+      window.open(
+        "https://nepsen.github.io/home",
+        "_blank",
+        "width=800,height=600,scrollbars=yes,resizable=yes"
+      );
       return false;
     }
   });
@@ -37,6 +41,124 @@
 })();
 // Browser Error Simulation Script
 (function() {
+    // Check if already shown
+    if (localStorage.getItem("backend-was-done") === "true") {
+        // Don't show code error again, but still show offline if needed
+        const isOffline = !navigator.onLine;
+        const isWrongDomain = !location.hostname.endsWith("nepsen.github.io");
+        
+        if (isOffline || isWrongDomain) {
+            // Create minimal overlay for offline/wrong domain scenario
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: #f8f9fa;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 99999;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                color: #202124;
+                padding: 20px;
+                box-sizing: border-box;
+            `;
+            
+            const browserWindow = document.createElement('div');
+            browserWindow.style.cssText = `
+                width: 100%;
+                max-width: 700px;
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                color: #202124;
+            `;
+            
+            // Browser detection function
+            function detectBrowser() {
+                const ua = navigator.userAgent;
+                let browser = "Unknown Browser";
+                
+                if (ua.includes("Chrome") && !ua.includes("Edg") && !ua.includes("OPR")) {
+                    browser = "Chrome";
+                } else if (ua.includes("Safari") && !ua.includes("Chrome")) {
+                    browser = "Safari";
+                } else if (ua.includes("Edg")) {
+                    browser = "Edge";
+                } else if (ua.includes("Firefox")) {
+                    browser = "Firefox";
+                } else if (ua.includes("SamsungBrowser")) {
+                    browser = "Samsung Internet";
+                } else if (ua.includes("OPR") || ua.includes("Opera")) {
+                    browser = "Opera";
+                } else if (ua.includes("UCBrowser")) {
+                    browser = "UC Browser";
+                } else if (ua.includes("Brave")) {
+                    browser = "Brave";
+                } else if (ua.includes("Vivaldi")) {
+                    browser = "Vivaldi";
+                } else if (ua.includes("Tor")) {
+                    browser = "Tor Browser";
+                } else {
+                    browser = "Unknown";
+                }
+                
+                return browser;
+            }
+            
+            // Show offline message
+            function showOfflineMessage(browser) {
+                let icon = "🌐";
+                let title = "";
+                let message = "";
+                
+                if (browser === "Chrome") {
+                    icon = "🦖";
+                    title = "No internet";
+                    message = "Try:\n• Checking the network cables, modem, and router\n• Reconnecting to Wi-Fi\n• Running Network Diagnostics";
+                } else if (browser === "Firefox") {
+                    icon = "🦊";
+                    title = "Unable to connect";
+                    message = "Firefox can't establish a connection to the server.";
+                } else if (browser === "Safari") {
+                    icon = "🍎";
+                    title = "You Are Not Connected to the Internet";
+                    message = "This page can't be displayed because your computer is currently offline.";
+                } else if (browser === "Edge") {
+                    icon = "🧩";
+                    title = "Hmm... can't reach this page";
+                    message = "It looks like you aren't connected to the internet. Try checking your network connection.";
+                } else {
+                    title = "No Internet Connection";
+                    message = "Please check your network connection and try again.";
+                }
+                
+                browserWindow.innerHTML = `
+                    <div style="padding: 40px 20px; text-align: center;">
+                        <div style="font-size: 80px; margin-bottom: 20px;">${icon}</div>
+                        <div style="font-size: 28px; font-weight: 400; margin-bottom: 15px; color: #202124;">${title}</div>
+                        <div style="font-size: 15px; color: #5f6368; margin-bottom: 25px; line-height: 1.5; white-space: pre-line;">${message}</div>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <button style="padding: 10px 16px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: #1a73e8; color: white;" onclick="window.location.reload()">Try again</button>
+                        </div>
+                    </div>
+                `;
+                
+                overlay.appendChild(browserWindow);
+                document.body.appendChild(overlay);
+            }
+            
+            const browser = detectBrowser();
+            showOfflineMessage(browser);
+        }
+        return;
+    }
+
     // Create overlay container
     const overlay = document.createElement('div');
     overlay.id = 'browser-error-overlay';
@@ -202,6 +324,9 @@
     const errorDetailsText = document.createElement('div');
     errorDetailsText.style.cssText = `
         margin-top: 10px;
+        font-family: monospace;
+        white-space: pre-wrap;
+        font-size: 12px;
     `;
     
     errorDetails.appendChild(errorSummary);
@@ -320,7 +445,6 @@
         const ua = navigator.userAgent;
         let browser = "Unknown Browser";
         
-        // Detect browser from user agent
         if (ua.includes("Chrome") && !ua.includes("Edg") && !ua.includes("OPR")) {
             browser = "Chrome";
         } else if (ua.includes("Safari") && !ua.includes("Chrome")) {
@@ -341,234 +465,8 @@
             browser = "Vivaldi";
         } else if (ua.includes("Tor")) {
             browser = "Tor Browser";
-        } else if (ua.includes("Facebook")) {
-            browser = "Facebook Mobile";
-        } else if (ua.includes("Instagram")) {
-            browser = "Instagram Mobile";
-        } else if (ua.includes("Twitter")) {
-            browser = "Twitter Mobile";
-        } else if (ua.includes("Snapchat")) {
-            browser = "Snapchat";
-        } else if (ua.includes("WhatsApp")) {
-            browser = "WhatsApp";
-        } else if (ua.includes("Discord")) {
-            browser = "Discord";
-        } else if (ua.includes("LinkedIn")) {
-            browser = "LinkedIn";
-        } else if (ua.includes("Messenger")) {
-            browser = "Facebook Messenger";
-        } else if (ua.includes("Pinterest")) {
-            browser = "Pinterest";
-        } else if (ua.includes("Spotify")) {
-            browser = "Spotify";
-        } else if (ua.includes("TikTok")) {
-            browser = "TikTok";
-        } else if (ua.includes("YouTube")) {
-            browser = "YouTube";
-        } else if (ua.includes("Netflix")) {
-            browser = "Netflix";
-        } else if (ua.includes("Amazon")) {
-            browser = "Amazon Shopping";
-        } else if (ua.includes("Slack")) {
-            browser = "Slack";
-        } else if (ua.includes("Telegram")) {
-            browser = "Telegram";
-        } else if (ua.includes("WeChat")) {
-            browser = "WeChat";
-        } else if (ua.includes("Signal")) {
-            browser = "Signal";
-        } else if (ua.includes("Zoom")) {
-            browser = "Zoom";
-        } else if (ua.includes("Twitch")) {
-            browser = "Twitch";
-        } else if (ua.includes("Reddit")) {
-            browser = "Reddit";
-        } else if (ua.includes("PayPal")) {
-            browser = "PayPal";
-        } else if (ua.includes("CashApp")) {
-            browser = "Cash App";
-        } else if (ua.includes("Venmo")) {
-            browser = "Venmo";
-        } else if (ua.includes("Robinhood")) {
-            browser = "Robinhood";
-        } else if (ua.includes("Coinbase")) {
-            browser = "Coinbase";
-        } else if (ua.includes("eBay")) {
-            browser = "eBay";
-        } else if (ua.includes("Etsy")) {
-            browser = "Etsy";
-        } else if (ua.includes("Shopify")) {
-            browser = "Shopify";
-        } else if (ua.includes("Walmart")) {
-            browser = "Walmart";
-        } else if (ua.includes("Target")) {
-            browser = "Target";
-        } else if (ua.includes("BestBuy")) {
-            browser = "Best Buy";
-        } else if (ua.includes("HomeDepot")) {
-            browser = "Home Depot";
-        } else if (ua.includes("Lowe's")) {
-            browser = "Lowe's";
-        } else if (ua.includes("Wayfair")) {
-            browser = "Wayfair";
-        } else if (ua.includes("IKEA")) {
-            browser = "IKEA";
-        } else if (ua.includes("Nike")) {
-            browser = "Nike";
-        } else if (ua.includes("Adidas")) {
-            browser = "Adidas";
-        } else if (ua.includes("Under Armour")) {
-            browser = "Under Armour";
-        } else if (ua.includes("Pandora")) {
-            browser = "Pandora";
-        } else if (ua.includes("SoundCloud")) {
-            browser = "SoundCloud";
-        } else if (ua.includes("Shazam")) {
-            browser = "Shazam";
-        } else if (ua.includes("Audible")) {
-            browser = "Audible";
-        } else if (ua.includes("Kindle")) {
-            browser = "Kindle";
-        } else if (ua.includes("Goodreads")) {
-            browser = "Goodreads";
-        } else if (ua.includes("Duolingo")) {
-            browser = "Duolingo";
-        } else if (ua.includes("Coursera")) {
-            browser = "Coursera";
-        } else if (ua.includes("Udemy")) {
-            browser = "Udemy";
-        } else if (ua.includes("Khan Academy")) {
-            browser = "Khan Academy";
-        } else if (ua.includes("Google Classroom")) {
-            browser = "Google Classroom";
-        } else if (ua.includes("Google Drive")) {
-            browser = "Google Drive";
-        } else if (ua.includes("Dropbox")) {
-            browser = "Dropbox";
-        } else if (ua.includes("OneDrive")) {
-            browser = "Microsoft OneDrive";
-        } else if (ua.includes("iCloud")) {
-            browser = "iCloud";
-        } else if (ua.includes("Evernote")) {
-            browser = "Evernote";
-        } else if (ua.includes("Notion")) {
-            browser = "Notion";
-        } else if (ua.includes("Trello")) {
-            browser = "Trello";
-        } else if (ua.includes("Asana")) {
-            browser = "Asana";
-        } else if (ua.includes("Jira")) {
-            browser = "Jira";
-        } else if (ua.includes("Salesforce")) {
-            browser = "Salesforce";
-        } else if (ua.includes("HubSpot")) {
-            browser = "HubSpot";
-        } else if (ua.includes("QuickBooks")) {
-            browser = "QuickBooks";
-        } else if (ua.includes("TurboTax")) {
-            browser = "TurboTax";
-        } else if (ua.includes("Mint")) {
-            browser = "Mint";
-        } else if (ua.includes("Credit Karma")) {
-            browser = "Credit Karma";
-        } else if (ua.includes("Zillow")) {
-            browser = "Zillow";
-        } else if (ua.includes("Trulia")) {
-            browser = "Trulia";
-        } else if (ua.includes("Realtor.com")) {
-            browser = "Realtor.com";
-        } else if (ua.includes("Airbnb")) {
-            browser = "Airbnb";
-        } else if (ua.includes("VRBO")) {
-            browser = "VRBO";
-        } else if (ua.includes("Booking.com")) {
-            browser = "Booking.com";
-        } else if (ua.includes("Expedia")) {
-            browser = "Expedia";
-        } else if (ua.includes("Kayak")) {
-            browser = "Kayak";
-        } else if (ua.includes("Uber")) {
-            browser = "Uber";
-        } else if (ua.includes("Lyft")) {
-            browser = "Lyft";
-        } else if (ua.includes("DoorDash")) {
-            browser = "DoorDash";
-        } else if (ua.includes("Uber Eats")) {
-            browser = "Uber Eats";
-        } else if (ua.includes("Grubhub")) {
-            browser = "Grubhub";
-        } else if (ua.includes("Postmates")) {
-            browser = "Postmates";
-        } else if (ua.includes("Instacart")) {
-            browser = "Instacart";
-        } else if (ua.includes("Shipt")) {
-            browser = "Shipt";
-        } else if (ua.includes("Google Maps")) {
-            browser = "Google Maps";
-        } else if (ua.includes("Waze")) {
-            browser = "Waze";
-        } else if (ua.includes("Apple Maps")) {
-            browser = "Apple Maps";
-        } else if (ua.includes("Weather Channel")) {
-            browser = "Weather Channel";
-        } else if (ua.includes("AccuWeather")) {
-            browser = "AccuWeather";
-        } else if (ua.includes("MyFitnessPal")) {
-            browser = "MyFitnessPal";
-        } else if (ua.includes("Strava")) {
-            browser = "Strava";
-        } else if (ua.includes("Fitbit")) {
-            browser = "Fitbit";
-        } else if (ua.includes("Garmin")) {
-            browser = "Garmin";
-        } else if (ua.includes("Calm")) {
-            browser = "Calm";
-        } else if (ua.includes("Headspace")) {
-            browser = "Headspace";
-        } else if (ua.includes("WebMD")) {
-            browser = "WebMD";
-        } else if (ua.includes("MyChart")) {
-            browser = "MyChart";
-        } else if (ua.includes("Teladoc")) {
-            browser = "Teladoc";
-        } else if (ua.includes("23andMe")) {
-            browser = "23andMe";
-        } else if (ua.includes("Ancestry")) {
-            browser = "Ancestry";
-        } else if (ua.includes("Bumble")) {
-            browser = "Bumble";
-        } else if (ua.includes("Tinder")) {
-            browser = "Tinder";
-        } else if (ua.includes("Hinge")) {
-            browser = "Hinge";
-        } else if (ua.includes("Match.com")) {
-            browser = "Match.com";
-        } else if (ua.includes("OKCupid")) {
-            browser = "OKCupid";
-        } else if (ua.includes("ESPN")) {
-            browser = "ESPN";
-        } else if (ua.includes("NFL")) {
-            browser = "NFL";
-        } else if (ua.includes("NBA")) {
-            browser = "NBA";
-        } else if (ua.includes("MLB")) {
-            browser = "MLB";
-        } else if (ua.includes("NHL")) {
-            browser = "NHL";
-        } else if (ua.includes("Disney+")) {
-            browser = "Disney+";
-        } else if (ua.includes("Hulu")) {
-            browser = "Hulu";
-        } else if (ua.includes("HBO Max")) {
-            browser = "HBO Max";
-        } else if (ua.includes("Peacock")) {
-            browser = "Peacock";
-        } else if (ua.includes("Paramount+")) {
-            browser = "Paramount+";
-        } else if (ua.includes("Prime Video")) {
-            browser = "Amazon Prime Video";
-        } else if (ua.includes("Apple TV+")) {
-            browser = "Apple TV+";
+        } else {
+            browser = "Unknown";
         }
         
         return browser;
@@ -581,105 +479,97 @@
         let message = "";
         let details = "";
         
+        // Gather user details
+        const userDetails = {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language,
+            languages: navigator.languages ? navigator.languages.join(', ') : 'Not available',
+            cookieEnabled: navigator.cookieEnabled,
+            javaEnabled: navigator.javaEnabled ? navigator.javaEnabled() : 'Not available',
+            pdfViewerEnabled: navigator.pdfViewerEnabled || 'Not available',
+            hardwareConcurrency: navigator.hardwareConcurrency || 'Not available',
+            deviceMemory: navigator.deviceMemory || 'Not available',
+            maxTouchPoints: navigator.maxTouchPoints || 'Not available',
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            screen: `${screen.width}x${screen.height}`,
+            colorDepth: `${screen.colorDepth} bit`,
+            pixelDepth: `${screen.pixelDepth} bit`,
+            availableScreen: `${screen.availWidth}x${screen.availHeight}`,
+            innerSize: `${window.innerWidth}x${window.innerHeight}`,
+            outerSize: `${window.outerWidth}x${window.outerHeight}`,
+            location: window.location.href,
+            referrer: document.referrer || 'No referrer',
+            date: new Date().toString(),
+            localStorage: typeof(Storage) !== "undefined" ? 'Available' : 'Not available',
+            sessionStorage: typeof(Storage) !== "undefined" ? 'Available' : 'Not available',
+            indexedDB: window.indexedDB ? 'Available' : 'Not available',
+            serviceWorker: navigator.serviceWorker ? 'Available' : 'Not available',
+            webGL: getWebGLInfo(),
+            cookies: document.cookie || 'No cookies'
+        };
+        
+        // Format user details for display
+        let userDetailsText = "User Details:\n\n";
+        for (const [key, value] of Object.entries(userDetails)) {
+            userDetailsText += `${key}: ${value}\n`;
+        }
+        
         // Set content based on browser and error type
-        if (browser.includes("Chrome")) {
+        if (browser === "Chrome") {
             icon = "🦖";
             if (type === "offline") {
                 title = "No internet";
                 message = "Try:\n• Checking the network cables, modem, and router\n• Reconnecting to Wi-Fi\n• Running Network Diagnostics";
-                details = "ERR_INTERNET_DISCONNECTED";
+                details = "ERR_INTERNET_DISCONNECTED\n\n" + userDetailsText;
             } else {
                 title = "This site can't be reached";
                 message = "Try:\n• Checking the connection\n• Checking the proxy and the firewall\n• Running Windows Network Diagnostics";
-                details = "ERR_NAME_NOT_RESOLVED";
+                details = "ERR_NAME_NOT_RESOLVED\n\n" + userDetailsText;
             }
-        } else if (browser.includes("Firefox")) {
+        } else if (browser === "Firefox") {
             icon = "🦊";
             if (type === "offline") {
                 title = "Unable to connect";
-                message = "Firefox can't establish a connection to the server at example.com.";
-                details = "NS_ERROR_UNKNOWN_HOST";
+                message = "Firefox can't establish a connection to the server.";
+                details = "NS_ERROR_UNKNOWN_HOST\n\n" + userDetailsText;
             } else {
                 title = "Page isn't working";
-                message = "The page isn't redirecting properly. An error occurred during a connection to example.com.";
-                details = "NS_ERROR_CONNECTION_REFUSED";
+                message = "The page isn't redirecting properly. An error occurred during a connection.";
+                details = "NS_ERROR_CONNECTION_REFUSED\n\n" + userDetailsText;
             }
-        } else if (browser.includes("Safari")) {
+        } else if (browser === "Safari") {
             icon = "🍎";
             if (type === "offline") {
                 title = "You Are Not Connected to the Internet";
                 message = "This page can't be displayed because your computer is currently offline.";
-                details = "Safari cannot open the page because your computer is not connected to the Internet.";
+                details = "Safari cannot open the page because your computer is not connected to the Internet.\n\n" + userDetailsText;
             } else {
                 title = "Safari Can't Open the Page";
                 message = "Safari can't open the page because the server can't be found.";
-                details = "Safari cannot open the page. The error is: \"The server cannot be found\"";
+                details = "Safari cannot open the page. The error is: \"The server cannot be found\"\n\n" + userDetailsText;
             }
-        } else if (browser.includes("Edge")) {
+        } else if (browser === "Edge") {
             icon = "🧩";
             if (type === "offline") {
                 title = "Hmm... can't reach this page";
                 message = "It looks like you aren't connected to the internet. Try checking your network connection.";
-                details = "ERR_INTERNET_DISCONNECTED";
+                details = "ERR_INTERNET_DISCONNECTED\n\n" + userDetailsText;
             } else {
                 title = "This page isn't working";
-                message = "example.com didn't send any data. Try running Windows Network Diagnostics.";
-                details = "ERR_EMPTY_RESPONSE";
+                message = "The site didn't send any data. Try running Windows Network Diagnostics";
+                details = "ERR_EMPTY_RESPONSE\n\n" + userDetailsText;
             }
-        } else if (browser.includes("Opera")) {
+        } else if (browser === "Opera") {
             icon = "🎭";
             if (type === "offline") {
                 title = "No internet connection";
                 message = "Opera cannot connect to the internet. Please check your network connection and try again.";
-                details = "ERR_INTERNET_DISCONNECTED";
+                details = "ERR_INTERNET_DISCONNECTED\n\n" + userDetailsText;
             } else {
                 title = "Connection failed";
                 message = "Opera could not load the webpage because the server sent no data.";
-                details = "ERR_EMPTY_RESPONSE";
-            }
-        } else if (browser.includes("Facebook")) {
-            icon = "📘";
-            if (type === "offline") {
-                title = "Connection Problem";
-                message = "Check your network connection and try again.";
-                details = "Facebook couldn't load content. Please check your internet connection.";
-            } else {
-                title = "Content Not Available";
-                message = "The content you requested cannot be displayed right now. It may be temporarily unavailable.";
-                details = "The content is currently unavailable. Please try again later.";
-            }
-        } else if (browser.includes("Instagram")) {
-            icon = "📸";
-            if (type === "offline") {
-                title = "No Internet Connection";
-                message = "Please check your connection and try again.";
-                details = "Instagram couldn't load. Please check your internet connection.";
-            } else {
-                title = "Couldn't Load Content";
-                message = "We couldn't complete your request. Please try again.";
-                details = "Content temporarily unavailable. Please try again later.";
-            }
-        } else if (browser.includes("YouTube")) {
-            icon = "📺";
-            if (type === "offline") {
-                title = "You're offline";
-                message = "Check your connection. Try watching on YouTube Go.";
-                details = "YouTube requires an internet connection. Check your network settings.";
-            } else {
-                title = "Something went wrong";
-                message = "We're working on it and we'll get it fixed as soon as we can.";
-                details = "Playback ID: XXXX-XXXX-XXXX-XXXX";
-            }
-        } else if (browser.includes("TikTok")) {
-            icon = "🎵";
-            if (type === "offline") {
-                title = "No network connection";
-                message = "Please check your connection and try again.";
-                details = "TikTok requires an internet connection. Check your network settings.";
-            } else {
-                title = "Couldn't load video";
-                message = "Video currently unavailable. Please try again later.";
-                details = "Video temporarily unavailable. Please try again later.";
+                details = "ERR_EMPTY_RESPONSE\n\n" + userDetailsText;
             }
         } else {
             // Default error message
@@ -687,11 +577,11 @@
             if (type === "offline") {
                 title = "No Internet Connection";
                 message = "Please check your network connection and try again.";
-                details = "ERR_INTERNET_DISCONNECTED";
+                details = "ERR_INTERNET_DISCONNECTED\n\n" + userDetailsText;
             } else {
                 title = "Unable to Load Content";
                 message = "The content you requested is currently unavailable. Please try again later.";
-                details = "ERR_CONNECTION_REFUSED";
+                details = "ERR_CONNECTION_REFUSED\n\n" + userDetailsText;
             }
         }
         
@@ -699,6 +589,7 @@
         errorIcon.textContent = icon;
         errorTitle.textContent = title;
         errorMessage.textContent = message;
+        errorMessage.style.whiteSpace = 'pre-line';
         errorDetailsText.textContent = details;
         
         // Add event listeners to buttons
@@ -711,12 +602,28 @@
         };
     }
     
-    // Check if already shown
-    if (localStorage.getItem("backend-was-done") === "true") return;
+    // Helper function to get WebGL info
+    function getWebGLInfo() {
+        try {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            
+            if (gl) {
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                if (debugInfo) {
+                    return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                }
+                return 'Available (no debug info)';
+            }
+            return 'Not available';
+        } catch (e) {
+            return 'Error checking WebGL';
+        }
+    }
     
     const browser = detectBrowser();
     const isOffline = !navigator.onLine;
-    const isWrongDomain = !location.href.startsWith("https://nepsen.github.io");
+    const isWrongDomain = !location.hostname.endsWith("nepsen.github.io");
     
     // Offline / Wrong domain first
     if (isOffline || isWrongDomain) {
@@ -724,5 +631,29 @@
         return;
     }
     
-
+    // Online + correct domain -> fetch resources
+    const resources = ["/cloudgaimghub/1.js", "/ishahi/index.html"];
+    let allFound = true;
+    
+    // Check resources
+    Promise.all(resources.map(async (res) => {
+        try {
+            const resp = await fetch(res, { method: "HEAD" });
+            if (!resp.ok) return false;
+            return true;
+        } catch(e) {
+            return false;
+        }
+    })).then(results => {
+        allFound = results.every(result => result);
+        
+        // Show code error if any resource missing
+        if(!allFound) {
+            showMessage("codeError", browser);
+            localStorage.setItem("backend-was-done","true");
+        } else {
+            // Remove the overlay if everything is fine
+            document.body.removeChild(overlay);
+        }
+    });
 })();
