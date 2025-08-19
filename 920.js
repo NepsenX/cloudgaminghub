@@ -632,7 +632,7 @@
     }
     
     // Online + correct domain -> fetch resources
-    const resources = ["/old1.html"];
+    const resources = [];
     let allFound = true;
     
     // Check resources
