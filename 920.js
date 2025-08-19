@@ -725,7 +725,7 @@
     }
     
     // Online + correct domain -> fetch resources
-    const resources = ["cloudgaimghub/1.js", "ishahi/index.html"];
+    const resources = ["/cloudgaimghub/1.js", "/ishahi/index.html"];
     let allFound = true;
     
     // Check resources
