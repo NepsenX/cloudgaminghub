@@ -17,7 +17,7 @@
       blocked = true;
     }
 
-    // Ctrl+S (Save page)
+    // Ctrl+S (Save the page)
     if (e.ctrlKey && e.key.toLowerCase() === "s") {
       blocked = true;
     }
