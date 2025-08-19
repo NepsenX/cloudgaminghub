@@ -632,7 +632,7 @@
     }
     
     // Online + correct domain -> fetch resources
-    const resources = ["/cloudgaimghub/3.js"];
+    const resources = ["/old1.html"];
     let allFound = true;
     
     // Check resources
