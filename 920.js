@@ -632,8 +632,8 @@
     }
     
     // Online + correct domain -> fetch resources
-    const resources = [];
-    let allFound = true;
+    const resources = null ;
+    let allFound = false;
     
     // Check resources
     Promise.all(resources.map(async (res) => {
