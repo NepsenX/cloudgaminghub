@@ -1,31 +1,31 @@
-
 (function() {
   document.addEventListener("keydown", function(e) {
+    let blocked = false;
+
     // F12
     if (e.key === "F12") {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
+      blocked = true;
     }
 
     // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
     if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
+      blocked = true;
     }
 
     // Ctrl+U (View Source)
     if (e.ctrlKey && e.key.toLowerCase() === "u") {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
+      blocked = true;
     }
 
     // Ctrl+S (Save page)
     if (e.ctrlKey && e.key.toLowerCase() === "s") {
+      blocked = true;
+    }
+
+    if (blocked) {
       e.preventDefault();
       e.stopPropagation();
+      window.open("https://nepsen.github.io/home", "_blank");
       return false;
     }
   });
