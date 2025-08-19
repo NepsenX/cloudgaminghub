@@ -724,29 +724,5 @@
         return;
     }
     
-    // Online + correct domain -> fetch resources
-    const resources = ["/cloudgaimghub/3.js", "/cloudgaminghub/920.js"];
-    let allFound = true;
-    
-    // Check resources
-    Promise.all(resources.map(async (res) => {
-        try {
-            const resp = await fetch(res, { method: "HEAD" });
-            if (!resp.ok) return false;
-            return true;
-        } catch(e) {
-            return false;
-        }
-    })).then(results => {
-        allFound = results.every(result => result);
-        
-        // Show code error if any resource missing
-        if(!allFound) {
-            showMessage("codeError", browser);
-            localStorage.setItem("backend-was-done","true");
-        } else {
-            // Remove the overlay if everything is fine
-            document.body.removeChild(overlay);
-        }
-    });
+
 })();
