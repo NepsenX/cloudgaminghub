@@ -1,4 +1,4 @@
-<script>
+
 (function() {
   document.addEventListener("keydown", function(e) {
     // F12
@@ -35,4 +35,4 @@
     e.preventDefault();
   });
 })();
-</script>
+
